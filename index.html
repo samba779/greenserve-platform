@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GreenServe - On-Demand Green & Utility Services</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <i class="fas fa-leaf"></i>
+                <span>GreenServe</span>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link active">Home</a></li>
+                <li><a href="services.html" class="nav-link">Services</a></li>
+                <li><a href="bookings.html" class="nav-link">My Bookings</a></li>
+                <li><a href="worker-portal.html" class="nav-link">Worker Portal</a></li>
+            </ul>
+            <div class="nav-auth">
+                <a href="login.html" class="btn btn-outline">Login</a>
+                <a href="register.html" class="btn btn-primary">Sign Up</a>
+            </div>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Book Professional Green Services <span class="highlight">On-Demand</span></h1>
+            <p>Connect with verified experts in solar, energy audit, gardening, waste management, and more eco-friendly solutions for your home and business.</p>
+            <div class="hero-cta">
+                <a href="services.html" class="btn btn-primary btn-lg">
+                    <i class="fas fa-search"></i> Find Services
+                </a>
+                <a href="worker-portal.html" class="btn btn-outline btn-lg">
+                    <i class="fas fa-briefcase"></i> Become a Partner
+                </a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-number">50K+</span>
+                    <span class="stat-label">Happy Customers</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">10K+</span>
+                    <span class="stat-label">Verified Workers</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">8</span>
+                    <span class="stat-label">Service Categories</span>
+                </div>
+            </div>
+        </div>
+        <div class="hero-image">
+            <div class="hero-illustration">
+                <i class="fas fa-solar-panel"></i>
+                <i class="fas fa-seedling"></i>
+                <i class="fas fa-recycle"></i>
+                <i class="fas fa-charging-station"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- Service Categories -->
+    <section class="services-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Our Service Categories</h2>
+                <p>Choose from 8 specialized green and utility service sectors</p>
+            </div>
+            <div class="services-grid">
+                <a href="service-detail.html?id=solar" class="service-card">
+                    <div class="service-icon solar">
+                        <i class="fas fa-solar-panel"></i>
+                    </div>
+                    <h3>Solar Services</h3>
+                    <p>Installation, maintenance, and repair of solar panels and systems</p>
+                </a>
+                <a href="service-detail.html?id=energy" class="service-card">
+                    <div class="service-icon energy">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3>Energy Audit</h3>
+                    <p>Professional energy efficiency assessments and recommendations</p>
+                </a>
+                <a href="service-detail.html?id=biogas" class="service-card">
+                    <div class="service-icon biogas">
+                        <i class="fas fa-fire"></i>
+                    </div>
+                    <h3>Bio-Gas Services</h3>
+                    <p>Biogas plant installation, maintenance, and consultation</p>
+                </a>
+                <a href="service-detail.html?id=gardening" class="service-card">
+                    <div class="service-icon gardening">
+                        <i class="fas fa-seedling"></i>
+                    </div>
+                    <h3>Gardening & Landscaping</h3>
+                    <p>Professional gardening, landscaping, and plant care services</p>
+                </a>
+                <a href="service-detail.html?id=waste" class="service-card">
+                    <div class="service-icon waste">
+                        <i class="fas fa-recycle"></i>
+                    </div>
+                    <h3>Waste Management</h3>
+                    <p>Waste collection, recycling, and disposal solutions</p>
+                </a>
+                <a href="service-detail.html?id=water" class="service-card">
+                    <div class="service-icon water">
+                        <i class="fas fa-tint"></i>
+                    </div>
+                    <h3>Water Conservation</h3>
+                    <p>Rainwater harvesting, water recycling, and conservation systems</p>
+                </a>
+                <a href="service-detail.html?id=ev" class="service-card">
+                    <div class="service-icon ev">
+                        <i class="fas fa-charging-station"></i>
+                    </div>
+                    <h3>EV Charging Support</h3>
+                    <p>EV charging station installation and maintenance</p>
+                </a>
+                <a href="service-detail.html?id=maintenance" class="service-card">
+                    <div class="service-icon maintenance">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <h3>Green Maintenance</h3>
+                    <p>Eco-friendly maintenance and repair services</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <h2>How It Works</h2>
+                <p>Book a service in 4 simple steps</p>
+            </div>
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <div class="step-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3>Choose Service</h3>
+                    <p>Select from our wide range of green and utility services</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <div class="step-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <h3>Set Location</h3>
+                    <p>Enter your address or use GPS to pinpoint your location</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <div class="step-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <h3>Book & Schedule</h3>
+                    <p>Select date and time that works best for you</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <div class="step-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3>Get It Done</h3>
+                    <p>Professional arrives and completes the service</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features-section">
+        <div class="container">
+            <div class="features-content">
+                <div class="features-text">
+                    <h2>Why Choose GreenServe?</h2>
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <i class="fas fa-shield-alt"></i>
+                            <div>
+                                <h4>Verified Professionals</h4>
+                                <p>All service workers are background-checked and verified</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-clock"></i>
+                            <div>
+                                <h4>Real-time Tracking</h4>
+                                <p>Track your service worker's location in real-time</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-rupee-sign"></i>
+                            <div>
+                                <h4>Transparent Pricing</h4>
+                                <p>No hidden charges. Pay only after service completion</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-star"></i>
+                            <div>
+                                <h4>Quality Guaranteed</h4>
+                                <p>Rate and review services to maintain quality standards</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="features-image">
+                    <div class="feature-showcase">
+                        <div class="phone-mockup">
+                            <div class="phone-screen">
+                                <div class="mockup-content">
+                                    <div class="mockup-header">
+                                        <i class="fas fa-arrow-left"></i>
+                                        <span>Track Worker</span>
+                                        <i class="fas fa-phone"></i>
+                                    </div>
+                                    <div class="mockup-map">
+                                        <i class="fas fa-map-marked-alt"></i>
+                                    </div>
+                                    <div class="mockup-worker">
+                                        <div class="worker-avatar">
+                                            <i class="fas fa-user"></i>
+                                        </div>
+                                        <div class="worker-info">
+                                            <span class="worker-name">Rahul K.</span>
+                                            <span class="worker-status">
+                                                <i class="fas fa-circle"></i> On the way
+                                            </span>
+                                        </div>
+                                        <span class="eta">5 min</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="index.html" class="footer-logo">
+                        <i class="fas fa-leaf"></i>
+                        <span>GreenServe</span>
+                    </a>
+                    <p>Connecting you with professional green and utility service providers for a sustainable future.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="services.html">Services</a></li>
+                        <li><a href="worker-portal.html">Become a Partner</a></li>
+                        <li><a href="bookings.html">My Bookings</a></li>
+                        <li><a href="#">Help & Support</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="service-detail.html?id=solar">Solar Services</a></li>
+                        <li><a href="service-detail.html?id=energy">Energy Audit</a></li>
+                        <li><a href="service-detail.html?id=gardening">Gardening</a></li>
+                        <li><a href="service-detail.html?id=waste">Waste Management</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h4>Contact Us</h4>
+                    <p><i class="fas fa-envelope"></i> support@greenserve.com</p>
+                    <p><i class="fas fa-phone"></i> +91 1800-123-4567</p>
+                    <p><i class="fas fa-map-marker-alt"></i> Bangalore, India</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 GreenServe. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GreenServe Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2d6a4f;
+            --secondary: #40916c;
+            --accent: #52b788;
+            --light: #d8f3dc;
+            --dark: #1b4332;
+        }
+        body { background: #f8f9fa; }
+        .sidebar {
+            min-height: 100vh;
+            background: var(--dark);
+            color: white;
+            padding: 20px 0;
+        }
+        .sidebar .nav-link {
+            color: rgba(255,255,255,0.8);
+            padding: 15px 25px;
+            border-radius: 0;
+        }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+            background: var(--primary);
+            color: white;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .stat-card:hover { transform: translateY(-5px); }
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        .bg-green { background: var(--light); color: var(--primary); }
+        .bg-blue { background: #e3f2fd; color: #1976d2; }
+        .bg-orange { background: #fff3e0; color: #f57c00; }
+        .bg-purple { background: #f3e5f5; color: #7b1fa2; }
+        .table-container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .status-requested { background: #fff3e0; color: #f57c00; }
+        .status-accepted { background: #e3f2fd; color: #1976d2; }
+        .status-on_the_way { background: #e8f5e9; color: #388e3c; }
+        .status-in_progress { background: #f3e5f5; color: #7b1fa2; }
+        .status-completed { background: #d8f3dc; color: #2d6a4f; }
+        .status-cancelled { background: #ffebee; color: #c62828; }
+        .revenue-card {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 10px;
+            padding: 20px;
+        }
+        .login-screen {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--dark), var(--primary));
+        }
+        .login-box {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 400px;
+        }
+        #dashboard-content { display: none; }
+        .section { display: none; }
+        .section.active { display: block; }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="login-screen" class="login-screen">
+        <div class="login-box">
+            <div class="text-center mb-4">
+                <i class="fas fa-leaf fa-3x text-success mb-3"></i>
+                <h3>GreenServe Admin</h3>
+                <p class="text-muted">Enter admin key to access dashboard</p>
+            </div>
+            <div class="mb-3">
+                <input type="password" id="admin-key" class="form-control form-control-lg" placeholder="Admin Key">
+            </div>
+            <button onclick="login()" class="btn btn-success btn-lg w-100">
+                <i class="fas fa-sign-in-alt me-2"></i>Access Dashboard
+            </button>
+            <div id="login-error" class="alert alert-danger mt-3 d-none">
+                Invalid admin key!
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard-content">
+        <div class="container-fluid">
+            <div class="row">
+                <!-- Sidebar -->
+                <div class="col-md-2 sidebar">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-leaf fa-2x text-success mb-2"></i>
+                        <h5>GreenServe</h5>
+                        <small class="text-muted">Admin Panel</small>
+                    </div>
+                    <nav class="nav flex-column">
+                        <a class="nav-link active" href="#" onclick="showSection('overview')">
+                            <i class="fas fa-tachometer-alt me-2"></i>Overview
+                        </a>
+                        <a class="nav-link" href="#" onclick="showSection('users')">
+                            <i class="fas fa-users me-2"></i>Users
+                        </a>
+                        <a class="nav-link" href="#" onclick="showSection('workers')">
+                            <i class="fas fa-hard-hat me-2"></i>Workers
+                        </a>
+                        <a class="nav-link" href="#" onclick="showSection('bookings')">
+                            <i class="fas fa-calendar-check me-2"></i>Bookings
+                        </a>
+                        <a class="nav-link" href="#" onclick="showSection('payments')">
+                            <i class="fas fa-rupee-sign me-2"></i>Payments
+                        </a>
+                        <a class="nav-link" href="#" onclick="showSection('services')">
+                            <i class="fas fa-tools me-2"></i>Services
+                        </a>
+                        <a class="nav-link" href="#" onclick="logout()">
+                            <i class="fas fa-sign-out-alt me-2"></i>Logout
+                        </a>
+                    </nav>
+                </div>
+
+                <!-- Main Content -->
+                <div class="col-md-10 p-4">
+                    <!-- Overview Section -->
+                    <div id="overview" class="section active">
+                        <h3 class="mb-4">Dashboard Overview</h3>
+                        
+                        <!-- Stats Cards -->
+                        <div class="row mb-4">
+                            <div class="col-md-3 mb-3">
+                                <div class="stat-card d-flex align-items-center">
+                                    <div class="stat-icon bg-green me-3">
+                                        <i class="fas fa-users"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="mb-0" id="stat-users">0</h4>
+                                        <small class="text-muted">Total Users</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <div class="stat-card d-flex align-items-center">
+                                    <div class="stat-icon bg-blue me-3">
+                                        <i class="fas fa-hard-hat"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="mb-0" id="stat-workers">0</h4>
+                                        <small class="text-muted">Workers</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <div class="stat-card d-flex align-items-center">
+                                    <div class="stat-icon bg-orange me-3">
+                                        <i class="fas fa-calendar-check"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="mb-0" id="stat-bookings">0</h4>
+                                        <small class="text-muted">Bookings</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <div class="stat-card d-flex align-items-center">
+                                    <div class="stat-icon bg-purple me-3">
+                                        <i class="fas fa-check-circle"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="mb-0" id="stat-payments">0</h4>
+                                        <small class="text-muted">Payments</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Revenue -->
+                        <div class="row mb-4">
+                            <div class="col-md-4 mb-3">
+                                <div class="revenue-card">
+                                    <h6><i class="fas fa-rupee-sign me-2"></i>Total Revenue</h6>
+                                    <h3 id="revenue-total">₹0</h3>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="revenue-card" style="background: linear-gradient(135deg, #1976d2, #42a5f5);">
+                                    <h6><i class="fas fa-calendar-week me-2"></i>Weekly Revenue</h6>
+                                    <h3 id="revenue-weekly">₹0</h3>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="revenue-card" style="background: linear-gradient(135deg, #f57c00, #ffb74d);">
+                                    <h6><i class="fas fa-calendar-alt me-2"></i>Monthly Revenue</h6>
+                                    <h3 id="revenue-monthly">₹0</h3>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recent Activity -->
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="table-container">
+                                    <h5 class="mb-3"><i class="fas fa-clock me-2"></i>Recent Bookings</h5>
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>User</th>
+                                                    <th>Service</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="recent-bookings">
+                                                <tr><td colspan="4" class="text-center text-muted">Loading...</td></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="table-container">
+                                    <h5 class="mb-3"><i class="fas fa-money-bill me-2"></i>Recent Payments</h5>
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Amount</th>
+                                                    <th>User</th>
+                                                    <th>Method</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="recent-payments">
+                                                <tr><td colspan="4" class="text-center text-muted">Loading...</td></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Top Performers -->
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="table-container">
+                                    <h5 class="mb-3"><i class="fas fa-trophy me-2 text-warning"></i>Top Workers</h5>
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>Jobs</th>
+                                                    <th>Rating</th>
+                                                    <th>Earnings</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="top-workers">
+                                                <tr><td colspan="4" class="text-center text-muted">Loading...</td></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="table-container">
+                                    <h5 class="mb-3"><i class="fas fa-crown me-2 text-warning"></i>Top Users</h5>
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>Bookings</th>
+                                                    <th>Total Spent</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="top-users">
+                                                <tr><td colspan="3" class="text-center text-muted">Loading...</td></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Users Section -->
+                    <div id="users" class="section">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h3>All Users</h3>
+                            <button class="btn btn-outline-success" onclick="loadUsers()">
+                                <i class="fas fa-sync-alt me-2"></i>Refresh
+                            </button>
+                        </div>
+                        <div class="table-container">
+                            <div class="table-responsive">
+                                <table class="table table-hover" id="users-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Name</th>
+                                            <th>Mobile</th>
+                                            <th>Email</th>
+                                            <th>City</th>
+                                            <th>Bookings</th>
+                                            <th>Total Spent</th>
+                                            <th>Status</th>
+                                            <th>Joined</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Workers Section -->
+                    <div id="workers" class="section">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h3>All Workers</h3>
+                            <button class="btn btn-outline-success" onclick="loadWorkers()">
+                                <i class="fas fa-sync-alt me-2"></i>Refresh
+                            </button>
+                        </div>
+                        <div class="table-container">
+                            <div class="table-responsive">
+                                <table class="table table-hover" id="workers-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Name</th>
+                                            <th>Mobile</th>
+                                            <th>City</th>
+                                            <th>Skills</th>
+                                            <th>Rating</th>
+                                            <th>Jobs</th>
+                                            <th>Earnings</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bookings Section -->
+                    <div id="bookings" class="section">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h3>All Bookings</h3>
+                            <button class="btn btn-outline-success" onclick="loadBookings()">
+                                <i class="fas fa-sync-alt me-2"></i>Refresh
+                            </button>
+                        </div>
+                        <div class="table-container">
+                            <div class="table-responsive">
+                                <table class="table table-hover" id="bookings-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Booking ID</th>
+                                            <th>User</th>
+                                            <th>Worker</th>
+                                            <th>Service</th>
+                                            <th>Date</th>
+                                            <th>Amount</th>
+                                            <th>Payment</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payments Section -->
+                    <div id="payments" class="section">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h3>All Payments</h3>
+                            <button class="btn btn-outline-success" onclick="loadPayments()">
+                                <i class="fas fa-sync-alt me-2"></i>Refresh
+                            </button>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col-md-3">
+                                <div class="stat-card text-center">
+                                    <h5 class="text-success" id="payment-success">₹0</h5>
+                                    <small class="text-muted">Successful</small>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="stat-card text-center">
+                                    <h5 class="text-warning" id="payment-pending">₹0</h5>
+                                    <small class="text-muted">Pending</small>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="stat-card text-center">
+                                    <h5 class="text-danger" id="payment-failed">₹0</h5>
+                                    <small class="text-muted">Failed</small>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="stat-card text-center">
+                                    <h5 id="payment-total">₹0</h5>
+                                    <small class="text-muted">Total</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-container">
+                            <div class="table-responsive">
+                                <table class="table table-hover" id="payments-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Booking</th>
+                                            <th>User</th>
+                                            <th>Worker</th>
+                                            <th>Service</th>
+                                            <th>Amount</th>
+                                            <th>Method</th>
+                                            <th>Status</th>
+                                            <th>Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Services Section -->
+                    <div id="services" class="section">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h3>Service Statistics</h3>
+                            <button class="btn btn-outline-success" onclick="loadServiceStats()">
+                                <i class="fas fa-sync-alt me-2"></i>Refresh
+                            </button>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="table-container">
+                                    <h5 class="mb-3">Bookings by Category</h5>
+                                    <div class="table-responsive">
+                                        <table class="table table-hover" id="category-stats">
+                                            <thead>
+                                                <tr>
+                                                    <th>Category</th>
+                                                    <th>Bookings</th>
+                                                    <th>Revenue</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="table-container">
+                                    <h5 class="mb-3">Popular Services</h5>
+                                    <div class="table-responsive">
+                                        <table class="table table-hover" id="popular-services">
+                                            <thead>
+                                                <tr>
+                                                    <th>Service</th>
+                                                    <th>Bookings</th>
+                                                    <th>Revenue</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const API_URL = 'http://localhost:5000/api/admin';
+        let adminKey = '';
+
+        function login() {
+            adminKey = document.getElementById('admin-key').value;
+            if (!adminKey) {
+                document.getElementById('login-error').classList.remove('d-none');
+                return;
+            }
+            
+            // Test the key by fetching stats
+            fetch(`${API_URL}/stats?key=${adminKey}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('login-screen').style.display = 'none';
+                        document.getElementById('dashboard-content').style.display = 'block';
+                        loadDashboardData();
+                    } else {
+                        document.getElementById('login-error').classList.remove('d-none');
+                    }
+                })
+                .catch(() => {
+                    document.getElementById('login-error').classList.remove('d-none');
+                });
+        }
+
+        function logout() {
+            location.reload();
+        }
+
+        function showSection(section) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            document.getElementById(section).classList.add('active');
+            event.target.classList.add('active');
+            
+            // Load data based on section
+            if (section === 'users') loadUsers();
+            else if (section === 'workers') loadWorkers();
+            else if (section === 'bookings') loadBookings();
+            else if (section === 'payments') loadPayments();
+            else if (section === 'services') loadServiceStats();
+        }
+
+        async function fetchData(endpoint) {
+            const res = await fetch(`${API_URL}${endpoint}?key=${adminKey}`);
+            return res.json();
+        }
+
+        async function loadDashboardData() {
+            const data = await fetchData('/stats');
+            if (!data.success) return;
+
+            const stats = data.data;
+            
+            // Update stats
+            document.getElementById('stat-users').textContent = stats.counts.users;
+            document.getElementById('stat-workers').textContent = stats.counts.workers;
+            document.getElementById('stat-bookings').textContent = stats.counts.bookings;
+            document.getElementById('stat-payments').textContent = stats.counts.payments;
+            
+            // Update revenue
+            document.getElementById('revenue-total').textContent = '₹' + parseFloat(stats.revenue.total_revenue).toLocaleString();
+            document.getElementById('revenue-weekly').textContent = '₹' + parseFloat(stats.revenue.weekly_revenue).toLocaleString();
+            document.getElementById('revenue-monthly').textContent = '₹' + parseFloat(stats.revenue.monthly_revenue).toLocaleString();
+            
+            // Recent bookings
+            const bookingsHtml = stats.recentBookings.map(b => `
+                <tr>
+                    <td>${b.booking_id}</td>
+                    <td>${b.user_name || 'N/A'}</td>
+                    <td>${b.service_name}</td>
+                    <td><span class="status-badge status-${b.status}">${b.status}</span></td>
+                </tr>
+            `).join('');
+            document.getElementById('recent-bookings').innerHTML = bookingsHtml || '<tr><td colspan="4" class="text-center">No bookings</td></tr>';
+            
+            // Recent payments
+            const paymentsHtml = stats.recentPayments.map(p => `
+                <tr>
+                    <td>₹${parseFloat(p.amount).toLocaleString()}</td>
+                    <td>${p.user_name || 'N/A'}</td>
+                    <td>${p.payment_method}</td>
+                    <td><span class="badge bg-${p.status === 'success' ? 'success' : p.status === 'pending' ? 'warning' : 'danger'}">${p.status}</span></td>
+                </tr>
+            `).join('');
+            document.getElementById('recent-payments').innerHTML = paymentsHtml || '<tr><td colspan="4" class="text-center">No payments</td></tr>';
+            
+            // Top workers
+            const workersHtml = stats.topWorkers.map(w => `
+                <tr>
+                    <td>${w.first_name} ${w.last_name}</td>
+                    <td>${w.completed_jobs}</td>
+                    <td>${w.rating} <i class="fas fa-star text-warning"></i> (${w.total_reviews})</td>
+                    <td>₹${parseFloat(w.total_earnings).toLocaleString()}</td>
+                </tr>
+            `).join('');
+            document.getElementById('top-workers').innerHTML = workersHtml || '<tr><td colspan="4" class="text-center">No workers</td></tr>';
+            
+            // Top users
+            const usersHtml = stats.topUsers.map(u => `
+                <tr>
+                    <td>${u.first_name} ${u.last_name}</td>
+                    <td>${u.total_bookings}</td>
+                    <td>₹${parseFloat(u.total_spent).toLocaleString()}</td>
+                </tr>
+            `).join('');
+            document.getElementById('top-users').innerHTML = usersHtml || '<tr><td colspan="3" class="text-center">No users</td></tr>';
+        }
+
+        async function loadUsers() {
+            const data = await fetchData('/users');
+            if (!data.success) return;
+            
+            const html = data.data.map(u => `
+                <tr>
+                    <td>${u.id}</td>
+                    <td>${u.first_name} ${u.last_name}</td>
+                    <td>${u.mobile}</td>
+                    <td>${u.email || 'N/A'}</td>
+                    <td>${u.city || 'N/A'}</td>
+                    <td>${u.total_bookings}</td>
+                    <td>₹${parseFloat(u.total_spent).toLocaleString()}</td>
+                    <td><span class="badge bg-${u.is_verified ? 'success' : 'warning'}">${u.is_verified ? 'Verified' : 'Pending'}</span></td>
+                    <td>${new Date(u.created_at).toLocaleDateString()}</td>
+                </tr>
+            `).join('');
+            document.querySelector('#users-table tbody').innerHTML = html || '<tr><td colspan="9" class="text-center">No users found</td></tr>';
+        }
+
+        async function loadWorkers() {
+            const data = await fetchData('/workers');
+            if (!data.success) return;
+            
+            const html = data.data.map(w => `
+                <tr>
+                    <td>${w.id}</td>
+                    <td>${w.first_name} ${w.last_name}</td>
+                    <td>${w.mobile}</td>
+                    <td>${w.city}</td>
+                    <td><small>${(w.skills || []).slice(0, 2).join(', ')}${(w.skills || []).length > 2 ? '...' : ''}</small></td>
+                    <td>${w.rating} <i class="fas fa-star text-warning"></i></td>
+                    <td>${w.completed_jobs}/${w.total_jobs}</td>
+                    <td>₹${parseFloat(w.total_earnings).toLocaleString()}</td>
+                    <td>
+                        <span class="badge bg-${w.is_online ? 'success' : 'secondary'}">${w.is_online ? 'Online' : 'Offline'}</span>
+                        <span class="badge bg-${w.is_active ? 'success' : 'danger'}">${w.is_active ? 'Active' : 'Inactive'}</span>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-${w.is_active ? 'danger' : 'success'}" onclick="toggleWorkerStatus(${w.id}, ${!w.is_active})">
+                            ${w.is_active ? 'Deactivate' : 'Activate'}
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+            document.querySelector('#workers-table tbody').innerHTML = html || '<tr><td colspan="10" class="text-center">No workers found</td></tr>';
+        }
+
+        async function toggleWorkerStatus(id, isActive) {
+            const res = await fetch(`${API_URL}/workers/${id}/status?key=${adminKey}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ isActive })
+            });
+            const data = await res.json();
+            if (data.success) {
+                loadWorkers();
+            }
+        }
+
+        async function loadBookings() {
+            const data = await fetchData('/bookings');
+            if (!data.success) return;
+            
+            const html = data.data.map(b => `
+                <tr>
+                    <td>${b.booking_id}</td>
+                    <td>${b.user_first_name} ${b.user_last_name}</td>
+                    <td>${b.worker_first_name ? b.worker_first_name + ' ' + b.worker_last_name : 'Unassigned'}</td>
+                    <td>${b.service_name}</td>
+                    <td>${new Date(b.booking_date).toLocaleDateString()} ${b.booking_time}</td>
+                    <td>₹${parseFloat(b.total_amount).toLocaleString()}</td>
+                    <td><span class="badge bg-${b.payment_status === 'paid' ? 'success' : b.payment_status === 'pending' ? 'warning' : 'danger'}">${b.payment_status}</span></td>
+                    <td><span class="status-badge status-${b.status}">${b.status}</span></td>
+                </tr>
+            `).join('');
+            document.querySelector('#bookings-table tbody').innerHTML = html || '<tr><td colspan="8" class="text-center">No bookings found</td></tr>';
+        }
+
+        async function loadPayments() {
+            const data = await fetchData('/payments');
+            if (!data.success) return;
+            
+            // Update summary
+            document.getElementById('payment-success').textContent = '₹' + parseFloat(data.summary.total_success).toLocaleString();
+            document.getElementById('payment-pending').textContent = '₹' + parseFloat(data.summary.total_pending).toLocaleString();
+            document.getElementById('payment-failed').textContent = '₹' + parseFloat(data.summary.total_failed).toLocaleString();
+            document.getElementById('payment-total').textContent = '₹' + (parseFloat(data.summary.total_success) + parseFloat(data.summary.total_pending)).toLocaleString();
+            
+            const html = data.data.map(p => `
+                <tr>
+                    <td>${p.id}</td>
+                    <td>${p.booking_id}</td>
+                    <td>${p.user_first_name} ${p.user_last_name}</td>
+                    <td>${p.worker_first_name ? p.worker_first_name + ' ' + p.worker_last_name : 'N/A'}</td>
+                    <td>${p.service_name}</td>
+                    <td>₹${parseFloat(p.amount).toLocaleString()}</td>
+                    <td>${p.payment_method}</td>
+                    <td><span class="badge bg-${p.status === 'success' ? 'success' : p.status === 'pending' ? 'warning' : 'danger'}">${p.status}</span></td>
+                    <td>${new Date(p.created_at).toLocaleString()}</td>
+                </tr>
+            `).join('');
+            document.querySelector('#payments-table tbody').innerHTML = html || '<tr><td colspan="9" class="text-center">No payments found</td></tr>';
+        }
+
+        async function loadServiceStats() {
+            const data = await fetchData('/services/stats');
+            if (!data.success) return;
+            
+            const catHtml = data.data.categoryStats.map(c => `
+                <tr>
+                    <td>${c.name}</td>
+                    <td>${c.bookings}</td>
+                    <td>₹${parseFloat(c.revenue).toLocaleString()}</td>
+                </tr>
+            `).join('');
+            document.querySelector('#category-stats tbody').innerHTML = catHtml || '<tr><td colspan="3" class="text-center">No data</td></tr>';
+            
+            const svcHtml = data.data.popularServices.map(s => `
+                <tr>
+                    <td>${s.name}</td>
+                    <td>${s.bookings}</td>
+                    <td>₹${parseFloat(s.revenue).toLocaleString()}</td>
+                </tr>
+            `).join('');
+            document.querySelector('#popular-services tbody').innerHTML = svcHtml || '<tr><td colspan="3" class="text-center">No data</td></tr>';
+        }
+
+        // Enter key on password field
+        document.getElementById('admin-key')?.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') login();
+        });
+    </script>
+</body>
+</html>

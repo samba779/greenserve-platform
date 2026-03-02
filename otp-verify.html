@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify OTP - GreenServe</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <i class="fas fa-leaf"></i>
+                <span>GreenServe</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- OTP Verification -->
+    <div class="form-container">
+        <div class="form-header">
+            <h2>Verify Your Number</h2>
+            <p>Enter the 6-digit code sent to +91 98765 43210</p>
+        </div>
+
+        <form id="otpForm" data-submit="true" data-redirect="index.html">
+            <div class="otp-inputs">
+                <input type="text" class="otp-input" maxlength="1" required>
+                <input type="text" class="otp-input" maxlength="1" required>
+                <input type="text" class="otp-input" maxlength="1" required>
+                <input type="text" class="otp-input" maxlength="1" required>
+                <input type="text" class="otp-input" maxlength="1" required>
+                <input type="text" class="otp-input" maxlength="1" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-full" data-original-text="Verify">
+                <i class="fas fa-check-circle"></i> Verify
+            </button>
+        </form>
+
+        <div class="form-footer">
+            Didn't receive the code? <a href="#" onclick="resendOTP()">Resend</a>
+        </div>
+
+        <div class="form-footer" style="margin-top: 0.5rem; font-size: 0.75rem;">
+            <a href="login.html">Change number</a>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        function resendOTP() {
+            showToast('OTP resent successfully!', 'success');
+        }
+    </script>
+</body>
+</html>

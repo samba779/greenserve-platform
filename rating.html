@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rate Service - GreenServe</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <i class="fas fa-leaf"></i>
+                <span>GreenServe</span>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="services.html" class="nav-link">Services</a></li>
+                <li><a href="bookings.html" class="nav-link active">My Bookings</a></li>
+                <li><a href="worker-portal.html" class="nav-link">Worker Portal</a></li>
+            </ul>
+            <div class="nav-auth">
+                <a href="bookings.html" class="btn btn-outline"><i class="fas fa-arrow-left"></i> Back</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Rating Container -->
+    <div class="form-container" style="max-width: 600px;">
+        <div class="form-header">
+            <h2>Rate Your Experience</h2>
+            <p>Your feedback helps us improve our services</p>
+        </div>
+
+        <!-- Service Info -->
+        <div class="card" style="margin-bottom: 1.5rem;">
+            <div class="card-body">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div style="width: 3.5rem; height: 3.5rem; background: #e0e7ff; color: #6366f1; border-radius: var(--radius); display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                        <i class="fas fa-recycle"></i>
+                    </div>
+                    <div>
+                        <div style="font-weight: 600;">Waste Management Setup</div>
+                        <div style="font-size: 0.875rem; color: var(--gray-500);">Booking #GR788456 • Feb 25, 2026</div>
+                    </div>
+                </div>
+                <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--gray-100); display: flex; align-items: center; gap: 0.75rem;">
+                    <div style="width: 2.5rem; height: 2.5rem; background: var(--primary-light); color: var(--primary); border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div>
+                        <div style="font-weight: 500; font-size: 0.875rem;">Served by Suresh Patel</div>
+                        <div style="font-size: 0.75rem; color: var(--gray-500);">Waste Management Expert</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rating Form -->
+        <form id="ratingForm" data-submit="true" data-redirect="bookings.html">
+            <input type="hidden" name="rating" value="0">
+            
+            <div class="rating-container">
+                <h4 style="margin-bottom: 0.5rem;">How was your service?</h4>
+                <div class="rating-stars">
+                    <i class="fas fa-star" data-rating="1"></i>
+                    <i class="fas fa-star" data-rating="2"></i>
+                    <i class="fas fa-star" data-rating="3"></i>
+                    <i class="fas fa-star" data-rating="4"></i>
+                    <i class="fas fa-star" data-rating="5"></i>
+                </div>
+                <p id="rating-text" style="color: var(--gray-500); margin-top: 0.5rem;">Tap a star to rate</p>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">What went well?</label>
+                <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
+                    <label style="padding: 0.5rem 1rem; background: var(--gray-100); border-radius: var(--radius-full); font-size: 0.875rem; cursor: pointer;">
+                        <input type="checkbox" style="display: none;"> 
+                        <i class="fas fa-check" style="display: none;"></i> Professional
+                    </label>
+                    <label style="padding: 0.5rem 1rem; background: var(--gray-100); border-radius: var(--radius-full); font-size: 0.875rem; cursor: pointer;">
+                        <input type="checkbox" style="display: none;"> On Time
+                    </label>
+                    <label style="padding: 0.5rem 1rem; background: var(--gray-100); border-radius: var(--radius-full); font-size: 0.875rem; cursor: pointer;">
+                        <input type="checkbox" style="display: none;"> Good Service
+                    </label>
+                    <label style="padding: 0.5rem 1rem; background: var(--gray-100); border-radius: var(--radius-full); font-size: 0.875rem; cursor: pointer;">
+                        <input type="checkbox" style="display: none;"> Clean Work
+                    </label>
+                    <label style="padding: 0.5rem 1rem; background: var(--gray-100); border-radius: var(--radius-full); font-size: 0.875rem; cursor: pointer;">
+                        <input type="checkbox" style="display: none;"> Knowledgeable
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Share your experience (Optional)</label>
+                <textarea class="rating-textarea" placeholder="Tell us about your experience with the service..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="form-checkbox">
+                    <input type="checkbox">
+                    <span>Would you recommend this service to others?</span>
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-full btn-lg" data-original-text="Submit Review">
+                <i class="fas fa-paper-plane"></i> Submit Review
+            </button>
+
+            <a href="bookings.html" style="display: block; text-align: center; margin-top: 1rem; color: var(--gray-500); text-decoration: none;">
+                Skip for now
+            </a>
+        </form>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        // Rating text mapping
+        const ratingTexts = {
+            1: 'Poor - Very disappointed',
+            2: 'Fair - Below expectations',
+            3: 'Good - Met expectations',
+            4: 'Very Good - Exceeded expectations',
+            5: 'Excellent - Outstanding service!'
+        };
+
+        // Update rating text on selection
+        document.querySelectorAll('.rating-stars i').forEach((star, index) => {
+            star.addEventListener('click', () => {
+                document.getElementById('rating-text').textContent = ratingTexts[index + 1];
+                document.querySelector('input[name="rating"]').value = index + 1;
+            });
+        });
+
+        // Tag selection toggle
+        document.querySelectorAll('.form-group label[style*="cursor: pointer"]').forEach(label => {
+            label.addEventListener('click', function() {
+                const checkbox = this.querySelector('input[type="checkbox"]');
+                checkbox.checked = !checkbox.checked;
+                this.style.background = checkbox.checked ? 'var(--primary-light)' : 'var(--gray-100)';
+                this.style.color = checkbox.checked ? 'var(--primary)' : 'inherit';
+            });
+        });
+    </script>
+</body>
+</html>

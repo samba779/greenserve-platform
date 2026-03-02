@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Service - GreenServe</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <i class="fas fa-leaf"></i>
+                <span>GreenServe</span>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="services.html" class="nav-link active">Services</a></li>
+                <li><a href="bookings.html" class="nav-link">My Bookings</a></li>
+                <li><a href="worker-portal.html" class="nav-link">Worker Portal</a></li>
+            </ul>
+            <div class="nav-auth">
+                <a href="login.html" class="btn btn-outline">Login</a>
+                <a href="register.html" class="btn btn-primary">Sign Up</a>
+            </div>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Service Detail Header -->
+    <section class="service-detail-header">
+        <div class="container" style="display: flex; align-items: center; gap: 1.5rem;">
+            <div style="width: 5rem; height: 5rem; background: rgba(255,255,255,0.2); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; font-size: 2.5rem;">
+                <i class="fas fa-solar-panel"></i>
+            </div>
+            <div>
+                <h1>Solar Panel Installation</h1>
+                <p>Professional solar panel installation for residential and commercial properties</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Booking Content -->
+    <div class="container" style="padding: 2rem 1.5rem;">
+        <div class="service-detail-content" style="display: grid; grid-template-columns: 1fr 420px; gap: 2rem;">
+            <!-- Left Column - Service Info -->
+            <div>
+                <!-- Service Features -->
+                <div class="card" style="margin-bottom: 1.5rem;">
+                    <div class="card-body">
+                        <h3 style="margin-bottom: 1rem;">What's Included</h3>
+                        <ul class="service-features" style="list-style: none; display: flex; flex-direction: column; gap: 0.75rem;">
+                            <li style="display: flex; align-items: center; gap: 0.75rem;">
+                                <i class="fas fa-check-circle" style="color: var(--primary);"></i>
+                                <span>Free site assessment and consultation</span>
+                            </li>
+                            <li style="display: flex; align-items: center; gap: 0.75rem;">
+                                <i class="fas fa-check-circle" style="color: var(--primary);"></i>
+                                <span>High-quality solar panels with 25-year warranty</span>
+                            </li>
+                            <li style="display: flex; align-items: center; gap: 0.75rem;">
+                                <i class="fas fa-check-circle" style="color: var(--primary);"></i>
+                                <span>Professional installation by certified technicians</span>
+                            </li>
+                            <li style="display: flex; align-items: center; gap: 0.75rem;">
+                                <i class="fas fa-check-circle" style="color: var(--primary);"></i>
+                                <span>Inverter and mounting structure included</span>
+                            </li>
+                            <li style="display: flex; align-items: center; gap: 0.75rem;">
+                                <i class="fas fa-check-circle" style="color: var(--primary);"></i>
+                                <span>Post-installation maintenance support</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Pricing Info -->
+                <div class="card" style="margin-bottom: 1.5rem;">
+                    <div class="card-body">
+                        <h3 style="margin-bottom: 1rem;">Pricing</h3>
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+                            <div style="text-align: center; padding: 1.5rem; border: 2px solid var(--gray-200); border-radius: var(--radius-lg);">
+                                <div style="font-size: 2rem; font-weight: 700; color: var(--primary);">3 kW</div>
+                                <div style="color: var(--gray-600); margin: 0.5rem 0;">Residential</div>
+                                <div style="font-size: 1.25rem; font-weight: 600;">₹1,50,000</div>
+                            </div>
+                            <div style="text-align: center; padding: 1.5rem; border: 2px solid var(--primary); border-radius: var(--radius-lg); background: var(--primary-light);">
+                                <div style="font-size: 2rem; font-weight: 700; color: var(--primary);">5 kW</div>
+                                <div style="color: var(--gray-600); margin: 0.5rem 0;">Popular</div>
+                                <div style="font-size: 1.25rem; font-weight: 600;">₹2,25,000</div>
+                            </div>
+                            <div style="text-align: center; padding: 1.5rem; border: 2px solid var(--gray-200); border-radius: var(--radius-lg);">
+                                <div style="font-size: 2rem; font-weight: 700; color: var(--primary);">10 kW</div>
+                                <div style="color: var(--gray-600); margin: 0.5rem 0;">Commercial</div>
+                                <div style="font-size: 1.25rem; font-weight: 600;">₹4,00,000</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reviews Preview -->
+                <div class="card">
+                    <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+                        <h3>Customer Reviews</h3>
+                        <div style="color: var(--accent);">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                            <span style="color: var(--gray-600); margin-left: 0.5rem;">4.8 (1,247 reviews)</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div style="display: flex; flex-direction: column; gap: 1rem;">
+                            <div style="border-bottom: 1px solid var(--gray-100); padding-bottom: 1rem;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                    <strong>Rajesh Kumar</strong>
+                                    <span style="color: var(--gray-500); font-size: 0.875rem;">2 days ago</span>
+                                </div>
+                                <div style="color: var(--accent); margin-bottom: 0.5rem;">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <p style="color: var(--gray-600); font-size: 0.875rem;">Excellent service! The team was professional and completed the installation in just 2 days. Highly recommended!</p>
+                            </div>
+                            <div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                    <strong>Priya Sharma</strong>
+                                    <span style="color: var(--gray-500); font-size: 0.875rem;">1 week ago</span>
+                                </div>
+                                <div style="color: var(--accent); margin-bottom: 0.5rem;">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <p style="color: var(--gray-600); font-size: 0.875rem;">Very happy with the installation. My electricity bills have reduced by 70%! Great investment.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column - Booking Form -->
+            <div class="booking-form-card">
+                <h3>Book This Service</h3>
+                <form id="bookingForm" data-submit="true" data-redirect="bookings.html">
+                    <!-- Capacity Selection -->
+                    <div class="form-group">
+                        <label class="form-label">Select Capacity</label>
+                        <select class="form-select" id="capacity" required>
+                            <option value="">Choose system size</option>
+                            <option value="3kw">3 kW System - ₹1,50,000</option>
+                            <option value="5kw" selected>5 kW System - ₹2,25,000</option>
+                            <option value="10kw">10 kW System - ₹4,00,000</option>
+                            <option value="custom">Custom - Get Quote</option>
+                        </select>
+                    </div>
+
+                    <!-- Address -->
+                    <div class="form-group">
+                        <label class="form-label">Installation Address</label>
+                        <div style="position: relative;">
+                            <input type="text" class="form-input" id="address" placeholder="Enter your address" required>
+                            <button type="button" onclick="getCurrentLocation()" style="position: absolute; right: 0.5rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--primary); cursor: pointer;">
+                                <i class="fas fa-location-arrow"></i>
+                            </button>
+                        </div>
+                        <div id="address-suggestions" style="display: none; position: absolute; background: white; border: 1px solid var(--gray-200); border-radius: var(--radius); margin-top: 0.25rem; width: 100%; z-index: 10;"></div>
+                    </div>
+
+                    <!-- Date Selection -->
+                    <div class="form-group">
+                        <label class="form-label">Preferred Date</label>
+                        <input type="date" class="form-input" required min="2026-03-02">
+                    </div>
+
+                    <!-- Time Slot -->
+                    <div class="form-group">
+                        <label class="form-label">Preferred Time</label>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                            <label class="time-slot" style="padding: 0.75rem; border: 2px solid var(--gray-200); border-radius: var(--radius); text-align: center; cursor: pointer;">
+                                <input type="radio" name="time" value="morning" style="display: none;">
+                                <i class="fas fa-sun"></i> 9 AM - 12 PM
+                            </label>
+                            <label class="time-slot" style="padding: 0.75rem; border: 2px solid var(--gray-200); border-radius: var(--radius); text-align: center; cursor: pointer;">
+                                <input type="radio" name="time" value="afternoon" style="display: none;">
+                                <i class="fas fa-sun" style="color: orange;"></i> 12 PM - 3 PM
+                            </label>
+                            <label class="time-slot" style="padding: 0.75rem; border: 2px solid var(--gray-200); border-radius: var(--radius); text-align: center; cursor: pointer;">
+                                <input type="radio" name="time" value="evening" style="display: none;">
+                                <i class="fas fa-cloud-sun"></i> 3 PM - 6 PM
+                            </label>
+                            <label class="time-slot selected" style="padding: 0.75rem; border: 2px solid var(--primary); border-radius: var(--radius); text-align: center; cursor: pointer; background: var(--primary-light);">
+                                <input type="radio" name="time" value="anytime" checked style="display: none;">
+                                <i class="fas fa-clock"></i> Anytime
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Notes -->
+                    <div class="form-group">
+                        <label class="form-label">Additional Notes (Optional)</label>
+                        <textarea class="form-input" rows="3" placeholder="Any specific requirements..."></textarea>
+                    </div>
+
+                    <!-- Price Summary -->
+                    <div style="background: var(--gray-50); padding: 1rem; border-radius: var(--radius); margin-bottom: 1rem;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span style="color: var(--gray-600);">Service Charge</span>
+                            <span id="service-charge">₹22,500</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span style="color: var(--gray-600);">Tax (18% GST)</span>
+                            <span id="tax">₹40,500</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding-top: 0.5rem; border-top: 1px solid var(--gray-200); font-weight: 600; font-size: 1.125rem;">
+                            <span>Total</span>
+                            <span id="total-amount">₹2,88,000</span>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-full btn-lg" data-original-text="Confirm Booking">
+                        <i class="fas fa-calendar-check"></i> Confirm Booking
+                    </button>
+
+                    <p style="text-align: center; font-size: 0.75rem; color: var(--gray-500); margin-top: 1rem;">
+                        <i class="fas fa-shield-alt"></i> Pay after service completion
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="index.html" class="footer-logo">
+                        <i class="fas fa-leaf"></i>
+                        <span>GreenServe</span>
+                    </a>
+                    <p>Connecting you with professional green and utility service providers for a sustainable future.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="services.html">All Services</a></li>
+                        <li><a href="service-detail.html?id=solar">Solar</a></li>
+                        <li><a href="service-detail.html?id=gardening">Gardening</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h4>Contact</h4>
+                    <p><i class="fas fa-phone"></i> +91 1800-123-4567</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 GreenServe. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
