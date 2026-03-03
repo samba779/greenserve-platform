@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Worker Dashboard - GreenServe</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <i class="fas fa-leaf"></i>
+                <span>GreenServe</span>
+            </a>
+            <div class="nav-menu">
+                <a href="worker-dashboard.html" class="nav-link active">Dashboard</a>
+                <a href="worker-bookings.html" class="nav-link">My Bookings</a>
+                <a href="worker-profile.html" class="nav-link">Profile</a>
+            </div>
+            <div class="nav-auth">
+                <a href="#" class="btn btn-outline">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Worker Dashboard -->
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <div class="worker-info">
+                <div class="worker-avatar">
+                    <img src="https://picsum.photos/seed/worker1/100/100.jpg" alt="Worker Avatar" id="workerAvatar">
+                    <div class="avatar-upload">
+                        <label for="avatarInput">
+                            <i class="fas fa-camera"></i>
+                        </label>
+                        <input type="file" id="avatarInput" accept="image/*" style="display: none;">
+                    </div>
+                </div>
+                <div class="worker-details">
+                    <h2 id="workerName">John Doe</h2>
+                    <p class="worker-role" id="workerRole">Solar Panel Installer</p>
+                    <div class="worker-rating">
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <span class="rating-text">4.5 (127 reviews)</span>
+                    </div>
+                </div>
+            </div>
+            <div class="availability-toggle">
+                <h3>Availability Status</h3>
+                <div class="toggle-container">
+                    <label class="status-toggle">
+                        <input type="checkbox" id="statusToggle" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                    <div class="status-text">
+                        <span id="statusText" class="status-online">Online</span>
+                        <span id="statusTime">Available for work</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-content">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalBookings">24</h3>
+                        <p>Total Bookings</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="completedBookings">18</h3>
+                        <p>Completed</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-rupee-sign"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalEarnings">₹45,280</h3>
+                        <p>Total Earnings</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="avgRating">4.5</h3>
+                        <p>Average Rating</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-sections">
+                <div class="section-card">
+                    <h3>Recent Bookings</h3>
+                    <div class="booking-list">
+                        <div class="booking-item">
+                            <div class="booking-info">
+                                <h4>Solar Panel Installation</h4>
+                                <p><i class="fas fa-map-marker-alt"></i> Koramangala, Bangalore</p>
+                                <p><i class="fas fa-calendar"></i> Today, 2:00 PM</p>
+                            </div>
+                            <div class="booking-status">
+                                <span class="status-badge status-confirmed">Confirmed</span>
+                                <span class="booking-amount">₹2,500</span>
+                            </div>
+                        </div>
+                        <div class="booking-item">
+                            <div class="booking-info">
+                                <h4>Energy Audit</h4>
+                                <p><i class="fas fa-map-marker-alt"></i> Indiranagar, Bangalore</p>
+                                <p><i class="fas fa-calendar"></i> Yesterday, 10:00 AM</p>
+                            </div>
+                            <div class="booking-status">
+                                <span class="status-badge status-completed">Completed</span>
+                                <span class="booking-amount">₹1,800</span>
+                            </div>
+                        </div>
+                        <div class="booking-item">
+                            <div class="booking-info">
+                                <h4>Waste Management</h4>
+                                <p><i class="fas fa-map-marker-alt"></i> Jayanagar, Bangalore</p>
+                                <p><i class="fas fa-calendar"></i> Tomorrow, 9:00 AM</p>
+                            </div>
+                            <div class="booking-status">
+                                <span class="status-badge status-pending">Pending</span>
+                                <span class="booking-amount">₹1,200</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-card">
+                    <h3>Quick Actions</h3>
+                    <div class="action-buttons">
+                        <button class="btn btn-primary">
+                            <i class="fas fa-plus"></i> New Service
+                        </button>
+                        <button class="btn btn-outline">
+                            <i class="fas fa-edit"></i> Edit Profile
+                        </button>
+                        <button class="btn btn-outline">
+                            <i class="fas fa-chart-line"></i> View Analytics
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        // Initialize worker dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            initWorkerStatus();
+            initAvatarUpload();
+            loadWorkerData();
+        });
+
+        // Load worker data from localStorage
+        function loadWorkerData() {
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            if (user.first_name) {
+                document.getElementById('workerName').textContent = `${user.first_name} ${user.last_name || ''}`;
+            }
+            if (user.skills && user.skills.length > 0) {
+                document.getElementById('workerRole').textContent = user.skills.join(', ');
+            }
+        }
+
+        // Avatar upload functionality
+        function initAvatarUpload() {
+            const avatarInput = document.getElementById('avatarInput');
+            const workerAvatar = document.getElementById('workerAvatar');
+            
+            avatarInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        workerAvatar.src = e.target.result;
+                        // Save to backend
+                        saveAvatarToBackend(e.target.result);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        // Save avatar to backend
+        function saveAvatarToBackend(avatarData) {
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            const token = localStorage.getItem('token');
+            
+            fetch('https://greenserve-platform.onrender.com/api/auth/profile', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    profile_picture: avatarData
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast('Avatar updated successfully', 'success');
+                }
+            })
+            .catch(error => {
+                showToast('Failed to update avatar', 'error');
+            });
+        }
+    </script>
+</body>
+</html>
