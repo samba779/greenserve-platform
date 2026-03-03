@@ -10,7 +10,88 @@ document.addEventListener('DOMContentLoaded', function() {
     initWorkerStatus();
     initBookingFlow();
     initEmailValidation();
+    checkAuthStatus();
 });
+
+// Check authentication status on page load
+function checkAuthStatus() {
+    const token = localStorage.getItem('token');
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    
+    // Update navigation based on auth status
+    const userMenu = document.getElementById('userMenu');
+    const authButtons = document.getElementById('authButtons');
+    const userName = document.getElementById('userName');
+    
+    if (token && user._id) {
+        // User is logged in
+        if (userMenu) userMenu.style.display = 'flex';
+        if (authButtons) authButtons.style.display = 'none';
+        if (userName) userName.textContent = `${user.first_name} ${user.last_name || ''}`;
+    } else {
+        // User is not logged in
+        if (userMenu) userMenu.style.display = 'none';
+        if (authButtons) authButtons.style.display = 'flex';
+    }
+}
+
+// Google Sign-In Handler
+function handleGoogleSignIn() {
+    console.log('🔍 Google Sign-In initiated');
+    
+    // Check if Google API is loaded
+    if (typeof google !== 'undefined' && google.accounts) {
+        google.accounts.id.initialize({
+            client_id: '203912734078-ajteh37er9cbpd0uc9b2neck0osdi57m.apps.googleusercontent.com',
+            callback: handleGoogleCallback
+        });
+        
+        google.accounts.id.prompt();
+    } else {
+        showToast('Google Sign-In not available. Please try again.', 'error');
+    }
+}
+
+// Google Callback Handler
+function handleGoogleCallback(response) {
+    console.log('🔍 Google callback received:', response);
+    
+    if (response.credential) {
+        // Send to backend for verification
+        fetch('https://greenserve-platform.onrender.com/api/auth/google', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                token: response.credential
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log('✅ Google auth result:', data);
+            
+            if (data.success) {
+                // Store user data
+                localStorage.setItem('token', data.data.token);
+                localStorage.setItem('user', JSON.stringify(data.data.user));
+                
+                showToast('Google Sign-In successful!', 'success');
+                
+                // Redirect to services page instead of index
+                setTimeout(() => {
+                    window.location.href = 'services.html';
+                }, 1000);
+            } else {
+                showToast(data.message || 'Google Sign-In failed', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('💥 Google auth error:', error);
+            showToast('Google Sign-In failed. Please try again.', 'error');
+        });
+    }
+}
 
 // Mobile Menu Toggle
 function initMobileMenu() {
@@ -489,3 +570,8 @@ window.openModal = openModal;
 window.closeModal = closeModal;
 window.formatCurrency = formatCurrency;
 window.calculateTotal = calculateTotal;
+window.togglePassword = togglePassword;
+window.validateEmail = validateEmail;
+window.detectLocation = detectLocation;
+window.handleGoogleSignIn = handleGoogleSignIn;
+window.handleGoogleCallback = handleGoogleCallback;
