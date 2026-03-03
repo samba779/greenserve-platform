@@ -25,7 +25,11 @@ const PORT = process.env.PORT || 5000;
 // Security middleware
 app.use(helmet());
 app.use(cors({
-  origin: process.env.FRONTEND_URL || '*',
+  origin: [
+    process.env.FRONTEND_URL,
+    'https://greenserve-platform.vercel.app',
+    'https://greenserve-platform-e9f85nq3s-samba779s-projects.vercel.app'
+  ].filter(Boolean),
   credentials: true
 }));
 
