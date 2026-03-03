@@ -5,7 +5,9 @@ const User = require('../models/User');
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  callbackURL: `${process.env.BACKEND_URL}/api/auth/google/callback`,
+  callbackURL: process.env.BACKEND_URL 
+    ? `${process.env.BACKEND_URL}/api/auth/google/callback` 
+    : 'https://greenserve-platform.onrender.com/api/auth/google/callback',
   scope: ['profile', 'email']
 },
 async (accessToken, refreshToken, profile, done) => {
