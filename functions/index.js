@@ -3,70 +3,83 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-const session = require('express-session');
-const passport = require('passport');
+const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 
-// Initialize Express app
+// Initialize Express
 const app = express();
 
-// Security middleware
+// Middleware
 app.use(helmet());
-app.use(cors({
-  origin: true,
-  credentials: true
-}));
-
-// Rate limiting
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100
-});
-app.use(limiter);
-
-// Body parsing
+app.use(cors({ origin: true, credentials: true }));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-// Session for Passport (Firebase handles sessions)
-app.use(session({
-  secret: process.env.SESSION_SECRET || 'firebase-secret-key',
-  resave: false,
-  saveUninitialized: false
-}));
+// Rate limiting
+const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100 });
+app.use(limiter);
 
-// Initialize Passport
-app.use(passport.initialize());
-app.use(passport.session());
+// MongoDB Connection
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.MONGODB_URI);
+    console.log('MongoDB Connected');
+  } catch (error) {
+    console.error('MongoDB Error:', error.message);
+  }
+};
+connectDB();
 
-// Health check
+// User Schema
+const userSchema = new mongoose.Schema({
+  googleId: { type: String, sparse: true, unique: true },
+  first_name: { type: String, required: true },
+  last_name: { type: String },
+  email: { type: String, unique: true, sparse: true, lowercase: true },
+  mobile: { type: String, unique: true, sparse: true },
+  password: { type: String },
+  is_verified: { type: Boolean, default: false },
+  profile_picture: { type: String }
+}, { timestamps: true });
+
+const User = mongoose.model('User', userSchema);
+
+// Health Check
 app.get('/api/health', (req, res) => {
-  res.json({
-    success: true,
-    message: 'GreenServe API is running on Firebase',
-    timestamp: new Date().toISOString(),
-    version: '1.0.0'
-  });
+  res.json({ success: true, message: 'GreenServe API on Firebase', timestamp: new Date().toISOString() });
 });
 
-// Import and use your routes here
-// TODO: Add your auth routes, service routes, etc.
-
-// 404 handler
-app.use((req, res) => {
-  res.status(404).json({
-    success: false,
-    message: 'Route not found'
-  });
+// Register
+app.post('/api/auth/register', async (req, res) => {
+  try {
+    const { first_name, last_name, email, mobile, password } = req.body;
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = new User({ first_name, last_name, email, mobile, password: hashedPassword });
+    await user.save();
+    res.status(201).json({ success: true, message: 'User registered', data: { userId: user._id } });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
 });
 
-// Error handler
-app.use((err, req, res, next) => {
-  console.error('Error:', err);
-  res.status(500).json({
-    success: false,
-    message: 'Internal server error'
-  });
+// Login
+app.post('/api/auth/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+    if (!user || !await bcrypt.compare(password, user.password)) {
+      return res.status(401).json({ success: false, message: 'Invalid credentials' });
+    }
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+    res.json({ success: true, token, user });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
 });
 
-// Export as Firebase Function
+// 404 Handler
+app.use((req, res) => res.status(404).json({ success: false, message: 'Route not found' }));
+
+// Export
 exports.api = functions.https.onRequest(app);
