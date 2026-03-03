@@ -134,6 +134,8 @@ function handleFormSubmit(e) {
         apiUrl = 'https://greenserve-platform.onrender.com/api/auth/login';
     } else if (formId === 'otpForm') {
         apiUrl = 'https://greenserve-platform.onrender.com/api/auth/verify-otp';
+    } else if (formId === 'bookingForm') {
+        apiUrl = 'https://greenserve-platform.onrender.com/api/bookings';
     }
     
     console.log('🌐 API URL:', apiUrl);
@@ -168,6 +170,11 @@ function handleFormSubmit(e) {
                         localStorage.setItem('user', JSON.stringify(result.data.user));
                     }
                     window.location.href = 'services.html';
+                } else if (formId === 'bookingForm') {
+                    if (result.data && result.data._id) {
+                        localStorage.setItem('lastBooking', JSON.stringify(result.data));
+                    }
+                    window.location.href = 'bookings.html';
                 } else if (formId === 'otpForm') {
                     // Store token and redirect
                     if (result.data.token) {

@@ -280,5 +280,49 @@
     </footer>
 
     <script src="js/app.js"></script>
+    <script>
+        const services = {
+            solar: { title: 'Solar Panel Installation', icon: 'fa-solar-panel', description: 'Professional solar panel installation for residential and commercial properties', features: ['Free site assessment','High-quality panels with 25-year warranty','Professional installation','Inverter included','Post-installation support'], pricing: [{size:'3 kW',label:'Residential',price:'₹1,50,000',value:150000},{size:'5 kW',label:'Popular',price:'₹2,25,000',value:225000},{size:'10 kW',label:'Commercial',price:'₹4,00,000',value:400000}] },
+            energy: { title: 'Energy Audit', icon: 'fa-bolt', description: 'Professional energy efficiency assessments', features: ['Complete energy assessment','Detailed audit report','Recommendations','ROI analysis','Follow-up support'], pricing: [{size:'Basic',label:'1 BHK',price:'₹5,000',value:5000},{size:'Standard',label:'2-3 BHK',price:'₹8,000',value:8000},{size:'Premium',label:'Villa/Office',price:'₹15,000',value:15000}] },
+            gardening: { title: 'Gardening & Landscaping', icon: 'fa-seedling', description: 'Professional gardening and plant care services', features: ['Garden design','Plant care','Lawn maintenance','Seasonal planting','Pest control'], pricing: [{size:'Basic',label:'Small Garden',price:'₹2,000',value:2000},{size:'Standard',label:'Medium Garden',price:'₹4,000',value:4000},{size:'Premium',label:'Large Garden',price:'₹8,000',value:8000}] },
+            waste: { title: 'Waste Management', icon: 'fa-recycle', description: 'Waste collection and recycling solutions', features: ['Waste collection','Segregation','Recycling','Disposal','Monthly service'], pricing: [{size:'Basic',label:'Monthly',price:'₹1,500',value:1500},{size:'Standard',label:'Weekly',price:'₹4,000',value:4000},{size:'Premium',label:'Daily',price:'₹10,000',value:10000}] },
+            biogas: { title: 'Bio-Gas Services', icon: 'fa-fire', description: 'Biogas plant installation and maintenance', features: ['Plant installation','Pipeline setup','Maintenance','Training','Annual service'], pricing: [{size:'Small',label:'Household',price:'₹45,000',value:45000},{size:'Medium',label:'Community',price:'₹1,20,000',value:120000},{size:'Large',label:'Commercial',price:'₹3,00,000',value:300000}] },
+            water: { title: 'Water Conservation', icon: 'fa-tint', description: 'Rainwater harvesting and conservation systems', features: ['System design','Installation','Filtration setup','Maintenance','Water audit'], pricing: [{size:'Basic',label:'Small',price:'₹25,000',value:25000},{size:'Standard',label:'Medium',price:'₹50,000',value:50000},{size:'Premium',label:'Large',price:'₹1,00,000',value:100000}] },
+            ev: { title: 'EV Charging Support', icon: 'fa-charging-station', description: 'EV charging station installation and maintenance', features: ['Station installation','Wiring setup','App integration','Maintenance','24/7 support'], pricing: [{size:'Basic',label:'Home 7kW',price:'₹35,000',value:35000},{size:'Standard',label:'Fast 22kW',price:'₹75,000',value:75000},{size:'Premium',label:'DC 50kW',price:'₹2,50,000',value:250000}] },
+            maintenance: { title: 'Green Maintenance', icon: 'fa-tools', description: 'Eco-friendly maintenance and repair services', features: ['Preventive maintenance','Eco-friendly products','Certified technicians','Same day service','Warranty'], pricing: [{size:'Basic',label:'Single Visit',price:'₹1,500',value:1500},{size:'Standard',label:'Monthly AMC',price:'₹5,000',value:5000},{size:'Premium',label:'Annual AMC',price:'₹15,000',value:15000}] }
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const serviceId = urlParams.get('id') || 'solar';
+            const service = services[serviceId] || services.solar;
+
+            document.title = service.title + ' - GreenServe';
+            document.querySelector('.service-detail-header h1').textContent = service.title;
+            document.querySelector('.service-detail-header p').textContent = service.description;
+            document.querySelector('.service-detail-header i').className = 'fas ' + service.icon;
+
+            const featuresList = document.querySelector('.service-features');
+            if(featuresList) {
+                featuresList.innerHTML = service.features.map(f => '<li style="display:flex;align-items:center;gap:0.75rem;"><i class="fas fa-check-circle" style="color:var(--primary);"></i><span>' + f + '</span></li>').join('');
+            }
+
+            const select = document.getElementById('capacity');
+            if(select) {
+                select.innerHTML = '<option value="">Choose option</option>' + service.pricing.map(p => '<option value="' + p.value + '">' + p.size + ' - ' + p.price + '</option>').join('');
+                
+                select.addEventListener('change', function() {
+                    const val = parseInt(this.value) || 0;
+                    const charge = Math.round(val * 0.10);
+                    const tax = Math.round(val * 0.18);
+                    const total = val + charge + tax;
+                    document.getElementById('service-charge').textContent = '₹' + charge.toLocaleString('en-IN');
+                    document.getElementById('tax').textContent = '₹' + tax.toLocaleString('en-IN');
+                    document.getElementById('total-amount').textContent = '₹' + total.toLocaleString('en-IN');
+                });
+                select.dispatchEvent(new Event('change'));
+            }
+        });
+    </script>
 </body>
 </html>
