@@ -5,6 +5,7 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const session = require('express-session');
 const passport = require('passport');
+const MongoStore = require('connect-mongo');
 
 const { connectDB } = require('./config/database');
 require('./config/passport');
@@ -21,6 +22,9 @@ const adminRoutes = require('./routes/adminRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+// Trust proxy for production deployment
+app.set('trust proxy', 1);
 
 // Security middleware
 app.use(helmet());
@@ -49,6 +53,11 @@ app.use(session({
   secret: process.env.SESSION_SECRET || 'fallback-secret-change-this',
   resave: false,
   saveUninitialized: false,
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGODB_URI,
+    collectionName: 'sessions',
+    ttl: 24 * 60 * 60 // 24 hours
+  }),
   cookie: { 
     secure: true,
     sameSite: 'none',
