@@ -921,13 +921,42 @@ body {
     text-align: center;
     font-size: 1.5rem;
     font-weight: 600;
-    border: 2px solid var(--gray-200);
+    border: 2px solid var(--gray-300);
     border-radius: var(--radius);
+    transition: all 0.2s ease;
 }
 
 .otp-input:focus {
-    outline: none;
     border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    outline: none;
+}
+
+.otp-input.filled {
+    border-color: var(--primary);
+    background: var(--primary-light);
+}
+
+.otp-timer {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    padding: 0.75rem;
+    background: var(--gray-100);
+    border-radius: var(--radius);
+    font-size: 0.875rem;
+    color: var(--gray-600);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.otp-timer i {
+    color: var(--primary);
+}
+
+#timerText {
+    font-weight: 500;
 }
 
 /* Page Header */

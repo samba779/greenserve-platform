@@ -28,12 +28,17 @@
 
         <form id="otpForm" data-submit="true" data-redirect="index.html">
             <div class="otp-inputs">
-                <input type="text" class="otp-input" maxlength="1" required>
-                <input type="text" class="otp-input" maxlength="1" required>
-                <input type="text" class="otp-input" maxlength="1" required>
-                <input type="text" class="otp-input" maxlength="1" required>
-                <input type="text" class="otp-input" maxlength="1" required>
-                <input type="text" class="otp-input" maxlength="1" required>
+                <input type="text" class="otp-input" maxlength="1" autocomplete="one-time-code" required>
+                <input type="text" class="otp-input" maxlength="1" autocomplete="one-time-code" required>
+                <input type="text" class="otp-input" maxlength="1" autocomplete="one-time-code" required>
+                <input type="text" class="otp-input" maxlength="1" autocomplete="one-time-code" required>
+                <input type="text" class="otp-input" maxlength="1" autocomplete="one-time-code" required>
+                <input type="text" class="otp-input" maxlength="1" autocomplete="one-time-code" required>
+            </div>
+
+            <div class="otp-timer" id="otpTimer">
+                <i class="fas fa-clock"></i>
+                <span id="timerText">Resend code in 60s</span>
             </div>
 
             <button type="submit" class="btn btn-primary btn-full" data-original-text="Verify">
@@ -42,7 +47,9 @@
         </form>
 
         <div class="form-footer">
-            Didn't receive the code? <a href="#" onclick="resendOTP()">Resend</a>
+            Didn't receive the code? 
+            <a href="#" id="resendLink" onclick="resendOTP()" style="display: none;">Resend</a>
+            <span id="resendTimer">Please wait...</span>
         </div>
 
         <div class="form-footer" style="margin-top: 0.5rem; font-size: 0.75rem;">
@@ -59,35 +66,152 @@
         if (mobile) {
             const mobileText = document.querySelector('.form-header p');
             if (mobileText) {
-                mobileText.textContent = `Enter the 6-digit code sent to ${mobile}`;
+                mobileText.textContent = `Enter  6-digit code sent to ${mobile}`;
             }
         }
         
-        function resendOTP() {
-            if (mobile) {
-                // Call backend to resend OTP
-                fetch('/api/auth/resend-otp', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ mobile: mobile })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        showToast('OTP resent successfully', 'success');
-                    } else {
-                        showToast('Failed to resend OTP', 'error');
+        let countdown = 60;
+        let timerInterval;
+        let resendAttempts = 0;
+        const maxResendAttempts = 3;
+        
+        // Countdown timer
+        function startCountdown() {
+            const resendLink = document.getElementById('resendLink');
+            const resendTimer = document.getElementById('resendTimer');
+            const timerText = document.getElementById('timerText');
+            
+            countdown = 60;
+            resendLink.style.display = 'none';
+            resendTimer.style.display = 'inline';
+            
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                countdown--;
+                
+                if (timerText) {
+                    timerText.textContent = `Resend code in ${countdown}s`;
+                }
+                
+                if (countdown <= 0) {
+                    clearInterval(timerInterval);
+                    resendLink.style.display = 'inline';
+                    resendTimer.style.display = 'none';
+                    if (timerText) {
+                        timerText.textContent = 'You can now resend the code';
                     }
-                })
-                .catch(error => {
-                    showToast('Error resending OTP', 'error');
-                });
-            } else {
-                showToast('Mobile number not found', 'error');
+                }
+            }, 1000);
+        }
+        
+        // Auto-detect OTP from SMS (Android only)
+        function detectOTPFromSMS() {
+            if ('sms' in navigator && 'getMessages' in navigator.sms) {
+                navigator.sms.getMessages()
+                    .then(messages => {
+                        const recentMessage = messages.find(msg => 
+                            msg.message && msg.message.includes('GreenServe OTP')
+                        );
+                        
+                        if (recentMessage) {
+                            const otpMatch = recentMessage.message.match(/\d{6}/);
+                            if (otpMatch) {
+                                fillOTP(otpMatch[0]);
+                            }
+                        }
+                    })
+                    .catch(err => console.log('SMS detection not available'));
             }
         }
+        
+        // Auto-fill OTP
+        function fillOTP(otp) {
+            const inputs = document.querySelectorAll('.otp-input');
+            for (let i = 0; i < 6; i++) {
+                if (i < otp.length) {
+                    inputs[i].value = otp[i];
+                }
+            }
+            
+            // Auto-submit after filling
+            setTimeout(() => {
+                const form = document.getElementById('otpForm');
+                if (form) form.submit();
+            }, 500);
+        }
+        
+        // Enhanced resend OTP
+        function resendOTP() {
+            if (countdown > 0) {
+                showToast('Please wait before requesting new code', 'warning');
+                return;
+            }
+            
+            if (resendAttempts >= maxResendAttempts) {
+                showToast('Maximum resend attempts reached. Please try again later', 'error');
+                return;
+            }
+            
+            if (!mobile) {
+                showToast('Mobile number not found', 'error');
+                return;
+            }
+            
+            resendAttempts++;
+            
+            // Call backend to resend OTP
+            fetch('https://greenserve-platform.onrender.com/api/auth/resend-otp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ mobile: mobile })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast('OTP resent successfully', 'success');
+                    startCountdown(); // Restart countdown
+                    detectOTPFromSMS(); // Try to detect new OTP
+                } else {
+                    showToast('Failed to resend OTP', 'error');
+                }
+            })
+            .catch(error => {
+                showToast('Error resending OTP', 'error');
+            });
+        }
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            startCountdown();
+            detectOTPFromSMS();
+            
+            // Add real-time validation
+            const inputs = document.querySelectorAll('.otp-input');
+            inputs.forEach((input, index) => {
+                input.addEventListener('input', (e) => {
+                    if (e.target.value.length === 1 && index < inputs.length - 1) {
+                        inputs[index + 1].focus();
+                    }
+                    
+                    // Auto-submit when all 6 digits are entered
+                    const allFilled = Array.from(inputs).every(inp => inp.value.length === 1);
+                    if (allFilled) {
+                        const form = document.getElementById('otpForm');
+                        if (form) {
+                            setTimeout(() => form.submit(), 300);
+                        }
+                    }
+                });
+                
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Backspace' && index > 0 && !e.target.value) {
+                        inputs[index - 1].focus();
+                    }
+                });
+            });
+        });
     </script>
 </body>
 </html>

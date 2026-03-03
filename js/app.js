@@ -77,20 +77,86 @@ function handleFormSubmit(e) {
         submitBtn.innerHTML = '<span class="spinner"></span>';
     }
     
-    // Simulate form submission
-    setTimeout(() => {
-        showToast('Success!', 'success');
-        if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = submitBtn.dataset.originalText || 'Submit';
-        }
-        
-        // Redirect if specified
-        const redirect = form.dataset.redirect;
-        if (redirect) {
-            window.location.href = redirect;
-        }
-    }, 1500);
+    // Get form data
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+    
+    // Submit to backend
+    const formId = form.id;
+    let apiUrl = '';
+    
+    if (formId === 'registerForm') {
+        apiUrl = 'https://greenserve-platform.onrender.com/api/auth/register';
+    } else if (formId === 'loginForm') {
+        apiUrl = 'https://greenserve-platform.onrender.com/api/auth/login';
+    } else if (formId === 'otpForm') {
+        apiUrl = 'https://greenserve-platform.onrender.com/api/auth/verify-otp';
+    }
+    
+    if (apiUrl) {
+        fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.success) {
+                showToast(result.message, 'success');
+                
+                // Handle different form types
+                if (formId === 'registerForm') {
+                    // Redirect to OTP verification with mobile number
+                    const mobile = data.mobile;
+                    window.location.href = `otp-verify.html?mobile=${encodeURIComponent(mobile)}`;
+                } else if (formId === 'otpForm') {
+                    // Store token and redirect
+                    if (result.data.token) {
+                        localStorage.setItem('token', result.data.token);
+                        localStorage.setItem('user', JSON.stringify(result.data.user));
+                    }
+                    const redirect = form.dataset.redirect;
+                    if (redirect) {
+                        window.location.href = redirect;
+                    }
+                } else {
+                    // Other forms
+                    const redirect = form.dataset.redirect;
+                    if (redirect) {
+                        window.location.href = redirect;
+                    }
+                }
+            } else {
+                showToast(result.message, 'error');
+            }
+        })
+        .catch(error => {
+            showToast('Submission failed. Please try again.', 'error');
+        })
+        .finally(() => {
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = submitBtn.dataset.originalText || 'Submit';
+            }
+        });
+    } else {
+        // Fallback for forms without API
+        setTimeout(() => {
+            showToast('Success!', 'success');
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = submitBtn.dataset.originalText || 'Submit';
+            }
+            
+            // Redirect if specified
+            const redirect = form.dataset.redirect;
+            if (redirect) {
+                window.location.href = redirect;
+            }
+        }, 1500);
+    }
 }
 
 // Tabs
