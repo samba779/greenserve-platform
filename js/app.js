@@ -556,6 +556,73 @@ function calculateTotal() {
     return total;
 }
 
+// Password Toggle Function
+function togglePassword(inputId) {
+    const passwordInput = document.getElementById(inputId);
+    const passwordIcon = document.getElementById(inputId + 'Icon');
+    
+    console.log('🔍 Toggling password for:', inputId);
+    console.log('🔍 Password input:', passwordInput);
+    console.log('🔍 Password icon:', passwordIcon);
+    
+    if (!passwordInput) {
+        console.error('❌ Password input not found:', inputId);
+        return;
+    }
+    
+    if (!passwordIcon) {
+        console.error('❌ Password icon not found:', inputId + 'Icon');
+        return;
+    }
+    
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        passwordIcon.classList.remove('fa-eye');
+        passwordIcon.classList.add('fa-eye-slash');
+        console.log('✅ Password shown');
+    } else {
+        passwordInput.type = 'password';
+        passwordIcon.classList.remove('fa-eye-slash');
+        passwordIcon.classList.add('fa-eye');
+        console.log('✅ Password hidden');
+    }
+}
+
+// Email Validation Function
+function validateEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+}
+
+// Location Detection Function
+function detectLocation(inputId) {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            async (position) => {
+                const { latitude, longitude } = position.coords;
+                
+                // Use reverse geocoding API to get address
+                try {
+                    const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
+                    const data = await response.json();
+                    
+                    if (data.display_name) {
+                        document.getElementById(inputId).value = data.display_name;
+                        showToast('Location detected successfully', 'success');
+                    }
+                } catch (error) {
+                    showToast('Failed to get address from location', 'error');
+                }
+            },
+            (error) => {
+                showToast('Location access denied. Please enter address manually.', 'error');
+            }
+        );
+    } else {
+        showToast('Geolocation is not supported by your browser', 'error');
+    }
+}
+
 // Export functions for global access
 window.showToast = showToast;
 window.cancelBooking = cancelBooking;
