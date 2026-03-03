@@ -133,18 +133,18 @@ const registerWorker = async (req, res) => {
       email: email || null,
       mobile: mobile,
       password: hashedPassword,
-      city: city,
+      city: city || null,
       address: address || null,
-      years_of_experience: yearsOfExperience || 0,
+      years_of_experience: yearsOfExperience,
+      skills: skills || [],
       otp_code: otp,
-      otp_expires_at: otpExpiresAt,
-      services: skills || []
+      otp_expires_at: otpExpiresAt
     });
 
     await worker.save();
 
-    // Log OTP for development (in production, send via SMS)
-    console.log(`🔔 OTP for ${mobile}: ${otp}`);
+    // Send OTP via SMS
+    const smsSent = await sendOTPviaSMS(mobile, otp);
 
     res.status(201).json({
       success: true,
@@ -152,14 +152,14 @@ const registerWorker = async (req, res) => {
       data: {
         workerId: worker._id,
         mobile,
-        otp: process.env.NODE_ENV === 'development' ? otp : undefined
+        otp: smsSent ? null : otp // Show OTP only if SMS failed
       }
     });
   } catch (error) {
     console.error('Worker registration error:', error);
     res.status(500).json({
       success: false,
-      message: 'Registration failed. Please try again.'
+      message: 'Worker registration failed. Please try again.'
     });
   }
 };
@@ -275,28 +275,29 @@ const login = async (req, res) => {
     const user = await Model.findOne({ mobile: mobile });
 
     if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+
+    if (!user.is_verified) {
+      return res.status(401).json({
+        success: false,
+        message: 'Please verify your mobile number first'
+      });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
       return res.status(401).json({
         success: false,
         message: 'Invalid credentials'
       });
     }
 
-    if (userType === 'worker' && !user.is_active) {
-      return res.status(401).json({
-        success: false,
-        message: 'Account is deactivated. Please contact support.'
-      });
-    }
-
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-
-    if (!isPasswordValid) {
-      return res.status(401).json({
-        success: false,
-        message: 'Invalid credentials'
-      });
-    }
-
+    // Generate JWT token
     const token = generateToken(user._id, userType);
 
     res.json({
@@ -309,8 +310,7 @@ const login = async (req, res) => {
           firstName: user.first_name,
           lastName: user.last_name,
           email: user.email,
-          mobile: user.mobile,
-          isVerified: user.is_verified
+          mobile: user.mobile
         }
       }
     });
@@ -326,10 +326,9 @@ const login = async (req, res) => {
 // Get Profile
 const getProfile = async (req, res) => {
   try {
-    const { id, role } = req.user;
-    const Model = role === 'worker' ? Worker : User;
-    
-    const user = await Model.findById(id);
+    const { userType = 'user' } = req.query;
+    const Model = userType === 'worker' ? Worker : User;
+    const user = await Model.findById(req.user.id);
 
     if (!user) {
       return res.status(404).json({
@@ -338,41 +337,27 @@ const getProfile = async (req, res) => {
       });
     }
 
-    const userData = {
-      id: user._id,
-      firstName: user.first_name,
-      lastName: user.last_name,
-      email: user.email,
-      mobile: user.mobile,
-      address: user.address,
-      city: user.city,
-      pincode: user.pincode,
-      location: user.location,
-      createdAt: user.created_at
-    };
-
-    if (role === 'worker') {
-      userData.yearsOfExperience = user.years_of_experience;
-      userData.rating = user.rating;
-      userData.totalReviews = user.total_reviews;
-      userData.totalEarnings = user.total_earnings;
-      userData.availableBalance = user.available_balance;
-      userData.isOnline = user.is_online;
-      userData.isActive = user.is_active;
-      userData.skills = user.services;
-    } else {
-      userData.isVerified = user.is_verified;
-    }
-
     res.json({
       success: true,
-      data: userData
+      data: {
+        user: {
+          id: user._id,
+          firstName: user.first_name,
+          lastName: user.last_name,
+          email: user.email,
+          mobile: user.mobile,
+          address: user.address,
+          city: user.city,
+          is_verified: user.is_verified,
+          created_at: user.created_at
+        }
+      }
     });
   } catch (error) {
     console.error('Get profile error:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to fetch profile'
+      message: 'Failed to get profile'
     });
   }
 };
@@ -380,24 +365,38 @@ const getProfile = async (req, res) => {
 // Update Profile
 const updateProfile = async (req, res) => {
   try {
-    const { id, role } = req.user;
-    const { firstName, lastName, email, address, city, pincode } = req.body;
-    
-    const Model = role === 'worker' ? Worker : User;
-    
+    const { userType = 'user' } = req.query;
+    const Model = userType === 'worker' ? Worker : User;
+    const user = await Model.findById(req.user.id);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+
+    const { firstName, lastName, email, address, city } = req.body;
     const updateData = {};
+
     if (firstName) updateData.first_name = firstName;
     if (lastName) updateData.last_name = lastName;
     if (email) updateData.email = email;
     if (address) updateData.address = address;
     if (city) updateData.city = city;
-    if (pincode) updateData.pincode = pincode;
 
-    await Model.findByIdAndUpdate(id, updateData);
+    const updatedUser = await Model.findByIdAndUpdate(
+      req.user.id,
+      updateData,
+      { new: true }
+    );
 
     res.json({
       success: true,
-      message: 'Profile updated successfully'
+      message: 'Profile updated successfully',
+      data: {
+        user: updatedUser
+      }
     });
   } catch (error) {
     console.error('Update profile error:', error);
@@ -411,18 +410,34 @@ const updateProfile = async (req, res) => {
 // Update Location
 const updateLocation = async (req, res) => {
   try {
-    const { id, role } = req.user;
+    const { userType = 'user' } = req.query;
+    const Model = userType === 'worker' ? Worker : User;
+    const user = await Model.findById(req.user.id);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+
     const { latitude, longitude } = req.body;
-    
-    const Model = role === 'worker' ? Worker : User;
-    
-    await Model.findByIdAndUpdate(id, {
-      location: { latitude, longitude }
-    });
+
+    const updatedUser = await Model.findByIdAndUpdate(
+      req.user.id,
+      { 
+        latitude: parseFloat(latitude),
+        longitude: parseFloat(longitude)
+      },
+      { new: true }
+    );
 
     res.json({
       success: true,
-      message: 'Location updated successfully'
+      message: 'Location updated successfully',
+      data: {
+        user: updatedUser
+      }
     });
   } catch (error) {
     console.error('Update location error:', error);
