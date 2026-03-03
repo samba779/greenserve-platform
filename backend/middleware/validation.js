@@ -27,9 +27,7 @@ const userRegistrationSchema = Joi.object({
     'string.pattern.base': 'Mobile number must be exactly 10 digits'
   }),
   password: Joi.string().min(8).required(),
-  confirmPassword: Joi.string().valid(Joi.ref('password')).required().messages({
-    'any.only': 'Passwords must match'
-  }),
+  confirmPassword: Joi.string().optional(), // Allow but don't validate
   address: Joi.string().optional(),
   city: Joi.string().optional()
 });
