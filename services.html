@@ -19,12 +19,23 @@
             <ul class="nav-menu">
                 <li><a href="index.html" class="nav-link">Home</a></li>
                 <li><a href="services.html" class="nav-link active">Services</a></li>
+                <li><a href="workers.html" class="nav-link">Find Workers</a></li>
                 <li><a href="bookings.html" class="nav-link">My Bookings</a></li>
-                <li><a href="worker-portal.html" class="nav-link">Worker Portal</a></li>
             </ul>
             <div class="nav-auth">
-                <a href="login.html" class="btn btn-outline">Login</a>
-                <a href="register.html" class="btn btn-primary">Sign Up</a>
+                <div class="user-menu" id="userMenu" style="display: none;">
+                    <img src="https://picsum.photos/seed/user1/40/40.jpg" alt="User" class="user-avatar">
+                    <span class="user-name" id="userName">John Doe</span>
+                    <div class="user-dropdown">
+                        <a href="profile.html"><i class="fas fa-user"></i> Profile</a>
+                        <a href="bookings.html"><i class="fas fa-calendar"></i> My Bookings</a>
+                        <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                </div>
+                <div id="authButtons">
+                    <a href="login.html" class="btn btn-outline">Login</a>
+                    <a href="register.html" class="btn btn-primary">Sign Up</a>
+                </div>
             </div>
             <button class="mobile-menu-toggle" id="mobileMenuToggle">
                 <i class="fas fa-bars"></i>
@@ -209,5 +220,129 @@
     </footer>
 
     <script src="js/app.js"></script>
+    <script>
+        // Initialize services page
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuthStatus();
+            initServiceCards();
+        });
+
+        // Check authentication status
+        function checkAuthStatus() {
+            const token = localStorage.getItem('token');
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            
+            if (token && user._id) {
+                // User is logged in
+                document.getElementById('userMenu').style.display = 'flex';
+                document.getElementById('authButtons').style.display = 'none';
+                
+                // Update user name
+                if (user.first_name) {
+                    document.getElementById('userName').textContent = `${user.first_name} ${user.last_name || ''}`;
+                }
+            } else {
+                // User is not logged in
+                document.getElementById('userMenu').style.display = 'none';
+                document.getElementById('authButtons').style.display = 'flex';
+            }
+        }
+
+        // Initialize service cards with booking functionality
+        function initServiceCards() {
+            const serviceCards = document.querySelectorAll('.service-card');
+            
+            serviceCards.forEach(card => {
+                card.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const token = localStorage.getItem('token');
+                    if (!token) {
+                        // Redirect to login if not authenticated
+                        showToast('Please login to book a service', 'info');
+                        setTimeout(() => {
+                            window.location.href = `login.html?redirect=${encodeURIComponent(window.location.href)}`;
+                        }, 1000);
+                        return;
+                    }
+                    
+                    // Get service details
+                    const serviceId = this.getAttribute('href')?.split('?id=')[1] || 'unknown';
+                    bookService(serviceId);
+                });
+            });
+        }
+
+        // Book service
+        function bookService(serviceId) {
+            const token = localStorage.getItem('token');
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            
+            // Create booking data
+            const bookingData = {
+                serviceType: serviceId,
+                userId: user._id,
+                status: 'pending',
+                createdAt: new Date().toISOString()
+            };
+            
+            // Submit booking to backend
+            fetch('https://greenserve-platform.onrender.com/api/bookings', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(bookingData)
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    showToast('Service booked successfully! Redirecting to bookings...', 'success');
+                    
+                    // Redirect to bookings page after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = 'bookings.html';
+                    }, 2000);
+                } else {
+                    showToast(result.message || 'Booking failed', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Booking error:', error);
+                showToast('Booking failed. Please try again.', 'error');
+            });
+        }
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            showToast('Logged out successfully', 'success');
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1000);
+        }
+
+        // Initialize user menu dropdown
+        document.addEventListener('DOMContentLoaded', function() {
+            const userMenu = document.getElementById('userMenu');
+            const userDropdown = userMenu?.querySelector('.user-dropdown');
+            
+            if (userMenu && userDropdown) {
+                userMenu.addEventListener('click', function(e) {
+                    if (e.target.closest('.user-dropdown')) return;
+                    userDropdown.classList.toggle('active');
+                });
+                
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!userMenu.contains(e.target)) {
+                        userDropdown.classList.remove('active');
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>
