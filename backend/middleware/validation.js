@@ -2,6 +2,11 @@ const Joi = require('joi');
 
 const validate = (schema) => {
   return (req, res, next) => {
+    // Clean mobile number - remove spaces, dashes, etc.
+    if (req.body.mobile) {
+      req.body.mobile = req.body.mobile.replace(/[^0-9]/g, '');
+    }
+    
     const { error } = schema.validate(req.body);
     if (error) {
       return res.status(400).json({
@@ -19,7 +24,7 @@ const userRegistrationSchema = Joi.object({
   lastName: Joi.string().min(2).max(100).required(),
   email: Joi.string().email().optional(),
   mobile: Joi.string().pattern(/^[0-9]{10}$/).required().messages({
-    'string.pattern.base': 'Mobile number must be 10 digits'
+    'string.pattern.base': 'Mobile number must be 10 digits (without country code)'
   }),
   password: Joi.string().min(8).required(),
   address: Joi.string().optional(),
