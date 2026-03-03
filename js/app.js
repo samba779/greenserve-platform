@@ -44,6 +44,8 @@ function initGetStarted() {
 
 // Form Validation & Handling
 function initForms() {
+    console.log('🔧 Initializing forms...');
+    
     // OTP Auto-focus
     const otpInputs = document.querySelectorAll('.otp-input');
     otpInputs.forEach((input, index) => {
@@ -62,7 +64,10 @@ function initForms() {
     
     // Form submissions
     const forms = document.querySelectorAll('form[data-submit]');
-    forms.forEach(form => {
+    console.log(`📝 Found ${forms.length} forms with data-submit attribute`);
+    
+    forms.forEach((form, index) => {
+        console.log(`📋 Setting up form ${index + 1}: ${form.id}`);
         form.addEventListener('submit', handleFormSubmit);
     });
 }
@@ -72,6 +77,8 @@ function handleFormSubmit(e) {
     const form = e.target;
     const submitBtn = form.querySelector('[type="submit"]');
     
+    console.log('🔍 Form submission started:', form.id);
+    
     if (submitBtn) {
         submitBtn.disabled = true;
         submitBtn.innerHTML = '<span class="spinner"></span>';
@@ -80,6 +87,8 @@ function handleFormSubmit(e) {
     // Get form data
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries());
+    
+    console.log('📋 Form data:', data);
     
     // Submit to backend
     const formId = form.id;
@@ -93,6 +102,8 @@ function handleFormSubmit(e) {
         apiUrl = 'https://greenserve-platform.onrender.com/api/auth/verify-otp';
     }
     
+    console.log('🌐 API URL:', apiUrl);
+    
     if (apiUrl) {
         fetch(apiUrl, {
             method: 'POST',
@@ -101,8 +112,13 @@ function handleFormSubmit(e) {
             },
             body: JSON.stringify(data)
         })
-        .then(response => response.json())
+        .then(response => {
+            console.log('📡 Response status:', response.status);
+            return response.json();
+        })
         .then(result => {
+            console.log('✅ API result:', result);
+            
             if (result.success) {
                 showToast(result.message, 'success');
                 
@@ -110,6 +126,7 @@ function handleFormSubmit(e) {
                 if (formId === 'registerForm') {
                     // Redirect to OTP verification with mobile number
                     const mobile = data.mobile;
+                    console.log('📱 Redirecting to OTP with mobile:', mobile);
                     window.location.href = `otp-verify.html?mobile=${encodeURIComponent(mobile)}`;
                 } else if (formId === 'otpForm') {
                     // Store token and redirect
@@ -129,10 +146,12 @@ function handleFormSubmit(e) {
                     }
                 }
             } else {
+                console.error('❌ API error:', result.message);
                 showToast(result.message, 'error');
             }
         })
         .catch(error => {
+            console.error('💥 Network error:', error);
             showToast('Submission failed. Please try again.', 'error');
         })
         .finally(() => {
@@ -142,6 +161,7 @@ function handleFormSubmit(e) {
             }
         });
     } else {
+        console.log('⚠️ No API URL found, using fallback');
         // Fallback for forms without API
         setTimeout(() => {
             showToast('Success!', 'success');
