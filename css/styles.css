@@ -242,6 +242,25 @@ body {
     flex-wrap: wrap;
 }
 
+.auth-options {
+    display: none;
+    gap: 1rem;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .hero-stats {
     display: flex;
     gap: 2.5rem;
@@ -709,10 +728,18 @@ body {
     }
 }
 
+.nav-auth-mobile {
+    display: none;
+}
+
 @media (max-width: 768px) {
     .nav-menu,
     .nav-auth {
         display: none;
+    }
+    
+    .nav-auth-mobile {
+        display: block !important;
     }
     
     .mobile-menu-toggle {
@@ -729,6 +756,10 @@ body {
     }
     
     .hero-cta {
+        flex-direction: column;
+    }
+    
+    .auth-options {
         flex-direction: column;
     }
     

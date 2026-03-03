@@ -3,6 +3,7 @@
 // DOM Ready
 document.addEventListener('DOMContentLoaded', function() {
     initMobileMenu();
+    initGetStarted();
     initForms();
     initTabs();
     initRating();
@@ -18,6 +19,25 @@ function initMobileMenu() {
     if (mobileMenuToggle && navMenu) {
         mobileMenuToggle.addEventListener('click', () => {
             navMenu.classList.toggle('active');
+        });
+    }
+}
+
+// Get Started Button Toggle
+function initGetStarted() {
+    const getStartedBtn = document.getElementById('getStartedBtn');
+    const authOptions = document.getElementById('authOptions');
+    
+    if (getStartedBtn && authOptions) {
+        getStartedBtn.addEventListener('click', () => {
+            // Toggle auth options visibility
+            if (authOptions.style.display === 'none') {
+                authOptions.style.display = 'flex';
+                getStartedBtn.style.display = 'none';
+            } else {
+                authOptions.style.display = 'none';
+                getStartedBtn.style.display = 'block';
+            }
         });
     }
 }
