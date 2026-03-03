@@ -20,7 +20,9 @@ const {
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
 router.get('/google/callback', 
-  passport.authenticate('google', { failureRedirect: '/login.html?error=google_auth_failed' }),
+  passport.authenticate('google', { 
+    failureRedirect: `${process.env.FRONTEND_URL}/login.html?error=google_auth_failed` 
+  }),
   (req, res) => {
     // Generate JWT token for the authenticated user
     const token = jwt.sign(
