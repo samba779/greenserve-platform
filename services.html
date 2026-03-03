@@ -232,17 +232,26 @@
             const token = localStorage.getItem('token');
             const user = JSON.parse(localStorage.getItem('user') || '{}');
             
-            if (token && user._id) {
+            console.log('🔍 Auth Check - Token:', token ? 'exists' : 'missing');
+            console.log('🔍 Auth Check - User:', user);
+            console.log('🔍 Auth Check - User ID:', user._id || user.id || 'missing');
+            
+            // Check for multiple possible ID fields
+            const userId = user._id || user.id || user.userId;
+            
+            if (token && userId) {
                 // User is logged in
+                console.log('✅ User is logged in, showing user menu');
                 document.getElementById('userMenu').style.display = 'flex';
                 document.getElementById('authButtons').style.display = 'none';
                 
                 // Update user name
-                if (user.first_name) {
-                    document.getElementById('userName').textContent = `${user.first_name} ${user.last_name || ''}`;
-                }
+                const firstName = user.first_name || user.firstName || user.name || 'User';
+                const lastName = user.last_name || user.lastName || '';
+                document.getElementById('userName').textContent = lastName ? `${firstName} ${lastName}` : firstName;
             } else {
                 // User is not logged in
+                console.log('❌ User not logged in, showing auth buttons');
                 document.getElementById('userMenu').style.display = 'none';
                 document.getElementById('authButtons').style.display = 'flex';
             }
@@ -277,14 +286,30 @@
         function bookService(serviceId) {
             const token = localStorage.getItem('token');
             const user = JSON.parse(localStorage.getItem('user') || '{}');
+            const userId = user._id || user.id || user.userId;
+            
+            console.log('🔍 Booking Service - Token:', token ? 'exists' : 'missing');
+            console.log('🔍 Booking Service - User ID:', userId || 'missing');
+            console.log('🔍 Booking Service - Service ID:', serviceId);
+            
+            if (!token || !userId) {
+                console.log('❌ No token or user ID, redirecting to login');
+                showToast('Please login to book a service', 'info');
+                setTimeout(() => {
+                    window.location.href = `login.html?redirect=${encodeURIComponent(window.location.href)}`;
+                }, 1000);
+                return;
+            }
             
             // Create booking data
             const bookingData = {
                 serviceType: serviceId,
-                userId: user._id,
+                userId: userId,
                 status: 'pending',
                 createdAt: new Date().toISOString()
             };
+            
+            console.log('📋 Sending booking data:', bookingData);
             
             // Submit booking to backend
             fetch('https://greenserve-platform.onrender.com/api/bookings', {
@@ -297,6 +322,7 @@
             })
             .then(response => response.json())
             .then(result => {
+                console.log('✅ Booking result:', result);
                 if (result.success) {
                     showToast('Service booked successfully! Redirecting to bookings...', 'success');
                     
@@ -309,7 +335,7 @@
                 }
             })
             .catch(error => {
-                console.error('Booking error:', error);
+                console.error('💥 Booking error:', error);
                 showToast('Booking failed. Please try again.', 'error');
             });
         }
