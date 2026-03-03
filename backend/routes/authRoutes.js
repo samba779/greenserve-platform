@@ -11,6 +11,7 @@ const {
   verifyOTP,
   resendOTP,
   login,
+  forgotPassword,
   getProfile,
   updateProfile,
   updateLocation
@@ -60,6 +61,7 @@ router.post('/worker/register', validate(workerRegistrationSchema), registerWork
 router.post('/login', validate(loginSchema), login);
 router.post('/verify-otp', validate(otpSchema), verifyOTP);
 router.post('/resend-otp', resendOTP);
+router.post('/forgot-password', forgotPassword);
 
 // Protected routes
 router.get('/profile', authMiddleware, getProfile);
