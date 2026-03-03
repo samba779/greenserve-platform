@@ -2047,6 +2047,70 @@ body {
     margin-bottom: 1rem;
 }
 
+/* Password Input Container */
+.password-input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: var(--gray-500);
+    cursor: pointer;
+    padding: 0.5rem;
+    transition: var(--transition);
+}
+
+.password-toggle:hover {
+    color: var(--primary);
+}
+
+.password-input-container .form-input {
+    padding-right: 3rem;
+}
+
+/* Form Validation */
+.form-input:invalid {
+    border-color: var(--danger);
+}
+
+.form-input:valid {
+    border-color: var(--success);
+}
+
+/* Location Button */
+.location-btn {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--primary);
+    color: var(--white);
+    border: none;
+    padding: 0.5rem;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.location-btn:hover {
+    background: var(--primary-dark);
+}
+
+.location-input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.location-input-container .form-input {
+    padding-right: 3rem;
+}
+
 .chart-placeholder {
     height: 200px;
     background: var(--gray-100);

@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initRating();
     initWorkerStatus();
     initBookingFlow();
+    initEmailValidation();
 });
 
 // Mobile Menu Toggle
