@@ -594,6 +594,27 @@ function validateEmail(email) {
     return emailRegex.test(email);
 }
 
+// Enhanced Email Validation Initialization
+function initEmailValidation() {
+    const emailInputs = document.querySelectorAll('input[type="email"]');
+    
+    emailInputs.forEach(input => {
+        input.addEventListener('blur', function() {
+            const email = this.value;
+            if (email && !validateEmail(email)) {
+                this.setCustomValidity('Please enter a valid email address (e.g., name@gmail.com)');
+                this.reportValidity();
+            } else {
+                this.setCustomValidity('');
+            }
+        });
+        
+        input.addEventListener('input', function() {
+            this.setCustomValidity('');
+        });
+    });
+}
+
 // Location Detection Function
 function detectLocation(inputId) {
     if (navigator.geolocation) {
