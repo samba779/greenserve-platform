@@ -4,6 +4,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const session = require('express-session');
+const MongoStore = require('connect-mongo');
 const passport = require('passport');
 
 const { connectDB } = require('./config/database');
@@ -45,6 +46,10 @@ app.use(session({
   secret: process.env.SESSION_SECRET || 'fallback-secret-change-this',
   resave: false,
   saveUninitialized: false,
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGODB_URI || 'mongodb://localhost:27017/greenserve',
+    ttl: 24 * 60 * 60 // 24 hours
+  }),
   cookie: { 
     secure: true,
     sameSite: 'none',
