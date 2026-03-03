@@ -61,6 +61,28 @@ router.post('/login', validate(loginSchema), login);
 router.post('/verify-otp', validate(otpSchema), verifyOTP);
 router.post('/resend-otp', resendOTP);
 
+// Cleanup route for testing (remove in production)
+router.post('/cleanup-user', async (req, res) => {
+  try {
+    const { mobile, email } = req.body;
+    const User = require('../models/User');
+    
+    let query = {};
+    if (mobile) query.mobile = mobile;
+    if (email) query.email = email;
+    
+    const result = await User.deleteOne(query);
+    
+    if (result.deletedCount > 0) {
+      res.json({ success: true, message: 'User cleaned up successfully' });
+    } else {
+      res.json({ success: false, message: 'User not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Cleanup failed' });
+  }
+});
+
 // Protected routes
 router.get('/profile', authMiddleware, getProfile);
 router.put('/profile', authMiddleware, updateProfile);
