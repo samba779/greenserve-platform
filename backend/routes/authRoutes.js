@@ -30,7 +30,7 @@ router.get('/google/callback',
     );
     
     // Redirect to frontend with token
-    res.redirect(`/index.html?token=${token}&user=${encodeURIComponent(JSON.stringify(req.user))}`);
+    res.redirect(`${process.env.FRONTEND_URL}/index.html?token=${token}&user=${encodeURIComponent(JSON.stringify(req.user))}`);
   }
 );
 
