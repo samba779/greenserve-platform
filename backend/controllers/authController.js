@@ -2,10 +2,36 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 const Worker = require('../models/Worker');
 const { generateToken } = require('../middleware/auth');
+const axios = require('axios');
 
 // Generate OTP
 const generateOTP = () => {
   return Math.floor(100000 + Math.random() * 900000).toString();
+};
+
+// Send OTP via Android SMS Gateway
+const sendOTPviaSMS = async (mobile, otp) => {
+  try {
+    // Android Gateway URL with your real IP
+    const androidGatewayURL = 'http://10.195.179.179:8080/sendsms';
+    
+    const message = `Your GreenServe OTP is: ${otp}. Valid for 10 minutes. Do not share this code.`;
+    
+    const response = await axios.post(androidGatewayURL, {
+      to: mobile,
+      message: message
+    }, {
+      timeout: 10000 // 10 second timeout
+    });
+    
+    console.log(`✅ SMS sent to ${mobile}: ${otp}`);
+    return true;
+  } catch (error) {
+    console.error('❌ SMS sending failed:', error.message);
+    // Fallback to console log for development
+    console.log(`🔔 OTP for ${mobile}: ${otp}`);
+    return false;
+  }
 };
 
 // User Registration
@@ -51,8 +77,8 @@ const registerUser = async (req, res) => {
 
     await user.save();
 
-    // Log OTP for development (in production, send via SMS)
-    console.log(`🔔 OTP for ${mobile}: ${otp}`);
+    // Send OTP via SMS
+    const smsSent = await sendOTPviaSMS(mobile, otp);
 
     res.status(201).json({
       success: true,
@@ -60,7 +86,7 @@ const registerUser = async (req, res) => {
       data: {
         userId: user._id,
         mobile,
-        otp: process.env.NODE_ENV === 'development' ? otp : undefined
+        otp: smsSent ? null : otp // Show OTP only if SMS failed
       }
     });
   } catch (error) {
@@ -221,14 +247,14 @@ const resendOTP = async (req, res) => {
     user.otp_expires_at = otpExpiresAt;
     await user.save();
 
-    // Log OTP for development (in production, send via SMS)
-    console.log(`🔔 New OTP for ${mobile}: ${otp}`);
+    // Send OTP via SMS
+    const smsSent = await sendOTPviaSMS(mobile, otp);
 
     res.json({
       success: true,
       message: 'OTP resent successfully',
       data: {
-        otp: process.env.NODE_ENV === 'development' ? otp : undefined
+        otp: smsSent ? null : otp // Show OTP only if SMS failed
       }
     });
   } catch (error) {
