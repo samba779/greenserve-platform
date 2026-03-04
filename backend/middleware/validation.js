@@ -7,13 +7,19 @@ const validate = (schema) => {
       req.body.mobile = req.body.mobile.replace(/[^0-9]/g, '');
     }
     
+    console.log('🔍 Validation Request Body:', req.body);
+    
     const { error } = schema.validate(req.body);
     if (error) {
+      console.log('❌ Validation Error:', error.details[0].message);
+      console.log('❌ Validation Error Details:', error.details);
       return res.status(400).json({
         success: false,
         message: error.details[0].message
       });
     }
+    
+    console.log('✅ Validation Passed');
     next();
   };
 };

@@ -174,7 +174,7 @@
                     <div class="form-group">
                         <label class="form-label">Installation Address</label>
                         <div style="position: relative;">
-                            <input type="text" class="form-input" id="address" placeholder="Enter your address" required>
+                            <input type="text" name="address" class="form-input" id="address" placeholder="Enter your address" required>
                             <button type="button" onclick="getCurrentLocation()" style="position: absolute; right: 0.5rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--primary); cursor: pointer;">
                                 <i class="fas fa-location-arrow"></i>
                             </button>
@@ -185,7 +185,7 @@
                     <!-- Date Selection -->
                     <div class="form-group">
                         <label class="form-label">Preferred Date</label>
-                        <input type="date" class="form-input" required min="2026-03-02">
+                        <input type="date" name="bookingDate" class="form-input" required min="2026-03-02">
                     </div>
 
                     <!-- Time Slot -->
@@ -193,28 +193,31 @@
                         <label class="form-label">Preferred Time</label>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
                             <label class="time-slot" style="padding: 0.75rem; border: 2px solid var(--gray-200); border-radius: var(--radius); text-align: center; cursor: pointer;">
-                                <input type="radio" name="time" value="morning" style="display: none;">
+                                <input type="radio" name="bookingTime" value="morning" style="display: none;">
                                 <i class="fas fa-sun"></i> 9 AM - 12 PM
                             </label>
                             <label class="time-slot" style="padding: 0.75rem; border: 2px solid var(--gray-200); border-radius: var(--radius); text-align: center; cursor: pointer;">
-                                <input type="radio" name="time" value="afternoon" style="display: none;">
+                                <input type="radio" name="bookingTime" value="afternoon" style="display: none;">
                                 <i class="fas fa-sun" style="color: orange;"></i> 12 PM - 3 PM
                             </label>
                             <label class="time-slot" style="padding: 0.75rem; border: 2px solid var(--gray-200); border-radius: var(--radius); text-align: center; cursor: pointer;">
-                                <input type="radio" name="time" value="evening" style="display: none;">
+                                <input type="radio" name="bookingTime" value="evening" style="display: none;">
                                 <i class="fas fa-cloud-sun"></i> 3 PM - 6 PM
                             </label>
                             <label class="time-slot selected" style="padding: 0.75rem; border: 2px solid var(--primary); border-radius: var(--radius); text-align: center; cursor: pointer; background: var(--primary-light);">
-                                <input type="radio" name="time" value="anytime" checked style="display: none;">
+                                <input type="radio" name="bookingTime" value="anytime" checked style="display: none;">
                                 <i class="fas fa-clock"></i> Anytime
                             </label>
                         </div>
                     </div>
 
+                    <!-- Hidden city field -->
+                    <input type="hidden" name="city" value="Bangalore">
+
                     <!-- Notes -->
                     <div class="form-group">
                         <label class="form-label">Additional Notes (Optional)</label>
-                        <textarea class="form-input" rows="3" placeholder="Any specific requirements..."></textarea>
+                        <textarea name="notes" class="form-input" rows="3" placeholder="Any specific requirements..."></textarea>
                     </div>
 
                     <!-- Price Summary -->
