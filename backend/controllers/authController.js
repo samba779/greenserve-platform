@@ -39,10 +39,13 @@ const registerUser = async (req, res) => {
   try {
     const { firstName, lastName, email, mobile, password, address, city } = req.body;
 
+    console.log('🔍 Registration Request:', { firstName, lastName, email, mobile });
+
     // Check if user already exists (only check mobile, not email)
     const existingUser = await User.findOne({ mobile: mobile });
 
     if (existingUser) {
+      console.log('❌ User already exists with mobile:', mobile);
       return res.status(400).json({
         success: false,
         message: 'User already exists with this mobile number'
@@ -57,6 +60,8 @@ const registerUser = async (req, res) => {
     const otp = generateOTP();
     const otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
+    console.log('🔢 Generated OTP:', otp);
+
     // Create user
     const user = new User({
       first_name: firstName,
@@ -70,7 +75,10 @@ const registerUser = async (req, res) => {
       otp_expires_at: otpExpiresAt
     });
 
+    console.log('👤 Creating user:', { firstName, lastName, email, mobile });
+
     await user.save();
+    console.log('✅ User saved successfully:', user._id);
 
     // Send OTP via SMS
     const smsSent = await sendOTPviaSMS(mobile, otp);
@@ -85,10 +93,22 @@ const registerUser = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Registration error:', error);
+    console.error('❌ Registration error:', error);
+    
+    // Handle duplicate key errors
+    if (error.code === 11000) {
+      const field = Object.keys(error.keyPattern)[0];
+      console.log('❌ Duplicate field error:', field);
+      return res.status(400).json({
+        success: false,
+        message: `This ${field} is already registered`
+      });
+    }
+
     res.status(500).json({
       success: false,
-      message: 'Registration failed. Please try again.'
+      message: 'Registration failed. Please try again.',
+      error: error.message
     });
   }
 };
