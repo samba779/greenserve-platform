@@ -30,6 +30,10 @@
                         <a href="bookings.html"><i class="fas fa-calendar"></i> My Bookings</a>
                     </div>
                 </div>
+                <div id="authButtons">
+                    <a href="login-choice.html" class="btn btn-outline">Login</a>
+                    <a href="register.html" class="btn btn-primary">Sign Up</a>
+                </div>
             </div>
             <button class="mobile-menu-toggle" id="mobileMenuToggle">
                 <i class="fas fa-bars"></i>
@@ -224,13 +228,27 @@
 
         // Book service
         function bookService(serviceId) {
-            console.log('🔍 Booking Service - Direct access (no auth required)');
+            const token = localStorage.getItem('token');
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            const userId = user._id || user.id || user.userId;
+            
+            console.log('🔍 Booking Service - Token:', token ? 'exists' : 'missing');
+            console.log('🔍 Booking Service - User ID:', userId || 'missing');
             console.log('🔍 Booking Service - Service ID:', serviceId);
             
-            // ✅ REMOVED: No authentication check needed
+            if (!token || !userId) {
+                console.log('❌ No token or user ID, redirecting to login');
+                showToast('Please login to book a service', 'info');
+                setTimeout(() => {
+                    window.location.href = `login-choice.html?redirect=${encodeURIComponent(window.location.href)}`;
+                }, 1000);
+                return;
+            }
+            
             // Create booking data
             const bookingData = {
                 serviceId: serviceId,
+                userId: userId,
                 status: 'pending',
                 createdAt: new Date().toISOString()
             };

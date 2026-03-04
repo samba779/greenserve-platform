@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoWorkConnect - Login</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/login-choice.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <i class="fas fa-leaf"></i>
+                <span>EcoWorkConnect</span>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="services.html" class="nav-link active">Services</a></li>
+                <li><a href="bookings.html" class="nav-link">My Bookings</a></li>
+            </ul>
+            <div class="nav-auth">
+                <a href="index.html" class="btn btn-outline">Back to Services</a>
+            </div>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Login Choice Section -->
+    <section class="login-choice">
+        <div class="container">
+            <div class="login-choice-header">
+                <h1>Choose Your Login Type</h1>
+                <p>Select how you want to access EcoWorkConnect</p>
+            </div>
+
+            <div class="login-options">
+                <!-- User Login -->
+                <div class="login-card">
+                    <div class="login-header">
+                        <i class="fas fa-user"></i>
+                        <h2>Login as User</h2>
+                        <p>Book and manage your service requests</p>
+                    </div>
+                    <div class="login-actions">
+                        <a href="user-login.html" class="btn btn-primary btn-lg">
+                            <i class="fas fa-sign-in-alt"></i>
+                            User Login
+                        </a>
+                        <p class="login-description">
+                            Access your personal dashboard, track bookings, and manage your service requests
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Worker Login -->
+                <div class="login-card">
+                    <div class="login-header">
+                        <i class="fas fa-briefcase"></i>
+                        <h2>Login as Worker</h2>
+                        <p>Manage your service work and earnings</p>
+                    </div>
+                    <div class="login-actions">
+                        <a href="worker-login.html" class="btn btn-secondary btn-lg">
+                            <i class="fas fa-hard-hat"></i>
+                            Worker Login
+                        </a>
+                        <p class="login-description">
+                            View your assigned jobs, update availability, and manage your professional profile
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="direct-access">
+                <h3>Or Continue Without Login</h3>
+                <p>Want to browse services without creating an account?</p>
+                <a href="services.html" class="btn btn-outline">
+                    <i class="fas fa-eye"></i>
+                    Browse Services as Guest
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="index.html" class="footer-logo">
+                        <i class="fas fa-leaf"></i>
+                        <span>GreenServe</span>
+                    </a>
+                    <p>Connecting you with professional green and utility service providers for a sustainable future.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="services.html">All Services</a></li>
+                        <li><a href="service-detail.html?id=solar">Solar</a></li>
+                        <li><a href="service-detail.html?id=gardening">Gardening</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 EcoWorkConnect. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
