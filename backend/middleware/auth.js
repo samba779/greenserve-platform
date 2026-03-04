@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
-const { pool } = require('../config/database');
+const User = require('../models/User');
+const Worker = require('../models/Worker');
 
 const authMiddleware = async (req, res, next) => {
   try {
@@ -17,17 +18,9 @@ const authMiddleware = async (req, res, next) => {
     // Check if user exists in database
     let user;
     if (decoded.role === 'worker') {
-      const [workers] = await pool.execute(
-        'SELECT id, first_name, last_name, email, mobile, is_active FROM workers WHERE id = ?',
-        [decoded.id]
-      );
-      user = workers[0];
+      user = await Worker.findById(decoded.id);
     } else {
-      const [users] = await pool.execute(
-        'SELECT id, first_name, last_name, email, mobile, is_verified FROM users WHERE id = ?',
-        [decoded.id]
-      );
-      user = users[0];
+      user = await User.findById(decoded.id);
     }
 
     if (!user) {
