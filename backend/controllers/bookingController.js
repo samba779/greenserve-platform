@@ -120,8 +120,17 @@ const createBooking = async (req, res) => {
       const savedBooking = await booking.save();
       console.log('✅ Booking saved successfully:', savedBooking._id);
 
-      // TODO: Find nearby workers and send notifications
-      // This will be implemented in the next step
+      // Find nearby workers and send alerts
+      const nearbyWorkers = await findNearbyWorkers(latitude, longitude, serviceIdStr);
+      console.log(`📍 Found ${nearbyWorkers.length} nearby workers`);
+      
+      // Send alerts to nearby workers
+      for (const worker of nearbyWorkers) {
+        await sendWorkerAlert(worker, savedBooking);
+      }
+      
+      // Send confirmation alert to user
+      await sendUserAlert(userId, savedBooking, nearbyWorkers.length);
 
       res.status(201).json({
         success: true,
@@ -393,3 +402,99 @@ module.exports = {
   getWorkerBookings,
   getAvailableBookings
 };
+
+// Helper function: Calculate distance between two coordinates (km)
+function calculateDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371; // Earth's radius in km
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLon/2) * Math.sin(dLon/2);
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+// Helper function: Find nearby workers within 5km radius
+async function findNearbyWorkers(latitude, longitude, serviceId) {
+  try {
+    // Get all workers who have the matching skill
+    const Worker = require('../models/Worker');
+    const workers = await Worker.find({
+      skills: { $in: [serviceId] },
+      is_verified: true,
+      current_location: { $exists: true }
+    }).limit(20);
+    
+    // Filter workers within 5km radius
+    const MATCHING_RADIUS_KM = 5;
+    const nearbyWorkers = workers.filter(worker => {
+      if (!worker.current_location || !worker.current_location.latitude) return false;
+      const distance = calculateDistance(
+        parseFloat(latitude),
+        parseFloat(longitude),
+        worker.current_location.latitude,
+        worker.current_location.longitude
+      );
+      return distance <= MATCHING_RADIUS_KM;
+    });
+    
+    return nearbyWorkers;
+  } catch (error) {
+    console.error('❌ Error finding nearby workers:', error);
+    return [];
+  }
+}
+
+// Helper function: Send alert to worker
+async function sendWorkerAlert(worker, booking) {
+  try {
+    console.log(`🔔 Sending alert to worker ${worker.first_name} (${worker.mobile})`);
+    
+    // TODO: Integrate with SMS/Email service (Twilio, SendGrid, etc.)
+    // For now, log the alert
+    console.log(`📱 Worker Alert: New booking #${booking.booking_id} for ${booking.service_id} near you!`);
+    
+    // Store notification in worker's notification array (if exists)
+    if (!worker.notifications) worker.notifications = [];
+    worker.notifications.push({
+      type: 'new_booking',
+      bookingId: booking.booking_id,
+      message: `New booking available near you - ${booking.service_id}`,
+      timestamp: new Date(),
+      read: false
+    });
+    
+    await worker.save();
+  } catch (error) {
+    console.error('❌ Error sending worker alert:', error);
+  }
+}
+
+// Helper function: Send alert to user
+async function sendUserAlert(userId, booking, workerCount) {
+  try {
+    console.log(`🔔 Sending confirmation to user ${userId}`);
+    
+    // TODO: Integrate with SMS/Email service
+    console.log(`📱 User Alert: Booking #${booking.booking_id} confirmed! ${workerCount} workers notified.`);
+    
+    // If user is authenticated, store notification
+    if (userId) {
+      const User = require('../models/User');
+      const user = await User.findById(userId);
+      if (user) {
+        if (!user.notifications) user.notifications = [];
+        user.notifications.push({
+          type: 'booking_confirmed',
+          bookingId: booking.booking_id,
+          message: `Booking confirmed! ${workerCount} workers will be notified.`,
+          timestamp: new Date(),
+          read: false
+        });
+        await user.save();
+      }
+    }
+  } catch (error) {
+    console.error('❌ Error sending user alert:', error);
+  }
+}
