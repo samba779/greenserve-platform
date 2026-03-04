@@ -127,9 +127,6 @@ const registerWorker = async (req, res) => {
 
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
-    const otp = generateOTP();
-    const otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000);
-
     // ✅ Allow multiple workers with same mobile - create new account every time
     console.log('✅ Creating new worker account');
 
@@ -143,26 +140,26 @@ const registerWorker = async (req, res) => {
       address: address || null,
       years_of_experience: yearsOfExperience || 0,
       skills: skills || [],
-      is_verified: false,
-      otp_code: otp,
-      otp_expires_at: otpExpiresAt
+      is_verified: true,
+      otp_code: undefined,
+      otp_expires_at: undefined
     });
 
     await newWorker.save();
     console.log('✅ New worker created:', newWorker._id);
 
-    // Send OTP via email (fallback to mobile if no email provided)
-    const targetEmail = email || mobile;
-    const smsSent = await sendOTPviaEmail(targetEmail, otp, firstName);
+    // Generate token immediately (no OTP needed)
+    const token = generateToken(newWorker._id, 'worker');
+    console.log('✅ Auto-verified worker, token generated');
 
     res.status(201).json({
       success: true,
-      message: 'Worker account created! Please verify with OTP',
+      message: 'Worker account created successfully!',
       data: {
+        token,
         workerId: newWorker._id,
         mobile: mobile,
-        requiresVerification: true,
-        otpSent: smsSent
+        isVerified: true
       }
     });
 
