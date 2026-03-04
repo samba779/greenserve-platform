@@ -359,7 +359,7 @@ async function doOTP(){
   try{
     const r=await fetch(`${API}/auth/verify-otp`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mobile:mob,otp:o,userType:'user'})});
     const d=await r.json();
-    if(d.success){localStorage.setItem('token',d.data.token);localStorage.setItem('user',JSON.stringify(d.data.user));toast('Verified! Welcome 🎉',true);setTimeout(()=>location.href='services.html',1200);}
+    if(d.success){localStorage.setItem('token',d.data.token);localStorage.setItem('user',JSON.stringify(d.data.user));toast('Verified! Welcome 🎉',true);setTimeout(()=>location.href='user-dashboard.html',1200);}
     else toast(d.message||'Invalid OTP');
   }catch{toast('Network error. Try again.');}
 }
@@ -371,7 +371,7 @@ async function resend(){
 
 const p=new URLSearchParams(location.search);
 const tk=p.get('token');
-if(tk){localStorage.setItem('token',tk);window.history.replaceState({},'',location.pathname);toast('Google sign-in successful!',true);setTimeout(()=>location.href='services.html',1000);}
+if(tk){localStorage.setItem('token',tk);window.history.replaceState({},'',location.pathname);toast('Google sign-in successful!',true);setTimeout(()=>location.href='user-dashboard.html',1000);}
 </script>
 </body>
 </html>
