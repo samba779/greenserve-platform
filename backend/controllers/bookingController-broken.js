@@ -127,6 +127,262 @@ const createBooking = async (req, res) => {
   }
 };
 
+
+module.exports = {
+  createBooking,
+  getUserBookings,
+  getBookingById,
+  cancelBooking,
+  acceptBooking,
+  rejectBooking,
+  updateBookingStatus,
+  getWorkerBookings,
+  getAvailableBookings
+};
+
+// Get user's bookings
+const getUserBookings = async (req, res) => {
+  try {
+    const { id: userId } = req.user;
+    const bookings = await Booking.find({ user_id: userId }).sort({ createdAt: -1 });
+    
+    res.json({
+      success: true,
+      data: bookings
+    });
+  } catch (error) {
+    console.error('❌ Get user bookings error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to get bookings',
+      error: error.message
+    });
+  }
+};
+
+// Get booking by ID
+const getBookingById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const booking = await Booking.findOne({ booking_id: id });
+    
+    if (!booking) {
+      return res.status(404).json({
+        success: false,
+        message: 'Booking not found'
+      });
+    }
+    
+    res.json({
+      success: true,
+      data: booking
+    });
+  } catch (error) {
+    console.error('❌ Get booking error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to get booking',
+      error: error.message
+    });
+  }
+};
+
+// Cancel booking
+const cancelBooking = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { reason } = req.body;
+    const { id: userId } = req.user;
+    
+    const booking = await Booking.findOne({ booking_id: id });
+    
+    if (!booking) {
+      return res.status(404).json({
+        success: false,
+        message: 'Booking not found'
+      });
+    }
+    
+    if (booking.user_id.toString() !== userId) {
+      return res.status(403).json({
+        success: false,
+        message: 'You can only cancel your own bookings'
+      });
+    }
+    
+    booking.status = 'cancelled';
+    booking.cancellation_reason = reason;
+    booking.cancelled_by = 'user';
+    await booking.save();
+    
+    res.json({
+      success: true,
+      message: 'Booking cancelled successfully'
+    });
+  } catch (error) {
+    console.error('❌ Cancel booking error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to cancel booking',
+      error: error.message
+    });
+  }
+};
+
+// Accept booking (for workers)
+const acceptBooking = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { id: workerId } = req.user;
+    
+    const booking = await Booking.findOne({ booking_id: id });
+    
+    if (!booking) {
+      return res.status(404).json({
+        success: false,
+        message: 'Booking not found'
+      });
+    }
+    
+    booking.status = 'accepted';
+    booking.worker_id = workerId;
+    await booking.save();
+    
+    res.json({
+      success: true,
+      message: 'Booking accepted successfully'
+    });
+  } catch (error) {
+    console.error('❌ Accept booking error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to accept booking',
+      error: error.message
+    });
+  }
+};
+
+// Reject booking (for workers)
+const rejectBooking = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { reason } = req.body;
+    const { id: workerId } = req.user;
+    
+    const booking = await Booking.findOne({ booking_id: id });
+    
+    if (!booking) {
+      return res.status(404).json({
+        success: false,
+        message: 'Booking not found'
+      });
+    }
+    
+    booking.status = 'rejected';
+    booking.worker_id = workerId;
+    booking.rejection_reason = reason;
+    await booking.save();
+    
+    res.json({
+      success: true,
+      message: 'Booking rejected successfully'
+    });
+  } catch (error) {
+    console.error('❌ Reject booking error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to reject booking',
+      error: error.message
+    });
+  }
+};
+
+// Update booking status
+const updateBookingStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+    
+    const booking = await Booking.findOne({ booking_id: id });
+    
+    if (!booking) {
+      return res.status(404).json({
+        success: false,
+        message: 'Booking not found'
+      });
+    }
+    
+    booking.status = status;
+    await booking.save();
+    
+    res.json({
+      success: true,
+      message: 'Booking status updated successfully'
+    });
+  } catch (error) {
+    console.error('❌ Update booking status error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to update booking status',
+      error: error.message
+    });
+  }
+};
+
+// Get worker's bookings
+const getWorkerBookings = async (req, res) => {
+  try {
+    const { id: workerId } = req.user;
+    const bookings = await Booking.find({ worker_id: workerId }).sort({ createdAt: -1 });
+    
+    res.json({
+      success: true,
+      data: bookings
+    });
+  } catch (error) {
+    console.error('❌ Get worker bookings error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to get bookings',
+      error: error.message
+    });
+  }
+};
+
+// Get available bookings (for workers)
+const getAvailableBookings = async (req, res) => {
+  try {
+    const bookings = await Booking.find({ 
+      status: 'requested',
+      worker_id: { $exists: false }
+    }).sort({ createdAt: -1 });
+    
+    res.json({
+      success: true,
+      data: bookings
+    });
+  } catch (error) {
+    console.error('❌ Get available bookings error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to get available bookings',
+      error: error.message
+    });
+  }
+};
+
+module.exports = {
+  createBooking,
+  getUserBookings,
+  getBookingById,
+  cancelBooking,
+  acceptBooking,
+  rejectBooking,
+  updateBookingStatus,
+  getWorkerBookings,
+  getAvailableBookings
+};
+
 // Get user's bookings
 const getUserBookings = async (req, res) => {
   try {
