@@ -168,9 +168,19 @@ const registerWorker = async (req, res) => {
 const verifyOTP = async (req, res) => {
   try {
     const { mobile, otp, userType = 'user' } = req.body;
+    
+    console.log('🔍 OTP Verification Request:', { mobile, otp, userType });
 
     const Model = userType === 'worker' ? Worker : User;
     const user = await Model.findOne({ mobile: mobile });
+    
+    console.log('👤 User found:', user ? 'Yes' : 'No');
+    if (user) {
+      console.log('📱 User mobile:', user.mobile);
+      console.log('🔢 Stored OTP:', user.otp_code);
+      console.log('🔢 Received OTP:', otp);
+      console.log('⏰ OTP expires:', user.otp_expires_at);
+    }
 
     if (!user) {
       return res.status(404).json({
@@ -180,6 +190,7 @@ const verifyOTP = async (req, res) => {
     }
 
     if (user.otp_code !== otp) {
+      console.log('❌ OTP mismatch');
       return res.status(400).json({
         success: false,
         message: 'Invalid OTP'
@@ -187,6 +198,7 @@ const verifyOTP = async (req, res) => {
     }
 
     if (new Date() > new Date(user.otp_expires_at)) {
+      console.log('⏰ OTP expired');
       return res.status(400).json({
         success: false,
         message: 'OTP has expired'
@@ -201,6 +213,8 @@ const verifyOTP = async (req, res) => {
 
     // Generate JWT token
     const token = generateToken(user._id, userType);
+
+    console.log('✅ OTP verification successful');
 
     res.json({
       success: true,
@@ -217,7 +231,7 @@ const verifyOTP = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('OTP verification error:', error);
+    console.error('❌ OTP verification error:', error);
     res.status(500).json({
       success: false,
       message: 'Verification failed. Please try again.'
