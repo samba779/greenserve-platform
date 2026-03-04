@@ -143,11 +143,22 @@ const registerWorker = async (req, res) => {
         existingWorker.otp_expires_at = otpExpiresAt;
         await existingWorker.save();
 
-        const smsSent = await sendOTPviaSMS(mobile, otp);
+        // Send OTP via Email or SMS based on what user provided
+        let otpSent;
+        if (email) {
+          // User provided email - send OTP via email
+          otpSent = await sendOTPviaEmail(email, otp, firstName);
+          console.log('📧 OTP email sent to:', email);
+        } else {
+          // User only provided mobile - send OTP via SMS (if gateway works)
+          otpSent = await sendOTPviaSMS(mobile, otp);
+          console.log('📱 OTP SMS sent to:', mobile);
+        }
+
         return res.status(200).json({
           success: true,
-          message: 'OTP resent. Please verify your mobile number.',
-          data: { workerId: existingWorker._id, mobile, otp: smsSent ? null : otp }
+          message: email ? 'OTP sent to your email. Please check your inbox and verify.' : 'OTP sent to your mobile number. Please verify.',
+          data: { workerId: existingWorker._id, [email ? 'email' : 'mobile']: email || mobile, otp: otpSent ? null : otp }
         });
       }
 
