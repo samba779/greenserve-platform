@@ -16,12 +16,23 @@ const {
 } = require('../controllers/bookingController');
 
 // User routes
-router.post('/', authMiddleware, validate(bookingSchema), createBooking);
+router.post('/', authMiddleware, (req, res, next) => {
+  try {
+    console.log('🔍 Route received request body:', JSON.stringify(req.body, null, 2));
+    validate(bookingSchema)(req, res, next);
+  } catch (error) {
+    console.error('❌ Route validation error:', error);
+    return res.status(400).json({
+      success: false,
+      message: 'Validation error: ' + error.message
+    });
+  }
+}, createBooking);
 router.get('/my-bookings', authMiddleware, getUserBookings);
 router.get('/available', authMiddleware, getAvailableBookings); // For workers
 router.get('/worker-bookings', authMiddleware, getWorkerBookings); // For workers
 
-// Common routes
+// Common routes a
 router.get('/:id', authMiddleware, getBookingById);
 router.put('/:id/cancel', authMiddleware, cancelBooking);
 
