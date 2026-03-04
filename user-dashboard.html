@@ -281,6 +281,7 @@ table.bkt td{padding:.9rem 1.25rem;font-size:.85rem;color:var(--text-mid);vertic
   <div class="sb-sec">Navigation</div>
   <ul class="sb-nav">
     <li><button class="sbl on" onclick="nav('overview',this)"><span class="ico">⬡</span> Overview</button></li>
+    <li><button class="sbl" onclick="nav('book-service',this)"><span class="ico">＋</span> Book Service</button></li>
     <li><button class="sbl" onclick="nav('bookings',this)"><span class="ico">◫</span> My Bookings <span class="sbl-badge" id="bookingCount">0</span></button></li>
     <li><button class="sbl" onclick="nav('tracker',this)"><span class="ico">◎</span> Track Worker</button></li>
     <li><button class="sbl" onclick="nav('nearby',this)"><span class="ico">◈</span> Nearby Workers</button></li>
@@ -378,6 +379,121 @@ table.bkt td{padding:.9rem 1.25rem;font-size:.85rem;color:var(--text-mid);vertic
             <div style="display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.75rem;">
               <span style="font-size:.72rem;font-weight:600;padding:.25rem .65rem;border-radius:100px;background:var(--card2);border:1px solid var(--border);color:var(--text-soft)">📍 <span id="userCity">—</span></span>
               <span style="font-size:.72rem;font-weight:600;padding:.25rem .65rem;border-radius:100px;background:var(--green-dim);border:1px solid rgba(16,185,129,.15);color:#6ee7b7">● <span id="onlineWorkers">0</span> Online</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOOK SERVICE -->
+    <div class="pg" id="pg-book-service">
+      <div class="ph"><div><h2>Book a Service</h2><p>Choose from our range of eco-friendly services</p></div></div>
+      <div class="services-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-bottom:1.5rem;">
+        <!-- Solar Service -->
+        <div class="service-card" style="background:var(--card);border:1px solid var(--border);border-radius:18px;padding:1.5rem;cursor:pointer;transition:all .25s;" onclick="selectService('solar')">
+          <div style="width:56px;height:56px;border-radius:14px;background:linear-gradient(135deg,#f59e0b,#fbbf24);display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin-bottom:1rem;">☀️</div>
+          <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:600;color:var(--text);margin-bottom:.5rem;">Solar Installation</h3>
+          <p style="font-size:.8rem;color:var(--text-mid);margin-bottom:1rem;line-height:1.5;">Switch to clean energy with our certified solar panel installation services.</p>
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <span style="font-size:1.1rem;font-weight:700;color:var(--green);">From ₹25,000</span>
+            <span style="font-size:.75rem;color:var(--text-soft);">⏱ 2-3 days</span>
+          </div>
+        </div>
+
+        <!-- EV Charging -->
+        <div class="service-card" style="background:var(--card);border:1px solid var(--border);border-radius:18px;padding:1.5rem;cursor:pointer;transition:all .25s;" onclick="selectService('ev')">
+          <div style="width:56px;height:56px;border-radius:14px;background:linear-gradient(135deg,var(--blue),var(--cyan));display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin-bottom:1rem;">🔌</div>
+          <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:600;color:var(--text);margin-bottom:.5rem;">EV Charging Station</h3>
+          <p style="font-size:.8rem;color:var(--text-mid);margin-bottom:1rem;line-height:1.5;">Home and commercial electric vehicle charging solutions.</p>
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <span style="font-size:1.1rem;font-weight:700;color:var(--green);">From ₹35,000</span>
+            <span style="font-size:.75rem;color:var(--text-soft);">⏱ 1-2 days</span>
+          </div>
+        </div>
+
+        <!-- Gardening -->
+        <div class="service-card" style="background:var(--card);border:1px solid var(--border);border-radius:18px;padding:1.5rem;cursor:pointer;transition:all .25s;" onclick="selectService('gardening')">
+          <div style="width:56px;height:56px;border-radius:14px;background:linear-gradient(135deg,#10b981,#34d399);display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin-bottom:1rem;">🌿</div>
+          <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:600;color:var(--text);margin-bottom:.5rem;">Green Gardening</h3>
+          <p style="font-size:.8rem;color:var(--text-mid);margin-bottom:1rem;line-height:1.5;">Sustainable garden design, maintenance and native plant landscaping.</p>
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <span style="font-size:1.1rem;font-weight:700;color:var(--green);">From ₹1,500</span>
+            <span style="font-size:.75rem;color:var(--text-soft);">⏱ Same day</span>
+          </div>
+        </div>
+
+        <!-- Water Harvesting -->
+        <div class="service-card" style="background:var(--card);border:1px solid var(--border);border-radius:18px;padding:1.5rem;cursor:pointer;transition:all .25s;" onclick="selectService('water')">
+          <div style="width:56px;height:56px;border-radius:14px;background:linear-gradient(135deg,#3b82f6,#60a5fa);display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin-bottom:1rem;">💧</div>
+          <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:600;color:var(--text);margin-bottom:.5rem;">Rainwater Harvesting</h3>
+          <p style="font-size:.8rem;color:var(--text-mid);margin-bottom:1rem;line-height:1.5;">Collect and store rainwater for sustainable water usage.</p>
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <span style="font-size:1.1rem;font-weight:700;color:var(--green);">From ₹15,000</span>
+            <span style="font-size:.75rem;color:var(--text-soft);">⏱ 1-2 days</span>
+          </div>
+        </div>
+
+        <!-- Energy Audit -->
+        <div class="service-card" style="background:var(--card);border:1px solid var(--border);border-radius:18px;padding:1.5rem;cursor:pointer;transition:all .25s;" onclick="selectService('audit')">
+          <div style="width:56px;height:56px;border-radius:14px;background:linear-gradient(135deg,#8b5cf6,#a78bfa);display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin-bottom:1rem;">⚡</div>
+          <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:600;color:var(--text);margin-bottom:.5rem;">Home Energy Audit</h3>
+          <p style="font-size:.8rem;color:var(--text-mid);margin-bottom:1rem;line-height:1.5;">Professional assessment to reduce your energy consumption.</p>
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <span style="font-size:1.1rem;font-weight:700;color:var(--green);">From ₹2,500</span>
+            <span style="font-size:.75rem;color:var(--text-soft);">⏱ 3-4 hours</span>
+          </div>
+        </div>
+
+        <!-- Maintenance -->
+        <div class="service-card" style="background:var(--card);border:1px solid var(--border);border-radius:18px;padding:1.5rem;cursor:pointer;transition:all .25s;" onclick="selectService('maintenance')">
+          <div style="width:56px;height:56px;border-radius:14px;background:linear-gradient(135deg,#f97316,#fb923c);display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin-bottom:1rem;">🔧</div>
+          <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:600;color:var(--text);margin-bottom:.5rem;">Green Maintenance</h3>
+          <p style="font-size:.8rem;color:var(--text-mid);margin-bottom:1rem;line-height:1.5;">Regular maintenance for all your eco-friendly installations.</p>
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <span style="font-size:1.1rem;font-weight:700;color:var(--green);">From ₹999</span>
+            <span style="font-size:.75rem;color:var(--text-soft);">⏱ 1 hour</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Booking Form -->
+      <div id="bookingFormSection" style="display:none;">
+        <div class="card">
+          <div class="ch"><div class="ct">📋 &nbsp;Complete Your Booking</div></div>
+          <div class="cb">
+            <div class="fg2" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
+              <div class="fg">
+                <label class="fl">Selected Service</label>
+                <input class="fi" type="text" id="selectedService" readonly style="background:var(--card2);color:var(--text-mid);">
+              </div>
+              <div class="fg">
+                <label class="fl">Preferred Date</label>
+                <input class="fi" type="date" id="bookingDate" min="">
+              </div>
+              <div class="fg">
+                <label class="fl">Preferred Time</label>
+                <select class="fi" id="bookingTime">
+                  <option value="">Select time slot</option>
+                  <option value="09:00">9:00 AM</option>
+                  <option value="10:00">10:00 AM</option>
+                  <option value="11:00">11:00 AM</option>
+                  <option value="14:00">2:00 PM</option>
+                  <option value="15:00">3:00 PM</option>
+                  <option value="16:00">4:00 PM</option>
+                </select>
+              </div>
+              <div class="fg">
+                <label class="fl">Address</label>
+                <input class="fi" type="text" id="bookingAddress" placeholder="Your address">
+              </div>
+            </div>
+            <div class="fg" style="margin-bottom:1rem;">
+              <label class="fl">Special Instructions (optional)</label>
+              <textarea class="fi" id="bookingNotes" rows="3" placeholder="Any specific requirements..."></textarea>
+            </div>
+            <div style="display:flex;gap:1rem;justify-content:flex-end;">
+              <button class="btn-g" onclick="cancelBooking()">Cancel</button>
+              <button class="btn-p" onclick="proceedToPayment()">Continue to Payment →</button>
             </div>
           </div>
         </div>
@@ -840,7 +956,7 @@ function getStatusColor(status) {
 }
 
 // Navigation
-const pages = {overview:'Overview',bookings:'My Bookings',tracker:'Track Worker',nearby:'Nearby Workers',profile:'Profile',settings:'Settings'};
+const pages = {overview:'Overview','book-service':'Book Service',bookings:'My Bookings',tracker:'Track Worker',nearby:'Nearby Workers',profile:'Profile',settings:'Settings'};
 
 function nav(page, btn) {
   document.querySelectorAll('.pg').forEach(p => p.classList.remove('on'));
@@ -862,6 +978,62 @@ function filt(btn, s) {
 
 function filterWorkers(type) {
   toast('Filtering workers by: ' + type, 'ok');
+}
+
+// Booking Flow Functions
+function selectService(serviceType) {
+  const services = {
+    'solar': { name: 'Solar Installation', price: '₹25,000' },
+    'ev': { name: 'EV Charging Station', price: '₹35,000' },
+    'gardening': { name: 'Green Gardening', price: '₹1,500' },
+    'water': { name: 'Rainwater Harvesting', price: '₹15,000' },
+    'audit': { name: 'Home Energy Audit', price: '₹2,500' },
+    'maintenance': { name: 'Green Maintenance', price: '₹999' }
+  };
+  
+  const service = services[serviceType];
+  document.getElementById('selectedService').value = service.name + ' - ' + service.price;
+  document.getElementById('bookingFormSection').style.display = 'block';
+  document.getElementById('bookingFormSection').scrollIntoView({ behavior: 'smooth' });
+  
+  // Set minimum date to today
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('bookingDate').min = today;
+}
+
+function cancelBooking() {
+  document.getElementById('bookingFormSection').style.display = 'none';
+  document.getElementById('selectedService').value = '';
+  document.getElementById('bookingDate').value = '';
+  document.getElementById('bookingTime').value = '';
+  document.getElementById('bookingAddress').value = '';
+  document.getElementById('bookingNotes').value = '';
+}
+
+function proceedToPayment() {
+  const service = document.getElementById('selectedService').value;
+  const date = document.getElementById('bookingDate').value;
+  const time = document.getElementById('bookingTime').value;
+  const address = document.getElementById('bookingAddress').value;
+  
+  if (!service || !date || !time || !address) {
+    toast('Please fill all required fields', 'error');
+    return;
+  }
+  
+  // Save booking details to localStorage for payment page
+  const bookingDetails = {
+    service: service,
+    date: date,
+    time: time,
+    address: address,
+    notes: document.getElementById('bookingNotes').value,
+    bookingId: 'ECO-' + Date.now()
+  };
+  localStorage.setItem('currentBooking', JSON.stringify(bookingDetails));
+  
+  // Redirect to payment page
+  window.location.href = 'payment.html';
 }
 
 function saveProfile() {

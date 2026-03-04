@@ -171,10 +171,17 @@ const verifyOTP = async (req, res) => {
     console.log('🔍 OTP Verification:', { mobile, otp, userType });
 
     const Model = userType === 'worker' ? Worker : User;
-    const user = await Model.findOne({ mobile });
+    // Get the most recent user with this mobile (since we allow duplicates)
+    const user = await Model.findOne({ mobile }).sort({ createdAt: -1 });
 
     if (!user) return res.status(404).json({ success: false, message: 'User not found' });
-    if (user.otp_code !== otp) return res.status(400).json({ success: false, message: 'Invalid OTP' });
+    
+    console.log('🔍 Found user:', user._id, '| Stored OTP:', user.otp_code, '| Provided OTP:', otp);
+    
+    // Convert both to strings for comparison
+    if (String(user.otp_code) !== String(otp)) {
+      return res.status(400).json({ success: false, message: 'Invalid OTP' });
+    }
     if (new Date() > new Date(user.otp_expires_at)) {
       return res.status(400).json({ success: false, message: 'OTP has expired. Please request a new one.' });
     }
