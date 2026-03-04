@@ -126,3 +126,16 @@ const createBooking = async (req, res) => {
     });
   }
 };
+
+
+module.exports = {
+  createBooking,
+  getUserBookings,
+  getBookingById,
+  cancelBooking,
+  acceptBooking,
+  rejectBooking,
+  updateBookingStatus,
+  getWorkerBookings,
+  getAvailableBookings
+};
