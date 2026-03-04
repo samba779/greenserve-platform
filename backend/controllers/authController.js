@@ -3,28 +3,13 @@ const User = require('../models/User');
 const Worker = require('../models/Worker');
 const { generateToken } = require('../middleware/auth');
 const nodemailer = require('nodemailer');
-const axios = require('axios');
 
 // Generate OTP
 const generateOTP = () => {
   return Math.floor(100000 + Math.random() * 900000).toString();
 };
 
-// Send OTP via Android SMS Gateway
-const sendOTPviaSMS = async (mobile, otp) => {
-  try {
-    const androidGatewayURL = 'http://10.195.179.179:8080/sendsms';
-    const message = `Your GreenServe OTP is: ${otp}. Valid for 10 minutes. Do not share this code.`;
-
-    await axios.post(androidGatewayURL, { to: mobile, message }, { timeout: 10000 });
-    console.log(`✅ SMS sent to ${mobile}: ${otp}`);
-    return true;
-  } catch (error) {
-    console.error('❌ SMS sending failed:', error.message);
-    console.log(`🔔 OTP for ${mobile}: ${otp}`);
-    return false;
-  }
-};
+// Send OTP via Email (Render-compatible)
 
 // Send OTP via Email (Render-compatible)
 const sendOTPviaEmail = async (email, otp, firstName) => {
