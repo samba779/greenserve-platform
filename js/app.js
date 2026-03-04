@@ -154,24 +154,24 @@ function handleFormSubmit(e) {
     
     console.log('🌐 API URL:', apiUrl);
 
-    // ✅ FIX: For booking form, inject userId from localStorage into POST body
-    if (formId === 'bookingForm') {
-        let user = {};
-        try { user = JSON.parse(localStorage.getItem('user') || '{}'); } catch(e) {}
-        const userId = user._id || user.id || user.userId;
-        if (userId) data.userId = userId;
-        console.log('🆔 Service ID in booking:', data.serviceId);
-        console.log('👤 User ID in booking:', data.userId);
-    }
+    // ✅ REMOVED: No authentication required for booking
+    // if (formId === 'bookingForm') {
+    //     let user = {};
+    //     try { user = JSON.parse(localStorage.getItem('user') || '{}'); } catch(e) {}
+    //     const userId = user._id || user.id || user.userId;
+    //     if (userId) data.userId = userId;
+    //     console.log('🆔 Service ID in booking:', data.serviceId);
+    //     console.log('👤 User ID in booking:', data.userId);
+    // }
     
     if (apiUrl) {
         const headers = { 'Content-Type': 'application/json' };
 
-        // ✅ Attach auth token for protected endpoints
-        if (formId === 'bookingForm') {
-            const token = localStorage.getItem('token');
-            if (token) headers['Authorization'] = `Bearer ${token}`;
-        }
+        // ✅ REMOVED: No auth token required for booking
+        // if (formId === 'bookingForm') {
+        //     const token = localStorage.getItem('token');
+        //     if (token) headers['Authorization'] = `Bearer ${token}`;
+        // }
 
         fetch(apiUrl, {
             method: 'POST',

@@ -224,27 +224,13 @@
 
         // Book service
         function bookService(serviceId) {
-            const token = localStorage.getItem('token');
-            const user = JSON.parse(localStorage.getItem('user') || '{}');
-            const userId = user._id || user.id || user.userId;
-            
-            console.log('🔍 Booking Service - Token:', token ? 'exists' : 'missing');
-            console.log('🔍 Booking Service - User ID:', userId || 'missing');
+            console.log('🔍 Booking Service - Direct access (no auth required)');
             console.log('🔍 Booking Service - Service ID:', serviceId);
             
-            if (!token || !userId) {
-                console.log('❌ No token or user ID, redirecting to login');
-                showToast('Please login to book a service', 'info');
-                setTimeout(() => {
-                    window.location.href = `login.html?redirect=${encodeURIComponent(window.location.href)}`;
-                }, 1000);
-                return;
-            }
-            
+            // ✅ REMOVED: No authentication check needed
             // Create booking data
             const bookingData = {
                 serviceId: serviceId,
-                userId: userId,
                 status: 'pending',
                 createdAt: new Date().toISOString()
             };
