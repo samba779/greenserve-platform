@@ -1,173 +1,225 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment - EcoWorkConnect</title>
-    <link rel="stylesheet" href="css/styles.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payment - EcoWorkConnect</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+:root{
+  --navy:#0a1628;--navy2:#0e2040;--blue:#1a56db;--blue2:#1e40af;
+  --sky:#3b82f6;--aqua:#06b6d4;--aqua-dim:rgba(6,182,212,0.1);
+  --blue-dim:rgba(26,86,219,0.08);--blue-glow:rgba(26,86,219,0.18);
+  --white:#ffffff;--off:#f8faff;--off2:#f1f5fd;
+  --border:rgba(26,86,219,0.12);--border-f:rgba(26,86,219,0.4);
+  --text:#0a1628;--text-mid:#4b6280;--text-soft:#94a3b8;
+  --gold:#f59e0b;--green:#10b981;--red:#ef4444;
+  --shadow:0 4px 24px rgba(26,86,219,0.08);
+  --shadow-lg:0 12px 48px rgba(26,86,219,0.14);
+}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--off);color:var(--text);min-height:100vh;margin:0;padding:0;}
+
+/* ── NAV ── */
+nav{position:sticky;top:0;z-index:200;background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 4rem;height:68px;display:flex;align-items:center;justify-content:space-between;}
+.logo{display:flex;align-items:center;gap:.65rem;text-decoration:none;}
+.logo-mark{width:36px;height:36px;background:linear-gradient(135deg,var(--blue),var(--aqua));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;box-shadow:0 4px 12px var(--blue-glow);}
+.logo-text{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;color:var(--navy);}
+.logo-text span{color:var(--blue);}
+.nav-links{display:flex;gap:2.5rem;list-style:none;}
+.nav-links a{font-size:.875rem;font-weight:600;color:var(--text-mid);text-decoration:none;transition:color .2s;}
+.nav-links a:hover{color:var(--blue);}
+.nav-right{display:flex;gap:.75rem;align-items:center;}
+.btn-ghost{padding:.55rem 1.25rem;border:1.5px solid var(--border);border-radius:100px;background:transparent;color:var(--text-mid);font-family:'Plus Jakarta Sans',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;transition:all .2s;}
+.btn-ghost:hover{border-color:var(--blue);color:var(--blue);}
+
+/* ── MAIN CONTENT ── */
+.main{max-width:800px;margin:0 auto;padding:3rem 4rem;}
+
+/* ── PAYMENT CARD ── */
+.payment-card{background:white;border:1.5px solid var(--border);border-radius:24px;padding:2.5rem;box-shadow:var(--shadow);}
+.section-title{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;color:var(--navy);margin-bottom:.5rem;display:flex;align-items:center;gap:.75rem;}
+.section-title i{color:var(--blue);}
+.section-subtitle{font-size:.9rem;color:var(--text-mid);margin-bottom:2rem;}
+
+/* ── ORDER SUMMARY ── */
+.order-summary{background:var(--off);border:1.5px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:2rem;}
+.order-item{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border);}
+.order-icon{width:56px;height:56px;background:linear-gradient(135deg,#fef3c7,#fde68a);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;}
+.order-details{flex:1;}
+.order-name{font-weight:700;color:var(--navy);margin-bottom:.25rem;}
+.order-meta{font-size:.85rem;color:var(--text-mid);}
+.order-price{font-size:1.25rem;font-weight:700;color:var(--blue);}
+
+.summary-row{display:flex;justify-content:space-between;margin-bottom:.75rem;font-size:.9rem;}
+.summary-row.total{margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);font-size:1.1rem;font-weight:700;color:var(--navy);}
+
+/* ── PAYMENT INFO ── */
+.payment-info{background:linear-gradient(135deg,#d1fae5,#a7f3d0);border:1.5px solid #10b981;border-radius:16px;padding:1.5rem;margin-bottom:2rem;text-align:center;}
+.payment-info-icon{font-size:3rem;margin-bottom:1rem;}
+.payment-info-title{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:#065f46;margin-bottom:.5rem;}
+.payment-info-text{font-size:.9rem;color:#047857;line-height:1.6;}
+
+/* ── CONFIRM BUTTON ── */
+.btn-confirm{width:100%;padding:1rem;border-radius:12px;background:linear-gradient(135deg,var(--green),#059669);color:white;border:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;box-shadow:0 4px 18px rgba(16,185,129,0.25);transition:all .25s;display:flex;align-items:center;justify-content:center;gap:.5rem;}
+.btn-confirm:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(16,185,129,0.35);}
+
+/* ── BACK LINK ── */
+.back-link{display:block;text-align:center;margin-top:1.5rem;color:var(--text-mid);text-decoration:none;font-size:.9rem;transition:color .2s;}
+.back-link:hover{color:var(--blue);}
+
+/* ── FOOTER ── */
+footer{text-align:center;padding:2rem;color:var(--text-soft);font-size:.85rem;border-top:1px solid var(--border);margin-top:3rem;}
+
+/* Toast */
+.toast{position:fixed;top:1.25rem;right:1.25rem;background:white;border:1px solid var(--border);border-radius:12px;padding:1rem 1.25rem;box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:.75rem;font-size:.9rem;font-weight:500;color:var(--text);opacity:0;transform:translateY(-10px);transition:all .3s ease;z-index:1000;}
+.toast.on{opacity:1;transform:translateY(0);}
+.toast i{color:var(--green);font-size:1.1rem;}
+
+@media (max-width:768px){
+  nav{padding:0 1.5rem;}
+  .main{padding:2rem 1.5rem;}
+  .payment-card{padding:1.5rem;}
+}
+</style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="index.html" class="nav-logo">
-                <i class="fas fa-leaf"></i>
-                <span>EcoWorkConnect</span>
-            </a>
-            <ul class="nav-menu">
-                <li><a href="index.html" class="nav-link">Home</a></li>
-                <li><a href="services.html" class="nav-link">Services</a></li>
-                <li><a href="worker-portal.html" class="nav-link">Worker Portal</a></li>
-            </ul>
-            <div class="nav-auth">
-                <a href="services.html" class="btn btn-outline"><i class="fas fa-arrow-left"></i> Back</a>
-            </div>
+
+<!-- Navigation -->
+<nav>
+  <a href="index.html" class="logo">
+    <div class="logo-mark">⚡</div>
+    <span class="logo-text">Eco<span>Work</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="service-detail.html">Services</a>
+    <a href="worker-portal.html">Worker Portal</a>
+  </div>
+  <div class="nav-right">
+    <button class="btn-ghost" onclick="history.back()"><i class="fas fa-arrow-left"></i> Back</button>
+  </div>
+</nav>
+
+<!-- Main Content -->
+<main class="main">
+  <div class="payment-card">
+    <h1 class="section-title"><i class="fas fa-file-invoice"></i> Order Summary</h1>
+    <p class="section-subtitle">Review your booking details</p>
+    
+    <!-- Order Details -->
+    <div class="order-summary" id="orderSummary">
+      <div class="order-item">
+        <div class="order-icon" id="serviceIcon">☀️</div>
+        <div class="order-details">
+          <div class="order-name" id="serviceName">Solar Panel Installation</div>
+          <div class="order-meta" id="bookingMeta">5 kW System • Booking #GR789456</div>
         </div>
-    </nav>
-
-    <!-- Payment Container -->
-    <div class="payment-container">
-        <!-- Payment Summary -->
-        <div class="payment-summary">
-            <h3><i class="fas fa-file-invoice"></i> Order Summary</h3>
-            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--gray-200);">
-                <div style="width: 3.5rem; height: 3.5rem; background: #fef3c7; color: #f59e0b; border-radius: var(--radius); display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
-                    <i class="fas fa-solar-panel"></i>
-                </div>
-                <div>
-                    <div style="font-weight: 600;">Solar Panel Installation</div>
-                    <div style="font-size: 0.875rem; color: var(--gray-500);">5 kW System • Booking #GR789456</div>
-                </div>
-            </div>
-            <div class="summary-row">
-                <span>Service Charge</span>
-                <span>₹2,25,000</span>
-            </div>
-            <div class="summary-row">
-                <span>Platform Fee (10%)</span>
-                <span>₹22,500</span>
-            </div>
-            <div class="summary-row">
-                <span>GST (18%)</span>
-                <span>₹40,500</span>
-            </div>
-            <div class="summary-row">
-                <span>Total Amount</span>
-                <span>₹2,88,000</span>
-            </div>
-        </div>
-
-        <!-- Payment Methods -->
-        <div class="payment-methods">
-            <h3><i class="fas fa-credit-card"></i> Select Payment Method</h3>
-
-            <form id="paymentForm" data-submit="true" data-redirect="index.html">
-                <!-- UPI -->
-                <label class="payment-method active">
-                    <input type="radio" name="payment" value="upi" checked>
-                    <div class="payment-method-icon" style="background: #d1fae5; color: #10b981;">
-                        <i class="fas fa-mobile-alt"></i>
-                    </div>
-                    <div class="payment-method-info">
-                        <h4>UPI</h4>
-                        <p>Google Pay, PhonePe, Paytm, etc.</p>
-                    </div>
-                    <i class="fas fa-chevron-right" style="color: var(--gray-400);"></i>
-                </label>
-
-                <!-- Credit/Debit Card -->
-                <label class="payment-method">
-                    <input type="radio" name="payment" value="card">
-                    <div class="payment-method-icon" style="background: #dbeafe; color: #3b82f6;">
-                        <i class="fas fa-credit-card"></i>
-                    </div>
-                    <div class="payment-method-info">
-                        <h4>Credit/Debit Card</h4>
-                        <p>Visa, Mastercard, RuPay</p>
-                    </div>
-                    <i class="fas fa-chevron-right" style="color: var(--gray-400);"></i>
-                </label>
-
-                <!-- Net Banking -->
-                <label class="payment-method">
-                    <input type="radio" name="payment" value="netbanking">
-                    <div class="payment-method-icon" style="background: #fef3c7; color: #f59e0b;">
-                        <i class="fas fa-university"></i>
-                    </div>
-                    <div class="payment-method-info">
-                        <h4>Net Banking</h4>
-                        <p>All major banks supported</p>
-                    </div>
-                    <i class="fas fa-chevron-right" style="color: var(--gray-400);"></i>
-                </label>
-
-                <!-- Cash -->
-                <label class="payment-method">
-                    <input type="radio" name="payment" value="cash">
-                    <div class="payment-method-icon" style="background: #e0e7ff; color: #6366f1;">
-                        <i class="fas fa-money-bill-wave"></i>
-                    </div>
-                    <div class="payment-method-info">
-                        <h4>Cash Payment</h4>
-                        <p>Pay cash after service completion</p>
-                    </div>
-                    <i class="fas fa-chevron-right" style="color: var(--gray-400);"></i>
-                </label>
-
-                <!-- Wallet -->
-                <label class="payment-method">
-                    <input type="radio" name="payment" value="wallet">
-                    <div class="payment-method-icon" style="background: #f3e8ff; color: #8b5cf6;">
-                        <i class="fas fa-wallet"></i>
-                    </div>
-                    <div class="payment-method-info">
-                        <h4>EcoWorkConnect Wallet</h4>
-                        <p>Balance: ₹0</p>
-                    </div>
-                    <i class="fas fa-chevron-right" style="color: var(--gray-400);"></i>
-                </label>
-
-                <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--gray-200);">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                        <span style="font-weight: 600; font-size: 1.125rem;">Amount to Pay</span>
-                        <span style="font-weight: 700; font-size: 1.5rem; color: var(--gray-900);">₹2,88,000</span>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-full btn-lg" data-original-text="Pay Now">
-                        <i class="fas fa-lock"></i> Pay Securely
-                    </button>
-                </div>
-
-                <p style="text-align: center; font-size: 0.75rem; color: var(--gray-500); margin-top: 1rem;">
-                    <i class="fas fa-shield-alt"></i> Your payment is secured with 256-bit encryption
-                </p>
-            </form>
-        </div>
-
-        <!-- Cash Payment Notice -->
-        <div class="card" style="margin-top: 1.5rem;">
-            <div class="card-body">
-                <div style="display: flex; align-items: flex-start; gap: 0.75rem;">
-                    <i class="fas fa-info-circle" style="color: var(--primary); font-size: 1.25rem;"></i>
-                    <div>
-                        <h5 style="font-weight: 600; margin-bottom: 0.25rem;">Cash Payment Option</h5>
-                        <p style="font-size: 0.875rem; color: var(--gray-600);">You can choose to pay in cash after the service is completed. The worker will provide a digital receipt.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <div class="order-price" id="servicePrice">₹2,25,000</div>
+      </div>
+      
+      <div class="summary-row">
+        <span>Service Charge</span>
+        <span id="serviceCharge">₹2,25,000</span>
+      </div>
+      <div class="summary-row">
+        <span>Platform Fee (10%)</span>
+        <span id="platformFee">₹22,500</span>
+      </div>
+      <div class="summary-row">
+        <span>GST (18%)</span>
+        <span id="gstFee">₹40,500</span>
+      </div>
+      <div class="summary-row total">
+        <span>Total Amount</span>
+        <span id="totalAmount">₹2,88,000</span>
+      </div>
     </div>
+    
+    <!-- Pay After Service Info -->
+    <div class="payment-info">
+      <div class="payment-info-icon">💰</div>
+      <h3 class="payment-info-title">Pay After Service Completion</h3>
+      <p class="payment-info-text">
+        No upfront payment required! Pay securely after your service is completed and you're fully satisfied. 
+        The worker will provide a digital receipt upon completion.
+      </p>
+    </div>
+    
+    <!-- Confirm Button -->
+    <button class="btn-confirm" onclick="confirmBooking()">
+      <i class="fas fa-check-circle"></i> Confirm Booking - Pay Later
+    </button>
+    
+    <a href="index.html" class="back-link">← Back to Home</a>
+  </div>
+</main>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-bottom" style="border-top: none; padding-top: 1rem;">
-                <p>&copy; 2026 EcoWorkConnect. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+<!-- Footer -->
+<footer>
+  <p>&copy; 2026 EcoWorkConnect. All rights reserved.</p>
+</footer>
 
-    <script src="js/app.js"></script>
+<!-- Toast -->
+<div class="toast" id="toast"><i class="fas fa-check-circle"></i><span id="toastMsg">Booking confirmed!</span></div>
+
+<script>
+// Load booking details from localStorage
+const booking = JSON.parse(localStorage.getItem('paymentBooking') || '{}');
+
+if (booking && booking.service) {
+  document.getElementById('serviceName').textContent = booking.service;
+  document.getElementById('bookingMeta').textContent = `Booking #${booking.id || 'GR789456'} • ${booking.date || 'Mar 5, 2026'}`;
+  document.getElementById('serviceIcon').textContent = getServiceIcon(booking.serviceType);
+  
+  const price = booking.price || 225000;
+  const platformFee = Math.round(price * 0.10);
+  const gst = Math.round((price + platformFee) * 0.18);
+  const total = price + platformFee + gst;
+  
+  document.getElementById('servicePrice').textContent = '₹' + price.toLocaleString();
+  document.getElementById('serviceCharge').textContent = '₹' + price.toLocaleString();
+  document.getElementById('platformFee').textContent = '₹' + platformFee.toLocaleString();
+  document.getElementById('gstFee').textContent = '₹' + gst.toLocaleString();
+  document.getElementById('totalAmount').textContent = '₹' + total.toLocaleString();
+}
+
+function getServiceIcon(type) {
+  const icons = {
+    'solar': '☀️',
+    'ev': '🔌',
+    'garden': '🌱',
+    'water': '💧',
+    'energy': '⚡',
+    'maintenance': '🔧'
+  };
+  return icons[type] || '📦';
+}
+
+function confirmBooking() {
+  const toast = document.getElementById('toast');
+  const msg = document.getElementById('toastMsg');
+  
+  msg.textContent = 'Booking confirmed! Pay after service completion.';
+  toast.classList.add('on');
+  
+  // Save to completed bookings
+  const booking = JSON.parse(localStorage.getItem('paymentBooking') || '{}');
+  if (booking.id) {
+    booking.status = 'pending';
+    let myBookings = JSON.parse(localStorage.getItem('myBookings') || '[]');
+    myBookings.push(booking);
+    localStorage.setItem('myBookings', JSON.stringify(myBookings));
+  }
+  
+  setTimeout(() => {
+    toast.classList.remove('on');
+    window.location.href = 'bookings.html';
+  }, 2500);
+}
+</script>
+
 </body>
 </html>
