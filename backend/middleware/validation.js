@@ -67,7 +67,7 @@ const otpSchema = Joi.object({
 
 // Booking Schema
 const bookingSchema = Joi.object({
-  serviceId: Joi.alternatives().try(Joi.string(), Joi.number()).required(),
+  serviceId: Joi.any().required(),
   bookingDate: Joi.date().min('now').required(),
   bookingTime: Joi.string().pattern(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/).required(),
   address: Joi.string().min(10).required(),
