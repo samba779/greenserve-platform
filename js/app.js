@@ -162,7 +162,9 @@ function handleFormSubmit(e) {
                 if (formId === 'registerForm') {
                     // Redirect to OTP verification with mobile number
                     const mobile = data.mobile;
-                    console.log('📱 Redirecting to OTP with mobile:', mobile);
+                    console.log('� Registration form data:', data);
+                    console.log('📱 Mobile from form data:', mobile);
+                    console.log('🔗 Redirect URL:', `otp-verify.html?mobile=${encodeURIComponent(mobile)}`);
                     window.location.href = `otp-verify.html?mobile=${encodeURIComponent(mobile)}`;
                 } else if (formId === 'loginForm') {
                     if (result.success && result.data && result.data.token) {
@@ -200,6 +202,11 @@ function handleFormSubmit(e) {
             } else {
                 console.error('❌ API error:', result.message);
                 showToast(result.message, 'error');
+                
+                // If registration failed, check if mobile was the issue
+                if (formId === 'registerForm' && result.message.includes('mobile')) {
+                    console.log('📱 Mobile issue detected in registration');
+                }
             }
         })
         .catch(error => {
