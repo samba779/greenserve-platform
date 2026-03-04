@@ -28,11 +28,14 @@ const createBooking = async (req, res) => {
     console.log('🔍 Booking Request:', { serviceId, userId, bookingDate, bookingTime });
     console.log('👤 User ID from token:', userId);
 
+    // Convert serviceId to string if it's a number
+    const serviceIdStr = String(serviceId);
+    
     // Get service details from hardcoded services
-    const service = services[serviceId];
+    const service = services[serviceIdStr];
     
     if (!service) {
-      console.log('❌ Service not found:', serviceId);
+      console.log('❌ Service not found:', serviceIdStr);
       return res.status(404).json({
         success: false,
         message: 'Service not found'
@@ -71,7 +74,7 @@ const createBooking = async (req, res) => {
          (booking_id, user_id, service_id, category_id, booking_date, booking_time, 
           address, city, latitude, longitude, price, service_charge, tax_amount, total_amount, notes, status)
          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'requested')`,
-        [bookingId, userId, serviceId, service.category_id, bookingDate, bookingTime,
+        [bookingId, userId, serviceIdStr, service.category_id, bookingDate, bookingTime,
          address, city, latitude, longitude, basePrice, serviceCharge, taxAmount, totalAmount, notes || null]
       );
 
