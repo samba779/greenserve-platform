@@ -108,6 +108,53 @@ app.get('/admin', (req, res) => {
   res.sendFile(__dirname + '/public/admin.html');
 });
 
+// ✅ Health check endpoint for Render
+app.get('/api/health', async (req, res) => {
+  try {
+    const dbState = mongoose.connection.readyState;
+    const dbStatus = dbState === 1 ? 'connected' : 'disconnected';
+    const dbStateText = ['disconnected', 'connected', 'connecting', 'disconnecting'][dbState] || 'unknown';
+    
+    res.json({ 
+      success: true,
+      status: 'ok', 
+      server: 'running',
+      database: {
+        state: dbStatus,
+        readyState: dbState,
+        stateText: dbStateText,
+        host: mongoose.connection.host || 'not connected'
+      },
+      environment: process.env.NODE_ENV || 'development',
+      port: PORT,
+      timestamp: new Date().toISOString(),
+      version: '1.0.0'
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      status: 'error',
+      message: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
+// Root endpoint
+app.get('/', (req, res) => {
+  res.json({
+    success: true,
+    message: 'GreenServe API Server is running',
+    endpoints: {
+      health: '/api/health',
+      auth: '/api/auth',
+      services: '/api/services',
+      bookings: '/api/bookings'
+    },
+    documentation: 'API documentation available at /api/health'
+  });
+});
+
 // 404 handler
 app.use((req, res) => {
   res.status(404).json({ success: false, message: 'Route not found' });
