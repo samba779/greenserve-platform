@@ -127,6 +127,7 @@ function handleFormSubmit(e) {
     e.preventDefault();
     const form = e.target;
     const submitBtn = form.querySelector('[type="submit"]');
+    const originalText = submitBtn ? submitBtn.getAttribute('data-original-text') : 'Submit';
     
     console.log('🔍 Form submission started:', form.id);
     
@@ -180,6 +181,12 @@ function handleFormSubmit(e) {
         })
         .then(response => {
             console.log('📡 Response status:', response.status);
+            console.log('📡 Response headers:', response.headers);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
             return response.json();
         })
         .then(result => {
@@ -195,17 +202,29 @@ function handleFormSubmit(e) {
                     if (result.data && result.data.token) {
                         localStorage.setItem('token', result.data.token);
                         localStorage.setItem('user', JSON.stringify(result.data.user));
-                        window.location.href = 'services.html';
+                        showToast('Login successful! Redirecting...', 'success');
+                        setTimeout(() => {
+                            window.location.href = 'services.html';
+                        }, 1000);
                     } else if (result.data && result.data.requiresVerification) {
                         const mobile = result.data.mobile || data.mobile;
                         showToast('Please verify your mobile number', 'warning');
-                        window.location.href = `otp-verify.html?mobile=${encodeURIComponent(mobile)}`;
+                        setTimeout(() => {
+                            window.location.href = `otp-verify.html?mobile=${encodeURIComponent(mobile)}`;
+                        }, 1000);
+                    } else {
+                        showToast('Login failed. Please check your credentials.', 'error');
                     }
                 } else if (formId === 'bookingForm') {
                     if (result.data && result.data._id) {
                         localStorage.setItem('lastBooking', JSON.stringify(result.data));
+                        showToast('Booking successful! Redirecting...', 'success');
+                        setTimeout(() => {
+                            window.location.href = 'bookings.html';
+                        }, 1000);
+                    } else {
+                        showToast('Booking failed. Please try again.', 'error');
                     }
-                    window.location.href = 'bookings.html';
                 } else if (formId === 'otpForm') {
                     if (result.data.token) {
                         localStorage.setItem('token', result.data.token);
