@@ -62,7 +62,8 @@ const loginSchema = Joi.object({
 // OTP Verification Schema
 const otpSchema = Joi.object({
   mobile: Joi.string().pattern(/^[0-9]{10}$/).required(),
-  otp: Joi.string().length(6).required()
+  otp: Joi.string().length(6).required(),
+  userType: Joi.string().valid('user', 'worker').optional()
 });
 
 // Booking Schema
