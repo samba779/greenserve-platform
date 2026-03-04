@@ -72,13 +72,14 @@ app.use(passport.session());
 // Serve static files (admin panel)
 app.use(express.static('public'));
 
-// Health check endpoint
+// Health Check Endpoint for Render
 app.get('/api/health', (req, res) => {
-  res.json({ 
-    success: true, 
-    message: 'GreenServe API is running',
+  res.status(200).json({
+    status: 'OK',
+    message: 'GreenServe Backend is running',
     timestamp: new Date().toISOString(),
-    version: '1.0.0'
+    version: '1.0.0',
+    environment: process.env.NODE_ENV || 'development'
   });
 });
 
