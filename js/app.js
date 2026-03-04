@@ -637,6 +637,29 @@ window.scrollToSection = scrollToSection;
 window.openModal = openModal;
 window.closeModal = closeModal;
 window.formatCurrency = formatCurrency;
+// Google Sign-In Callback Handler
+function handleGoogleCallback() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+    
+    if (token) {
+        localStorage.setItem('token', token);
+        showToast('Google sign-in successful!', 'success');
+        
+        // Remove token from URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+        
+        // Redirect to services
+        window.location.href = 'services.html';
+    }
+}
+
+// Google Sign-In Handler
+function handleGoogleSignIn() {
+    // This would integrate with Google OAuth
+    showToast('Google sign-in coming soon!', 'info');
+}
+
 window.calculateTotal = calculateTotal;
 window.togglePassword = togglePassword;
 window.validateEmail = validateEmail;
