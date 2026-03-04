@@ -14,12 +14,8 @@ const sendOTPviaSMS = async (mobile, otp) => {
   try {
     const androidGatewayURL = 'http://10.195.179.179:8080/sendsms';
     const message = `Your GreenServe OTP is: ${otp}. Valid for 10 minutes. Do not share this code.`;
-    
-    await axios.post(androidGatewayURL, {
-      to: mobile,
-      message: message
-    }, { timeout: 10000 });
-    
+
+    await axios.post(androidGatewayURL, { to: mobile, message }, { timeout: 10000 });
     console.log(`✅ SMS sent to ${mobile}: ${otp}`);
     return true;
   } catch (error) {
@@ -29,32 +25,24 @@ const sendOTPviaSMS = async (mobile, otp) => {
   }
 };
 
-// User Registration
+// ─── User Registration ───────────────────────────────────────────────────────
 const registerUser = async (req, res) => {
   try {
     const { firstName, lastName, email, mobile, password, address, city } = req.body;
-
     console.log('🔍 Registration Request:', { firstName, lastName, email, mobile });
 
-    // Hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
-
-    // Generate OTP
     const otp = generateOTP();
     const otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
-    console.log('🔢 Generated OTP:', otp);
-
-    // ✅ FIX: Check if user exists
-    const existingUser = await User.findOne({ mobile: mobile });
+    // ✅ Check by mobile only
+    const existingUser = await User.findOne({ mobile });
 
     if (existingUser) {
-      // ✅ FIX: If user exists but is NOT verified, allow re-registration
-      // (they probably failed OTP or SMS didn't arrive last time)
       if (!existingUser.is_verified) {
-        console.log('⚠️ Unverified user found, updating their record for re-registration');
-
+        // Unverified ghost record — update it and resend OTP
+        console.log('⚠️ Unverified user found, updating for re-registration');
         existingUser.first_name = firstName;
         existingUser.last_name = lastName;
         existingUser.email = email || null;
@@ -63,37 +51,29 @@ const registerUser = async (req, res) => {
         existingUser.city = city || null;
         existingUser.otp_code = otp;
         existingUser.otp_expires_at = otpExpiresAt;
-
         await existingUser.save();
-        console.log('✅ Unverified user updated:', existingUser._id);
 
         const smsSent = await sendOTPviaSMS(mobile, otp);
-
         return res.status(200).json({
           success: true,
           message: 'OTP resent. Please verify your mobile number.',
-          data: {
-            userId: existingUser._id,
-            mobile,
-            otp: smsSent ? null : otp
-          }
+          data: { userId: existingUser._id, mobile, otp: smsSent ? null : otp }
         });
       }
 
-      // ✅ User exists AND is verified — truly a duplicate
-      console.log('❌ Verified user already exists with mobile:', mobile);
+      // Verified duplicate
       return res.status(400).json({
         success: false,
         message: 'This mobile number is already registered. Please login instead.'
       });
     }
 
-    // New user — create fresh
+    // ✅ New user
     const user = new User({
       first_name: firstName,
       last_name: lastName,
       email: email || null,
-      mobile: mobile,
+      mobile,
       password: hashedPassword,
       address: address || null,
       city: city || null,
@@ -101,59 +81,45 @@ const registerUser = async (req, res) => {
       otp_expires_at: otpExpiresAt
     });
 
-    console.log('👤 Creating new user:', { firstName, lastName, email, mobile });
     await user.save();
-    console.log('✅ User saved successfully:', user._id);
+    console.log('✅ User saved:', user._id);
 
     const smsSent = await sendOTPviaSMS(mobile, otp);
-
     res.status(201).json({
       success: true,
-      message: 'User registered successfully. Please verify your mobile number.',
-      data: {
-        userId: user._id,
-        mobile,
-        otp: smsSent ? null : otp
-      }
+      message: 'Registered successfully. Please verify your mobile number.',
+      data: { userId: user._id, mobile, otp: smsSent ? null : otp }
     });
+
   } catch (error) {
     console.error('❌ Registration error:', error);
-
     if (error.code === 11000) {
       const field = Object.keys(error.keyPattern)[0];
-      console.log('❌ Duplicate field error:', field);
       return res.status(400).json({
         success: false,
         message: `This ${field} is already registered. Please login instead.`
       });
     }
-
-    res.status(500).json({
-      success: false,
-      message: 'Registration failed. Please try again.',
-      error: error.message
-    });
+    res.status(500).json({ success: false, message: 'Registration failed. Please try again.' });
   }
 };
 
-// Worker Registration
+// ─── Worker Registration ─────────────────────────────────────────────────────
 const registerWorker = async (req, res) => {
   try {
     const { firstName, lastName, email, mobile, password, city, address, yearsOfExperience, skills } = req.body;
 
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
-
     const otp = generateOTP();
     const otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
-    // ✅ FIX: Same pattern — allow re-registration if unverified
-    const existingWorker = await Worker.findOne({ mobile: mobile });
+    // ✅ FIX: Check mobile only (not broken $or with duplicate email key)
+    const existingWorker = await Worker.findOne({ mobile });
 
     if (existingWorker) {
       if (!existingWorker.is_verified) {
-        console.log('⚠️ Unverified worker found, updating their record');
-
+        console.log('⚠️ Unverified worker found, updating for re-registration');
         existingWorker.first_name = firstName;
         existingWorker.last_name = lastName;
         existingWorker.email = email || null;
@@ -164,19 +130,13 @@ const registerWorker = async (req, res) => {
         existingWorker.skills = skills || [];
         existingWorker.otp_code = otp;
         existingWorker.otp_expires_at = otpExpiresAt;
-
         await existingWorker.save();
 
         const smsSent = await sendOTPviaSMS(mobile, otp);
-
         return res.status(200).json({
           success: true,
           message: 'OTP resent. Please verify your mobile number.',
-          data: {
-            workerId: existingWorker._id,
-            mobile,
-            otp: smsSent ? null : otp
-          }
+          data: { workerId: existingWorker._id, mobile, otp: smsSent ? null : otp }
         });
       }
 
@@ -186,10 +146,10 @@ const registerWorker = async (req, res) => {
       });
     }
 
-    // Also check email uniqueness for workers (only if email provided)
+    // ✅ Check email separately — only if provided AND verified
     if (email) {
-      const workerWithEmail = await Worker.findOne({ email: email, is_verified: true });
-      if (workerWithEmail) {
+      const emailExists = await Worker.findOne({ email, is_verified: true });
+      if (emailExists) {
         return res.status(400).json({
           success: false,
           message: 'This email is already registered. Please login instead.'
@@ -201,7 +161,7 @@ const registerWorker = async (req, res) => {
       first_name: firstName,
       last_name: lastName,
       email: email || null,
-      mobile: mobile,
+      mobile,
       password: hashedPassword,
       city: city || null,
       address: address || null,
@@ -212,21 +172,17 @@ const registerWorker = async (req, res) => {
     });
 
     await worker.save();
+    console.log('✅ Worker saved:', worker._id);
 
     const smsSent = await sendOTPviaSMS(mobile, otp);
-
     res.status(201).json({
       success: true,
       message: 'Worker registered successfully. Please verify your mobile number.',
-      data: {
-        workerId: worker._id,
-        mobile,
-        otp: smsSent ? null : otp
-      }
+      data: { workerId: worker._id, mobile, otp: smsSent ? null : otp }
     });
+
   } catch (error) {
     console.error('Worker registration error:', error);
-
     if (error.code === 11000) {
       const field = Object.keys(error.keyPattern)[0];
       return res.status(400).json({
@@ -234,42 +190,22 @@ const registerWorker = async (req, res) => {
         message: `This ${field} is already registered. Please login instead.`
       });
     }
-
-    res.status(500).json({
-      success: false,
-      message: 'Worker registration failed. Please try again.'
-    });
+    res.status(500).json({ success: false, message: 'Worker registration failed. Please try again.' });
   }
 };
 
-// Verify OTP
+// ─── Verify OTP ──────────────────────────────────────────────────────────────
 const verifyOTP = async (req, res) => {
   try {
     const { mobile, otp, userType = 'user' } = req.body;
-
-    console.log('🔍 OTP Verification Request:', { mobile, otp, userType });
+    console.log('🔍 OTP Verification:', { mobile, otp, userType });
 
     const Model = userType === 'worker' ? Worker : User;
-    const user = await Model.findOne({ mobile: mobile });
+    const user = await Model.findOne({ mobile });
 
-    console.log('👤 User found:', user ? 'Yes' : 'No');
-    if (user) {
-      console.log('🔢 Stored OTP:', user.otp_code);
-      console.log('🔢 Received OTP:', otp);
-      console.log('⏰ OTP expires:', user.otp_expires_at);
-    }
-
-    if (!user) {
-      return res.status(404).json({ success: false, message: 'User not found' });
-    }
-
-    if (user.otp_code !== otp) {
-      console.log('❌ OTP mismatch');
-      return res.status(400).json({ success: false, message: 'Invalid OTP' });
-    }
-
+    if (!user) return res.status(404).json({ success: false, message: 'User not found' });
+    if (user.otp_code !== otp) return res.status(400).json({ success: false, message: 'Invalid OTP' });
     if (new Date() > new Date(user.otp_expires_at)) {
-      console.log('⏰ OTP expired');
       return res.status(400).json({ success: false, message: 'OTP has expired. Please request a new one.' });
     }
 
@@ -279,7 +215,7 @@ const verifyOTP = async (req, res) => {
     await user.save();
 
     const token = generateToken(user._id, userType);
-    console.log('✅ OTP verification successful');
+    console.log('✅ OTP verified successfully');
 
     res.json({
       success: true,
@@ -301,17 +237,14 @@ const verifyOTP = async (req, res) => {
   }
 };
 
-// Resend OTP
+// ─── Resend OTP ──────────────────────────────────────────────────────────────
 const resendOTP = async (req, res) => {
   try {
     const { mobile, userType = 'user' } = req.body;
-
     const Model = userType === 'worker' ? Worker : User;
-    const user = await Model.findOne({ mobile: mobile });
+    const user = await Model.findOne({ mobile });
 
-    if (!user) {
-      return res.status(404).json({ success: false, message: 'User not found' });
-    }
+    if (!user) return res.status(404).json({ success: false, message: 'User not found' });
 
     const otp = generateOTP();
     user.otp_code = otp;
@@ -319,7 +252,6 @@ const resendOTP = async (req, res) => {
     await user.save();
 
     const smsSent = await sendOTPviaSMS(mobile, otp);
-
     res.json({
       success: true,
       message: 'OTP resent successfully',
@@ -331,13 +263,12 @@ const resendOTP = async (req, res) => {
   }
 };
 
-// Login
+// ─── Login ───────────────────────────────────────────────────────────────────
 const login = async (req, res) => {
   try {
     const { mobile, password, userType = 'user' } = req.body;
-
     const Model = userType === 'worker' ? Worker : User;
-    const user = await Model.findOne({ mobile: mobile });
+    const user = await Model.findOne({ mobile });
 
     if (!user) {
       return res.status(404).json({ success: false, message: 'No account found with this mobile number' });
@@ -348,17 +279,12 @@ const login = async (req, res) => {
       user.otp_code = otp;
       user.otp_expires_at = new Date(Date.now() + 10 * 60 * 1000);
       await user.save();
-
       const smsSent = await sendOTPviaSMS(mobile, otp);
 
       return res.status(401).json({
         success: false,
         message: 'Please verify your mobile number first',
-        data: {
-          requiresVerification: true,
-          mobile: mobile,
-          otp: smsSent ? null : otp
-        }
+        data: { requiresVerification: true, mobile, otp: smsSent ? null : otp }
       });
     }
 
@@ -368,7 +294,6 @@ const login = async (req, res) => {
     }
 
     const token = generateToken(user._id, userType);
-
     res.json({
       success: true,
       message: 'Login successful',
@@ -389,13 +314,12 @@ const login = async (req, res) => {
   }
 };
 
-// Forgot Password
+// ─── Forgot Password ─────────────────────────────────────────────────────────
 const forgotPassword = async (req, res) => {
   try {
     const { mobile, userType = 'user' } = req.body;
-
     const Model = userType === 'worker' ? Worker : User;
-    const user = await Model.findOne({ mobile: mobile });
+    const user = await Model.findOne({ mobile });
 
     if (!user) {
       return res.status(404).json({ success: false, message: 'No account found with this mobile number' });
@@ -407,7 +331,6 @@ const forgotPassword = async (req, res) => {
     await user.save();
 
     const smsSent = await sendOTPviaSMS(mobile, otp);
-
     res.json({
       success: true,
       message: 'OTP sent for password reset',
@@ -419,16 +342,14 @@ const forgotPassword = async (req, res) => {
   }
 };
 
-// Get Profile
+// ─── Get Profile ─────────────────────────────────────────────────────────────
 const getProfile = async (req, res) => {
   try {
     const { userType = 'user' } = req.query;
     const Model = userType === 'worker' ? Worker : User;
     const user = await Model.findById(req.user.id);
 
-    if (!user) {
-      return res.status(404).json({ success: false, message: 'User not found' });
-    }
+    if (!user) return res.status(404).json({ success: false, message: 'User not found' });
 
     res.json({
       success: true,
@@ -442,7 +363,7 @@ const getProfile = async (req, res) => {
           address: user.address,
           city: user.city,
           is_verified: user.is_verified,
-          created_at: user.created_at
+          created_at: user.createdAt
         }
       }
     });
@@ -452,15 +373,14 @@ const getProfile = async (req, res) => {
   }
 };
 
-// Update Profile
+// ─── Update Profile ──────────────────────────────────────────────────────────
 const updateProfile = async (req, res) => {
   try {
     const { userType = 'user' } = req.query;
     const Model = userType === 'worker' ? Worker : User;
-
     const { firstName, lastName, email, address, city } = req.body;
-    const updateData = {};
 
+    const updateData = {};
     if (firstName) updateData.first_name = firstName;
     if (lastName) updateData.last_name = lastName;
     if (email) updateData.email = email;
@@ -468,48 +388,31 @@ const updateProfile = async (req, res) => {
     if (city) updateData.city = city;
 
     const updatedUser = await Model.findByIdAndUpdate(req.user.id, updateData, { new: true });
+    if (!updatedUser) return res.status(404).json({ success: false, message: 'User not found' });
 
-    if (!updatedUser) {
-      return res.status(404).json({ success: false, message: 'User not found' });
-    }
-
-    res.json({
-      success: true,
-      message: 'Profile updated successfully',
-      data: { user: updatedUser }
-    });
+    res.json({ success: true, message: 'Profile updated successfully', data: { user: updatedUser } });
   } catch (error) {
     console.error('Update profile error:', error);
     res.status(500).json({ success: false, message: 'Failed to update profile' });
   }
 };
 
-// Update Location
+// ─── Update Location ─────────────────────────────────────────────────────────
 const updateLocation = async (req, res) => {
   try {
     const { userType = 'user' } = req.query;
     const Model = userType === 'worker' ? Worker : User;
-
     const { latitude, longitude } = req.body;
 
     const updatedUser = await Model.findByIdAndUpdate(
       req.user.id,
-      {
-        latitude: parseFloat(latitude),
-        longitude: parseFloat(longitude)
-      },
+      { 'location.latitude': parseFloat(latitude), 'location.longitude': parseFloat(longitude) },
       { new: true }
     );
 
-    if (!updatedUser) {
-      return res.status(404).json({ success: false, message: 'User not found' });
-    }
+    if (!updatedUser) return res.status(404).json({ success: false, message: 'User not found' });
 
-    res.json({
-      success: true,
-      message: 'Location updated successfully',
-      data: { user: updatedUser }
-    });
+    res.json({ success: true, message: 'Location updated successfully', data: { user: updatedUser } });
   } catch (error) {
     console.error('Update location error:', error);
     res.status(500).json({ success: false, message: 'Failed to update location' });

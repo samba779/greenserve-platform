@@ -28,9 +28,11 @@ const createBooking = async (req, res) => {
     console.log('🔍 Full Booking Request Body:', req.body);
     console.log('🔍 Booking Request:', { serviceId, userId, bookingDate, bookingTime });
     console.log('👤 User ID from token:', userId);
+    console.log('🔍 Service ID type:', typeof serviceId, 'value:', serviceId);
 
     // Convert serviceId to string if it's a number
     const serviceIdStr = String(serviceId);
+    console.log('🔍 Converted serviceId string:', serviceIdStr);
     
     // Get service details from hardcoded services
     const service = services[serviceIdStr];
