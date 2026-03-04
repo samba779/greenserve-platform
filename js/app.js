@@ -143,8 +143,12 @@ function handleFormSubmit(e) {
     const formId = form.id;
     let apiUrl = '';
     
-    if (formId === 'registerForm') {
+    if (formId === 'userRegisterForm') {
         apiUrl = 'https://greenserve-platform.onrender.com/api/auth/register';
+    } else if (formId === 'workerRegisterForm') {
+        apiUrl = 'https://greenserve-platform.onrender.com/api/auth/register-worker';
+    } else if (formId === 'worker-register-form-123') {
+        apiUrl = 'https://greenserve-platform.onrender.com/api/auth/register-worker';
     } else if (formId === 'loginForm') {
         apiUrl = 'https://greenserve-platform.onrender.com/api/auth/login';
     } else if (formId === 'otpForm') {
@@ -195,9 +199,18 @@ function handleFormSubmit(e) {
             if (result.success) {
                 showToast(result.message, 'success');
                 
-                if (formId === 'registerForm') {
+                if (formId === 'userRegisterForm') {
                     const mobile = data.mobile;
-                    window.location.href = `otp-verify.html?mobile=${encodeURIComponent(mobile)}`;
+                    showToast('Registration successful! Redirecting...', 'success');
+                    setTimeout(() => {
+                        window.location.href = `otp-verify.html?mobile=${encodeURIComponent(mobile)}&type=user`;
+                    }, 1000);
+                } else if (formId === 'workerRegisterForm' || formId === 'worker-register-form-123') {
+                    const mobile = data.mobile;
+                    showToast('Worker registration successful! Redirecting...', 'success');
+                    setTimeout(() => {
+                        window.location.href = `otp-verify.html?mobile=${encodeURIComponent(mobile)}&type=worker`;
+                    }, 1000);
                 } else if (formId === 'loginForm') {
                     if (result.data && result.data.token) {
                         localStorage.setItem('token', result.data.token);
