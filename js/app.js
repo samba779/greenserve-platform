@@ -146,9 +146,9 @@ function handleFormSubmit(e) {
     if (formId === 'userRegisterForm') {
         apiUrl = 'https://greenserve-platform.onrender.com/api/auth/register';
     } else if (formId === 'workerRegisterForm') {
-        apiUrl = 'https://greenserve-platform.onrender.com/api/auth/register-worker';
+        apiUrl = 'https://greenserve-platform.onrender.com/api/auth/worker/register';
     } else if (formId === 'worker-register-form-123') {
-        apiUrl = 'https://greenserve-platform.onrender.com/api/auth/register-worker';
+        apiUrl = 'https://greenserve-platform.onrender.com/api/auth/worker/register';
     } else if (formId === 'loginForm') {
         apiUrl = 'https://greenserve-platform.onrender.com/api/auth/login';
     } else if (formId === 'otpForm') {
