@@ -154,100 +154,31 @@
             <!-- Right Column - Booking Form -->
             <div class="booking-form-card">
                 <h3>Book This Service</h3>
-                <form id="bookingForm" data-submit="true" data-redirect="bookings.html">
-                    <!-- Hidden service ID -->
-                    <input type="hidden" name="serviceId" id="serviceId" value="">
-                    
-                    <!-- Hidden location fields for GPS -->
-                    <input type="hidden" name="latitude"  id="bookingLat"  value="">
-                    <input type="hidden" name="longitude" id="bookingLng"  value="">
-                    
-                    <!-- Capacity Selection -->
-                    <div class="form-group">
-                        <label class="form-label">Select Capacity</label>
-                        <select class="form-select" id="capacity" required>
-                            <option value="">Choose system size</option>
-                            <option value="3kw">3 kW System - ₹1,50,000</option>
-                            <option value="5kw" selected>5 kW System - ₹2,25,000</option>
-                            <option value="10kw">10 kW System - ₹4,00,000</option>
-                            <option value="custom">Custom - Get Quote</option>
-                        </select>
-                    </div>
-
-                    <!-- Address -->
-                    <div class="form-group">
-                        <label class="form-label">Installation Address</label>
-                        <div style="position: relative;">
-                            <input type="text" name="address" class="form-input" id="address" placeholder="Enter your address" required>
-                            <button type="button" onclick="getCurrentLocation()" style="position: absolute; right: 0.5rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--primary); cursor: pointer;">
-                                <i class="fas fa-location-arrow"></i>
-                            </button>
-                        </div>
-                        <div id="address-suggestions" style="display: none; position: absolute; background: white; border: 1px solid var(--gray-200); border-radius: var(--radius); margin-top: 0.25rem; width: 100%; z-index: 10;"></div>
-                    </div>
-
-                    <!-- Date Selection -->
-                    <div class="form-group">
-                        <label class="form-label">Preferred Date</label>
-                        <input type="date" name="bookingDate" class="form-input" required min="2026-03-02">
-                    </div>
-
-                    <!-- Time Slot -->
-                    <div class="form-group">
-                        <label class="form-label">Preferred Time</label>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
-                            <label class="time-slot" style="padding: 0.75rem; border: 2px solid var(--gray-200); border-radius: var(--radius); text-align: center; cursor: pointer;">
-                                <input type="radio" name="bookingTime" value="09:00" style="display: none;">
-                                <i class="fas fa-sun"></i> 9 AM - 12 PM
-                            </label>
-                            <label class="time-slot" style="padding: 0.75rem; border: 2px solid var(--gray-200); border-radius: var(--radius); text-align: center; cursor: pointer;">
-                                <input type="radio" name="bookingTime" value="14:00" style="display: none;">
-                                <i class="fas fa-sun" style="color: orange;"></i> 12 PM - 3 PM
-                            </label>
-                            <label class="time-slot" style="padding: 0.75rem; border: 2px solid var(--gray-200); border-radius: var(--radius); text-align: center; cursor: pointer;">
-                                <input type="radio" name="bookingTime" value="17:00" style="display: none;">
-                                <i class="fas fa-cloud-sun"></i> 3 PM - 6 PM
-                            </label>
-                            <label class="time-slot selected" style="padding: 0.75rem; border: 2px solid var(--primary); border-radius: var(--radius); text-align: center; cursor: pointer; background: var(--primary-light);">
-                                <input type="radio" name="bookingTime" value="12:00" checked style="display: none;">
-                                <i class="fas fa-clock"></i> Anytime
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- Hidden city field -->
-                    <input type="hidden" name="city" value="Bangalore">
-
-                    <!-- Notes -->
-                    <div class="form-group">
-                        <label class="form-label">Additional Notes (Optional)</label>
-                        <textarea name="notes" class="form-input" rows="3" placeholder="Any specific requirements..."></textarea>
-                    </div>
-
-                    <!-- Price Summary -->
-                    <div style="background: var(--gray-50); padding: 1rem; border-radius: var(--radius); margin-bottom: 1rem;">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                            <span style="color: var(--gray-600);">Service Charge</span>
-                            <span id="service-charge">₹22,500</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                            <span style="color: var(--gray-600);">Tax (18% GST)</span>
-                            <span id="tax">₹40,500</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; padding-top: 0.5rem; border-top: 1px solid var(--gray-200); font-weight: 600; font-size: 1.125rem;">
-                            <span>Total</span>
-                            <span id="total-amount">₹2,88,000</span>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary btn-full btn-lg" data-original-text="Confirm Booking">
-                        <i class="fas fa-calendar-check"></i> Confirm Booking
-                    </button>
-
-                    <p style="text-align: center; font-size: 0.75rem; color: var(--gray-500); margin-top: 1rem;">
-                        <i class="fas fa-shield-alt"></i> Pay after service completion
-                    </p>
-                </form>
+                <p style="color: var(--gray-600); margin-bottom: 1rem;">Simple 3-step booking process</p>
+                
+                <!-- Hidden service ID -->
+                <input type="hidden" name="serviceId" id="serviceId" value="">
+                
+                <!-- Hidden location fields for GPS -->
+                <input type="hidden" name="latitude"  id="bookingLat"  value="">
+                <input type="hidden" name="longitude" id="bookingLng"  value="">
+                
+                <!-- Capacity Selection -->
+                <div class="form-group">
+                    <label class="form-label">Select Capacity</label>
+                    <select class="form-select" id="capacity" required>
+                        <option value="">Choose system size</option>
+                        <option value="150000">3 kW System - ₹1,50,000</option>
+                        <option value="225000" selected>5 kW System - ₹2,25,000</option>
+                        <option value="400000">10 kW System - ₹4,00,000</option>
+                        <option value="custom">Custom - Get Quote</option>
+                    </select>
+                </div>
+                
+                <!-- Book Now Button -->
+                <button type="button" onclick="openBookingModal()" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
+                    <i class="fas fa-calendar-check"></i> Book Now
+                </button>
             </div>
         </div>
     </div>
@@ -391,7 +322,244 @@
             () => { showToast('Unable to get location. Please enter manually.', 'error'); },
             { enableHighAccuracy: true, timeout: 8000 }
         );
-    };
+    <!-- Multi-Step Booking Modal -->
+    <div id="bookingModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
+        <div style="position: relative; max-width: 500px; margin: 50px auto; background: white; border-radius: var(--radius); padding: 2rem;">
+            
+            <!-- Modal Header -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h3 style="margin: 0; color: var(--dark);">Book Your Service</h3>
+                <button onclick="closeBookingModal()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--gray-600);">&times;</button>
+            </div>
+
+            <!-- Step 1: Time Slot Selection -->
+            <div id="step1" class="booking-step">
+                <h4 style="margin-bottom: 1rem; color: var(--primary);">Step 1: Select Time Slot</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 1rem;">
+                    <label class="time-slot" style="padding: 1rem; border: 2px solid var(--gray-200); border-radius: var(--radius); text-align: center; cursor: pointer;">
+                        <input type="radio" name="modalBookingTime" value="09:00" style="display: none;">
+                        <i class="fas fa-sun"></i><br>9 AM - 12 PM
+                    </label>
+                    <label class="time-slot" style="padding: 1rem; border: 2px solid var(--gray-200); border-radius: var(--radius); text-align: center; cursor: pointer;">
+                        <input type="radio" name="modalBookingTime" value="14:00" style="display: none;">
+                        <i class="fas fa-sun" style="color: orange;"></i><br>12 PM - 3 PM
+                    </label>
+                    <label class="time-slot" style="padding: 1rem; border: 2px solid var(--gray-200); border-radius: var(--radius); text-align: center; cursor: pointer;">
+                        <input type="radio" name="modalBookingTime" value="17:00" style="display: none;">
+                        <i class="fas fa-cloud-sun"></i><br>3 PM - 6 PM
+                    </label>
+                    <label class="time-slot" style="padding: 1rem; border: 2px solid var(--primary); border-radius: var(--radius); text-align: center; cursor: pointer; background: var(--primary-light);">
+                        <input type="radio" name="modalBookingTime" value="12:00" checked style="display: none;">
+                        <i class="fas fa-clock"></i><br>Anytime
+                    </label>
+                </div>
+                <button onclick="nextStep(2)" class="btn btn-primary" style="width: 100%;">Next</button>
+            </div>
+
+            <!-- Step 2: Date & Location -->
+            <div id="step2" class="booking-step" style="display: none;">
+                <h4 style="margin-bottom: 1rem; color: var(--primary);">Step 2: Date & Location</h4>
+                <div class="form-group">
+                    <label class="form-label">Preferred Date</label>
+                    <input type="date" id="modalBookingDate" class="form-input" required min="2026-03-02">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Installation Address</label>
+                    <div style="position: relative;">
+                        <input type="text" id="modalAddress" class="form-input" placeholder="Enter your address" required>
+                        <button type="button" onclick="getCurrentLocationForModal()" style="position: absolute; right: 0.5rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--primary); cursor: pointer;">
+                            <i class="fas fa-location-arrow"></i>
+                        </button>
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                    <button onclick="previousStep(1)" class="btn btn-secondary" style="width: 100%;">Back</button>
+                    <button onclick="nextStep(3)" class="btn btn-primary" style="width: 100%;">Next</button>
+                </div>
+            </div>
+
+            <!-- Step 3: Confirm Booking -->
+            <div id="step3" class="booking-step" style="display: none;">
+                <h4 style="margin-bottom: 1rem; color: var(--primary);">Step 3: Confirm Booking</h4>
+                <div class="booking-summary" style="background: var(--gray-50); padding: 1rem; border-radius: var(--radius); margin-bottom: 1rem;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span>Service:</span>
+                        <span id="summaryService">-</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span>Date:</span>
+                        <span id="summaryDate">-</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span>Time:</span>
+                        <span id="summaryTime">-</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span>Address:</span>
+                        <span id="summaryAddress">-</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 1.1rem; color: var(--primary); border-top: 1px solid var(--gray-200); padding-top: 0.5rem;">
+                        <span>Total:</span>
+                        <span id="summaryTotal">₹0</span>
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                    <button onclick="previousStep(2)" class="btn btn-secondary" style="width: 100%;">Back</button>
+                    <button onclick="confirmBooking()" class="btn btn-primary" style="width: 100%;">
+                        <i class="fas fa-check-circle"></i> Book Now
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Multi-step booking modal functions
+        let currentStep = 1;
+        let bookingData = {};
+
+        function openBookingModal() {
+            const capacity = document.getElementById('capacity').value;
+            const serviceId = document.getElementById('serviceId').value;
+            const service = services[serviceId] || services.solar;
+            
+            bookingData = {
+                serviceId: serviceId,
+                service: service.title,
+                capacity: capacity,
+                basePrice: parseInt(capacity) || 0
+            };
+            
+            document.getElementById('bookingModal').style.display = 'block';
+            showStep(1);
+        }
+
+        function closeBookingModal() {
+            document.getElementById('bookingModal').style.display = 'none';
+        }
+
+        function showStep(step) {
+            document.querySelectorAll('.booking-step').forEach(el => el.style.display = 'none');
+            document.getElementById('step' + step).style.display = 'block';
+            currentStep = step;
+        }
+
+        function nextStep(step) {
+            if (step === 2) {
+                // Validate step 1
+                const selectedTime = document.querySelector('input[name="modalBookingTime"]:checked');
+                if (!selectedTime) {
+                    showToast('Please select a time slot', 'error');
+                    return;
+                }
+                bookingData.time = selectedTime.value;
+                bookingData.timeLabel = selectedTime.parentElement.textContent.trim();
+            } else if (step === 3) {
+                // Validate step 2
+                const date = document.getElementById('modalBookingDate').value;
+                const address = document.getElementById('modalAddress').value;
+                
+                if (!date || !address) {
+                    showToast('Please fill in date and address', 'error');
+                    return;
+                }
+                bookingData.date = date;
+                bookingData.address = address;
+                
+                // Update summary
+                updateSummary();
+            }
+            showStep(step);
+        }
+
+        function previousStep(step) {
+            showStep(step);
+        }
+
+        function updateSummary() {
+            document.getElementById('summaryService').textContent = bookingData.service;
+            document.getElementById('summaryDate').textContent = bookingData.date;
+            document.getElementById('summaryTime').textContent = bookingData.timeLabel;
+            document.getElementById('summaryAddress').textContent = bookingData.address;
+            
+            const serviceCharge = Math.round(bookingData.basePrice * 0.10);
+            const tax = Math.round(bookingData.basePrice * 0.18);
+            const total = bookingData.basePrice + serviceCharge + tax;
+            
+            document.getElementById('summaryTotal').textContent = '₹' + total.toLocaleString('en-IN');
+        }
+
+        function getCurrentLocationForModal() {
+            if (!navigator.geolocation) {
+                showToast('Geolocation not supported', 'error');
+                return;
+            }
+            navigator.geolocation.getCurrentPosition(
+                async (pos) => {
+                    const { latitude, longitude } = pos.coords;
+                    document.getElementById('bookingLat').value = latitude;
+                    document.getElementById('bookingLng').value = longitude;
+                    
+                    try {
+                        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
+                        const data = await res.json();
+                        if (data.display_name) {
+                            document.getElementById('modalAddress').value = data.display_name;
+                            showToast('Location detected!', 'success');
+                        }
+                    } catch(e) {
+                        document.getElementById('modalAddress').value = `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`;
+                        showToast('Location set (address lookup failed)', 'info');
+                    }
+                },
+                () => { showToast('Unable to get location. Please enter manually.', 'error'); },
+                { enableHighAccuracy: true, timeout: 8000 }
+            );
+        }
+
+        function confirmBooking() {
+            const formData = new FormData();
+            formData.append('serviceId', bookingData.serviceId);
+            formData.append('bookingDate', bookingData.date);
+            formData.append('bookingTime', bookingData.time);
+            formData.append('address', bookingData.address);
+            formData.append('city', 'Bangalore');
+            formData.append('latitude', document.getElementById('bookingLat').value);
+            formData.append('longitude', document.getElementById('bookingLng').value);
+            
+            const data = Object.fromEntries(formData.entries());
+            
+            // Add user ID
+            let user = {};
+            try { user = JSON.parse(localStorage.getItem('user') || '{}'); } catch(e) {}
+            const userId = user._id || user.id || user.userId;
+            if (userId) data.userId = userId;
+            
+            // Submit booking
+            fetch('https://greenserve-platform.onrender.com/api/bookings', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    showToast('Booking created successfully!', 'success');
+                    closeBookingModal();
+                    // Optionally redirect to bookings page
+                    // window.location.href = 'bookings.html';
+                } else {
+                    showToast(result.message || 'Booking failed', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Booking error:', error);
+                showToast('Booking failed. Please try again.', 'error');
+            });
+        }
     </script>
 </body>
 </html>
