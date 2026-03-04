@@ -1,6 +1,7 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const User = require('../models/User');
+const Worker = require('../models/Worker');
 
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
@@ -12,37 +13,75 @@ passport.use(new GoogleStrategy({
 },
 async (accessToken, refreshToken, profile, done) => {
   try {
-    // Check if user already exists
-    let user = await User.findOne({ 
-      $or: [
-        { email: profile.emails[0].value },
-        { googleId: profile.id }
-      ]
-    });
+    // Check if user is coming from worker login (stored in session)
+    const isWorker = profile._json?.authType === 'worker' || profile.session?.authType === 'worker';
+    
+    if (isWorker) {
+      // Handle worker authentication
+      let worker = await Worker.findOne({ 
+        $or: [
+          { email: profile.emails[0].value },
+          { googleId: profile.id }
+        ]
+      });
 
-    if (user) {
-      // If user exists but doesn't have googleId, update it
-      if (!user.googleId) {
-        user.googleId = profile.id;
-        user.is_verified = true; // Auto-verify Google users
-        await user.save();
+      if (worker) {
+        if (!worker.googleId) {
+          worker.googleId = profile.id;
+          worker.is_verified = true; // Auto-verify Google workers
+          await worker.save();
+        }
+        return done(null, worker);
       }
+
+      // Create new worker if doesn't exist
+      const nameParts = profile.displayName.split(' ');
+      worker = new Worker({
+        googleId: profile.id,
+        first_name: nameParts[0] || profile.name?.givenName || 'Worker',
+        last_name: nameParts.slice(1).join(' ') || profile.name?.familyName || '',
+        email: profile.emails[0].value,
+        is_verified: true, // Auto-verify Google workers
+        profile_picture: profile.photos[0]?.value,
+        mobile: '0000000000', // Placeholder, will be updated later
+        city: 'Bangalore', // Default city
+        skills: [] // Empty skills initially
+      });
+
+      await worker.save();
+      return done(null, worker);
+    } else {
+      // Handle user authentication (existing logic)
+      let user = await User.findOne({ 
+        $or: [
+          { email: profile.emails[0].value },
+          { googleId: profile.id }
+        ]
+      });
+
+      if (user) {
+        if (!user.googleId) {
+          user.googleId = profile.id;
+          user.is_verified = true; // Auto-verify Google users
+          await user.save();
+        }
+        return done(null, user);
+      }
+
+      // Create new user if doesn't exist
+      const nameParts = profile.displayName.split(' ');
+      user = new User({
+        googleId: profile.id,
+        first_name: nameParts[0] || profile.name?.givenName || 'User',
+        last_name: nameParts.slice(1).join(' ') || profile.name?.familyName || '',
+        email: profile.emails[0].value,
+        is_verified: true, // Auto-verify Google users
+        profile_picture: profile.photos[0]?.value
+      });
+
+      await user.save();
       return done(null, user);
     }
-
-    // Create new user if doesn't exist
-    const nameParts = profile.displayName.split(' ');
-    user = new User({
-      googleId: profile.id,
-      first_name: nameParts[0] || profile.name?.givenName || 'User',
-      last_name: nameParts.slice(1).join(' ') || profile.name?.familyName || '',
-      email: profile.emails[0].value,
-      is_verified: true, // Auto-verify Google users
-      profile_picture: profile.photos[0]?.value
-    });
-
-    await user.save();
-    return done(null, user);
 
   } catch (error) {
     return done(error, null);

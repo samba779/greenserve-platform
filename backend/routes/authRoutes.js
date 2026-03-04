@@ -28,7 +28,7 @@ router.get('/google/callback',
   passport.authenticate('google', { 
     failureRedirect: `${process.env.FRONTEND_URL}/login.html?error=google_auth_failed` 
   }),
-  (req, res) => {
+  async (req, res) => {
     try {
       console.log('OAuth Callback - User:', req.user);
       
@@ -37,17 +37,29 @@ router.get('/google/callback',
         return res.redirect(`${process.env.FRONTEND_URL}/login.html?error=no_user`);
       }
       
+      // Check if user is coming from worker login
+      const isWorker = req.query.type === 'worker' || req.session?.authType === 'worker';
+      
       // Generate JWT token for the authenticated user
       const token = jwt.sign(
-        { userId: req.user._id, email: req.user.email, type: 'user' },
+        { 
+          userId: req.user._id, 
+          email: req.user.email, 
+          type: isWorker ? 'worker' : 'user',
+          userType: isWorker ? 'worker' : 'user'
+        },
         process.env.JWT_SECRET,
         { expiresIn: process.env.JWT_EXPIRE || '7d' }
       );
       
-      console.log('Token generated successfully');
+      console.log('Token generated successfully for:', isWorker ? 'worker' : 'user');
       
-      // Redirect to frontend with token
-      res.redirect(`${process.env.FRONTEND_URL}/index.html?token=${token}`);
+      // Redirect to appropriate dashboard
+      const redirectUrl = isWorker 
+        ? `${process.env.FRONTEND_URL}/worker-dashboard.html?token=${token}`
+        : `${process.env.FRONTEND_URL}/index.html?token=${token}`;
+      
+      res.redirect(redirectUrl);
     } catch (error) {
       console.error('OAuth Callback Error:', error);
       res.redirect(`${process.env.FRONTEND_URL}/login.html?error=oauth_error&message=${encodeURIComponent(error.message)}`);
