@@ -76,49 +76,21 @@
             document.getElementById('mobileValue').value = mobile;
         }
         
-        // Combine OTP digits before form submission
-        const otpForm = document.getElementById('otpForm');
-        otpForm.addEventListener('submit', function(e) {
+        // Combine OTP digits and submit
+        function submitOTPForm() {
             const inputs = document.querySelectorAll('.otp-input');
             let otpValue = '';
             inputs.forEach(input => {
                 otpValue += input.value;
             });
-            document.getElementById('otpValue').value = otpValue;
-        });
-        
-        let countdown = 60;
-        let timerInterval;
-        let resendAttempts = 0;
-        const maxResendAttempts = 3;
-        
-        // Countdown timer
-        function startCountdown() {
-            const resendLink = document.getElementById('resendLink');
-            const resendTimer = document.getElementById('resendTimer');
-            const timerText = document.getElementById('timerText');
             
-            countdown = 60;
-            resendLink.style.display = 'none';
-            resendTimer.style.display = 'inline';
-            
-            clearInterval(timerInterval);
-            timerInterval = setInterval(() => {
-                countdown--;
-                
-                if (timerText) {
-                    timerText.textContent = `Resend code in ${countdown}s`;
-                }
-                
-                if (countdown <= 0) {
-                    clearInterval(timerInterval);
-                    resendLink.style.display = 'inline';
-                    resendTimer.style.display = 'none';
-                    if (timerText) {
-                        timerText.textContent = 'You can now resend the code';
-                    }
-                }
-            }, 1000);
+            if (otpValue.length === 6) {
+                document.getElementById('otpValue').value = otpValue;
+                // Trigger the form submission through app.js handler
+                const form = document.getElementById('otpForm');
+                const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
+                form.dispatchEvent(submitEvent);
+            }
         }
         
         // Auto-detect OTP from SMS (Android only)
@@ -199,6 +171,20 @@
             });
         }
         
+        // Combine OTP digits and submit
+        function submitOTPForm() {
+            const inputs = document.querySelectorAll('.otp-input');
+            let otpValue = '';
+            inputs.forEach(input => {
+                otpValue += input.value;
+            });
+            
+            if (otpValue.length === 6) {
+                document.getElementById('otpValue').value = otpValue;
+                document.getElementById('otpForm').dispatchEvent(new Event('submit'));
+            }
+        }
+        
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', () => {
             startCountdown();
@@ -215,10 +201,7 @@
                     // Auto-submit when all 6 digits are entered
                     const allFilled = Array.from(inputs).every(inp => inp.value.length === 1);
                     if (allFilled) {
-                        const form = document.getElementById('otpForm');
-                        if (form) {
-                            setTimeout(() => form.submit(), 300);
-                        }
+                        setTimeout(submitOTPForm, 300);
                     }
                 });
                 
