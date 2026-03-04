@@ -215,9 +215,14 @@ function handleFormSubmit(e) {
                     if (result.data && result.data.token) {
                         localStorage.setItem('token', result.data.token);
                         localStorage.setItem('user', JSON.stringify(result.data.user));
+                        
+                        // Check if worker or user and redirect accordingly
+                        const isWorker = result.data.user && (result.data.user.userType === 'worker' || result.data.user.skills || result.data.user.years_of_experience);
+                        const dashboard = isWorker ? 'worker-dashboard.html' : 'user-dashboard.html';
+                        
                         showToast('Login successful! Redirecting...', 'success');
                         setTimeout(() => {
-                            window.location.href = 'user-dashboard.html';
+                            window.location.href = dashboard;
                         }, 1000);
                     } else if (result.data && result.data.requiresVerification) {
                         const mobile = result.data.mobile || data.mobile;
