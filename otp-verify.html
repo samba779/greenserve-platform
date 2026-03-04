@@ -84,6 +84,9 @@
                 otpValue += input.value;
             });
             
+            console.log('🔢 Submitting OTP:', otpValue);
+            console.log('📱 Mobile:', document.getElementById('mobileValue').value);
+            
             if (otpValue.length === 6) {
                 document.getElementById('otpValue').value = otpValue;
                 // Trigger the form submission through app.js handler
