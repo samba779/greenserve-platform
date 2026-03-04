@@ -39,8 +39,8 @@ app.use(cors({
 
 // Rate limiting
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100 // limit each IP to 100 requests per windowMs
+  windowMs: 15 * 60 * 1000,
+  max: 100
 });
 app.use(limiter);
 
@@ -48,20 +48,23 @@ app.use(limiter);
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-// Session middleware for Passport
+// ✅ FIX: Session middleware using mongoUrl directly (no need to wait for DB)
+// connect-mongo v6 handles its own connection using the mongoUrl string
 app.use(session({
   secret: process.env.SESSION_SECRET || 'fallback-secret-change-this',
   resave: false,
   saveUninitialized: false,
   store: MongoStore.create({
-    mongoUrl: process.env.MONGODB_URI,
+    mongoUrl: process.env.MONGODB_URI,    // ✅ uses its own connection string
     collectionName: 'sessions',
-    ttl: 24 * 60 * 60 // 24 hours
+    ttl: 24 * 60 * 60,                   // 24 hours
+    autoRemove: 'native',
+    touchAfter: 24 * 3600                // only update session once per 24h
   }),
-  cookie: { 
-    secure: true,
-    sameSite: 'none',
-    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  cookie: {
+    secure: process.env.NODE_ENV === 'production', // ✅ only force secure in prod
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    maxAge: 24 * 60 * 60 * 1000
   }
 }));
 
@@ -69,10 +72,10 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Serve static files (admin panel)
+// Serve static files
 app.use(express.static('public'));
 
-// Health Check Endpoint for Render
+// Health Check
 app.get('/api/health', (req, res) => {
   res.status(200).json({
     status: 'OK',
@@ -92,21 +95,16 @@ app.use('/api/reviews', reviewRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/admin', adminRoutes);
-
-// Cleanup Routes (for development/debugging)
 app.use('/api/cleanup', require('./routes/cleanupRoutes'));
 
-// Admin Panel Route
+// Admin Panel
 app.get('/admin', (req, res) => {
   res.sendFile(__dirname + '/public/admin.html');
 });
 
 // 404 handler
 app.use((req, res) => {
-  res.status(404).json({
-    success: false,
-    message: 'Route not found'
-  });
+  res.status(404).json({ success: false, message: 'Route not found' });
 });
 
 // Error handler
@@ -114,18 +112,16 @@ app.use((err, req, res, next) => {
   console.error('Error:', err);
   res.status(500).json({
     success: false,
-    message: process.env.NODE_ENV === 'production' 
-      ? 'Internal server error' 
-      : err.message
+    message: process.env.NODE_ENV === 'production' ? 'Internal server error' : err.message
   });
 });
 
-// Start server
+// ✅ FIX: Start server - connectDB first, then listen
 const startServer = async () => {
   try {
-    // Connect to database
     await connectDB();
-    
+    console.log('✅ Database connected');
+
     app.listen(PORT, () => {
       console.log(`
 ========================================
@@ -136,7 +132,7 @@ const startServer = async () => {
       `);
     });
   } catch (error) {
-    console.error('Failed to start server:', error);
+    console.error('❌ Failed to start server:', error);
     process.exit(1);
   }
 };
