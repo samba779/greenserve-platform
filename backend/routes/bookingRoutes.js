@@ -16,7 +16,7 @@ const {
 } = require('../controllers/bookingController');
 
 // User routes
-router.post('/', authMiddleware, createBooking); // Temporarily removed validation
+router.post('/', createBooking); // Temporarily removed validation
 router.get('/my-bookings', authMiddleware, getUserBookings);
 router.get('/available', authMiddleware, getAvailableBookings); // For workers
 router.get('/worker-bookings', authMiddleware, getWorkerBookings); // For workers

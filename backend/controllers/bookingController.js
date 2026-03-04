@@ -22,12 +22,25 @@ const generateBookingId = () => {
 // Create new booking
 const createBooking = async (req, res) => {
   try {
-    const { id: userId } = req.user;
+    // Allow booking without authentication for demo/testing
+    let userId = null;
+    let userName = 'Guest User';
+    
+    // Try to get user ID from token if available
+    try {
+      if (req.user && req.user.id) {
+        userId = req.user.id;
+        userName = req.user.first_name || 'User';
+      }
+    } catch (error) {
+      console.log('No authenticated user, proceeding as guest booking');
+    }
+    
     const { serviceId, bookingDate, bookingTime, address, city, latitude, longitude, notes } = req.body;
 
     console.log('🔍 Full Booking Request Body:', JSON.stringify(req.body, null, 2));
-    console.log('🔍 Booking Request:', { serviceId, userId, bookingDate, bookingTime });
-    console.log('👤 User ID from token:', userId);
+    console.log('🔍 Booking Request:', { serviceId, userId, userName, bookingDate, bookingTime });
+    console.log('👤 User:', userName, 'ID:', userId);
     console.log('🔍 Service ID type:', typeof serviceId, 'value:', serviceId);
     console.log('🔍 Service ID length:', serviceId ? serviceId.length : 'undefined');
     console.log('🔍 All request keys:', Object.keys(req.body));
