@@ -56,7 +56,7 @@ function handleGoogleCallback() {
         // Remove token from URL to keep it clean
         window.history.replaceState({}, document.title, window.location.pathname);
         setTimeout(() => {
-            window.location.href = 'services.html';
+            window.location.href = 'user-dashboard.html';
         }, 1000);
     }
 }
@@ -217,7 +217,7 @@ function handleFormSubmit(e) {
                         localStorage.setItem('user', JSON.stringify(result.data.user));
                         showToast('Login successful! Redirecting...', 'success');
                         setTimeout(() => {
-                            window.location.href = 'services.html';
+                            window.location.href = 'user-dashboard.html';
                         }, 1000);
                     } else if (result.data && result.data.requiresVerification) {
                         const mobile = result.data.mobile || data.mobile;

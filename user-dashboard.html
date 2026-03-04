@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EcoWorkConnect — Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+:root{
+  --ink:#080c10;--ink2:#0d1219;--ink3:#121820;
+  --panel:#0f1520;--card:#131c28;--card2:#162030;--lift:#1a2638;
+  --blue:#3b82f6;--blue2:#2563eb;--blue-glow:rgba(59,130,246,0.18);--blue-dim:rgba(59,130,246,0.08);
+  --cyan:#06b6d4;--cyan-dim:rgba(6,182,212,0.08);
+  --gold:#f59e0b;--gold-dim:rgba(245,158,11,0.1);
+  --green:#10b981;--green-dim:rgba(16,185,129,0.1);
+  --red:#f43f5e;--red-dim:rgba(244,63,94,0.08);
+  --border:rgba(255,255,255,0.055);--border2:rgba(255,255,255,0.09);
+  --text:#e2e8f0;--text-mid:#7d93ab;--text-soft:#3d5068;
+  --sw:256px;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--ink);color:var(--text);min-height:100vh;display:flex;overflow-x:hidden;}
+
+/* SIDEBAR */
+.sidebar{width:var(--sw);min-width:var(--sw);background:var(--ink2);border-right:1px solid var(--border);position:fixed;top:0;left:0;bottom:0;display:flex;flex-direction:column;z-index:200;overflow-y:auto;}
+.sb-brand{padding:1.5rem 1.5rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.75rem;text-decoration:none;}
+.sb-mark{width:34px;height:34px;background:linear-gradient(135deg,var(--blue),var(--cyan));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:.95rem;box-shadow:0 4px 16px var(--blue-glow);flex-shrink:0;}
+.sb-name{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:600;color:var(--text);letter-spacing:.02em;}
+.sb-name span{color:var(--blue);}
+.sb-user{margin:1.25rem 1rem;background:var(--card);border:1px solid var(--border2);border-radius:14px;padding:1rem;display:flex;align-items:center;gap:.8rem;}
+.sb-av{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--blue2),var(--cyan));display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;color:white;flex-shrink:0;box-shadow:0 4px 12px var(--blue-glow);}
+.sb-uname{font-size:.85rem;font-weight:600;color:var(--text);}
+.sb-urole{font-size:.7rem;color:var(--text-soft);margin-top:.1rem;}
+.sb-verified{margin-left:auto;background:var(--green-dim);border:1px solid rgba(16,185,129,.2);color:var(--green);font-size:.62rem;font-weight:700;padding:.2rem .5rem;border-radius:100px;white-space:nowrap;}
+.sb-sec{padding:.9rem 1.5rem .3rem;font-size:.64rem;font-weight:600;color:var(--text-soft);text-transform:uppercase;letter-spacing:1.4px;}
+.sb-nav{list-style:none;padding:.25rem .75rem;}
+.sb-nav li{margin-bottom:.1rem;}
+.sbl{display:flex;align-items:center;gap:.75rem;padding:.62rem .75rem;border-radius:10px;font-size:.855rem;font-weight:500;color:var(--text-mid);cursor:pointer;border:none;background:none;width:100%;text-align:left;transition:all .2s;position:relative;}
+.sbl .ico{font-size:.95rem;width:18px;text-align:center;opacity:.7;}
+.sbl:hover{background:rgba(255,255,255,.04);color:var(--text);}
+.sbl:hover .ico{opacity:1;}
+.sbl.on{background:var(--blue-dim);color:var(--blue);border:1px solid rgba(59,130,246,.12);}
+.sbl.on .ico{opacity:1;}
+.sbl.on::before{content:'';position:absolute;left:0;top:20%;bottom:20%;width:2.5px;border-radius:0 2px 2px 0;background:var(--blue);}
+.sbl-badge{margin-left:auto;background:var(--red);color:white;font-size:.62rem;font-weight:700;padding:.15rem .45rem;border-radius:100px;min-width:18px;text-align:center;}
+.sb-bottom{margin-top:auto;padding:1rem .75rem;border-top:1px solid var(--border);}
+.sb-bookbtn{width:100%;padding:.75rem;background:linear-gradient(135deg,var(--blue),var(--blue2));color:white;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;box-shadow:0 4px 20px var(--blue-glow);transition:all .25s;display:flex;align-items:center;justify-content:center;gap:.5rem;}
+.sb-bookbtn:hover{transform:translateY(-2px);box-shadow:0 8px 28px var(--blue-glow);}
+
+/* MAIN */
+.main{margin-left:var(--sw);flex:1;display:flex;flex-direction:column;min-height:100vh;}
+.topbar{height:64px;background:rgba(13,18,25,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 2.5rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.tb-pg{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;font-style:italic;color:var(--text);}
+.tb-right{display:flex;align-items:center;gap:.75rem;}
+.tb-search{display:flex;align-items:center;gap:.5rem;background:var(--card);border:1px solid var(--border);border-radius:100px;padding:.45rem .9rem;font-size:.82rem;color:var(--text-soft);cursor:pointer;transition:all .2s;}
+.tb-search:hover{border-color:var(--border2);}
+.tb-ibtn{width:36px;height:36px;border-radius:50%;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;position:relative;font-size:.9rem;}
+.tb-ibtn:hover{border-color:var(--border2);background:var(--lift);}
+.npip{position:absolute;top:5px;right:5px;width:7px;height:7px;background:var(--red);border-radius:50%;border:1.5px solid var(--ink2);}
+.tb-div{width:1px;height:20px;background:var(--border);}
+.tb-user{display:flex;align-items:center;gap:.6rem;cursor:pointer;}
+.tb-av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--blue2),var(--cyan));display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;color:white;}
+.tb-uname{font-size:.83rem;font-weight:600;color:var(--text);}
+
+/* CONTENT */
+.content{padding:2rem 2.5rem;flex:1;}
+.pg{display:none;animation:fadeIn .3s ease;}
+.pg.on{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* HERO BANNER */
+.hero{background:var(--card);border:1px solid var(--border2);border-radius:22px;padding:2rem 2.5rem;position:relative;overflow:hidden;margin-bottom:1.5rem;}
+.hero::before{content:'';position:absolute;top:0;right:0;width:400px;height:100%;background:radial-gradient(ellipse 80% 100% at 100% 50%,rgba(59,130,246,0.1),transparent 70%);pointer-events:none;}
+.hero::after{content:'';position:absolute;inset:0;background-image:radial-gradient(circle,rgba(255,255,255,.025) 1px,transparent 1px);background-size:28px 28px;pointer-events:none;}
+.hero-in{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:2rem;flex-wrap:wrap;}
+.hero-greet{font-size:.78rem;font-weight:600;color:var(--blue);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:.5rem;display:flex;align-items:center;gap:.5rem;}
+.ldot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:lp 2s infinite;box-shadow:0 0 0 0 rgba(16,185,129,.5);}
+@keyframes lp{0%{box-shadow:0 0 0 0 rgba(16,185,129,.4);}70%{box-shadow:0 0 0 7px transparent;}100%{box-shadow:0 0 0 0 transparent;}}
+.hero h1{font-family:'Cormorant Garamond',serif;font-size:2.1rem;font-weight:700;font-style:italic;color:white;line-height:1.15;margin-bottom:.5rem;}
+.hero h1 em{color:var(--blue);}
+.hero p{font-size:.875rem;color:var(--text-mid);}
+.hero-acts{display:flex;gap:.75rem;flex-wrap:wrap;}
+.btn-p{padding:.72rem 1.5rem;border-radius:100px;background:linear-gradient(135deg,var(--blue),var(--blue2));color:white;border:none;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;box-shadow:0 4px 20px var(--blue-glow);transition:all .25s;}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 8px 28px var(--blue-glow);}
+.btn-g{padding:.72rem 1.4rem;border-radius:100px;background:transparent;color:var(--text-mid);border:1px solid var(--border2);font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;transition:all .2s;}
+.btn-g:hover{border-color:var(--blue);color:var(--blue);}
+
+/* KPI */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem;}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:1.25rem 1.5rem;transition:all .25s;position:relative;overflow:hidden;}
+.kpi::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:18px 18px 0 0;opacity:0;transition:opacity .25s;}
+.kpi:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:0 12px 40px rgba(0,0,0,.3);}
+.kpi:hover::after{opacity:1;}
+.kpi.kb::after{background:linear-gradient(90deg,var(--blue),var(--cyan));}
+.kpi.kg::after{background:linear-gradient(90deg,var(--green),#34d399);}
+.kpi.kgo::after{background:linear-gradient(90deg,var(--gold),#fbbf24);}
+.kpi.kr::after{background:linear-gradient(90deg,var(--blue),var(--cyan));}
+.kpi-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;}
+.kpi-ico{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:1rem;}
+.kpi-tr{font-size:.72rem;font-weight:700;padding:.2rem .55rem;border-radius:100px;}
+.tr-up{background:var(--green-dim);color:var(--green);}
+.tr-bl{background:var(--blue-dim);color:#93c5fd;}
+.kpi-num{font-family:'Cormorant Garamond',serif;font-size:2.1rem;font-weight:700;font-style:italic;color:white;line-height:1;margin-bottom:.25rem;}
+.kpi-lbl{font-size:.75rem;color:var(--text-soft);font-weight:500;}
+
+/* GRIDS */
+.g2{display:grid;grid-template-columns:1.45fr 1fr;gap:1.25rem;margin-bottom:1.25rem;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.25rem;}
+
+/* CARD */
+.card{background:var(--card);border:1px solid var(--border);border-radius:18px;overflow:hidden;transition:border-color .2s;}
+.card:hover{border-color:var(--border2);}
+.ch{padding:1.1rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.ct{font-size:.875rem;font-weight:600;color:var(--text);}
+.ca{font-size:.78rem;font-weight:600;color:var(--blue);cursor:pointer;background:none;border:none;transition:color .2s;}
+.ca:hover{color:var(--cyan);}
+.cb{padding:1.25rem 1.5rem;}
+
+/* BOOKING ROW */
+.bkr{display:flex;align-items:center;gap:1rem;padding:.85rem 0;border-bottom:1px solid var(--border);}
+.bkr:last-child{border-bottom:none;padding-bottom:0;}
+.bkr:first-child{padding-top:0;}
+.bk-ico{width:42px;height:42px;border-radius:12px;background:var(--card2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.15rem;flex-shrink:0;}
+.bk-n{font-size:.875rem;font-weight:600;color:var(--text);}
+.bk-m{font-size:.72rem;color:var(--text-soft);margin-top:.15rem;}
+.bk-p{font-size:.875rem;font-weight:600;color:var(--text);}
+
+/* PILLS */
+.pill{display:inline-flex;align-items:center;gap:.25rem;font-size:.68rem;font-weight:700;padding:.2rem .6rem;border-radius:100px;margin-top:.2rem;}
+.pill::before{content:'';width:5px;height:5px;border-radius:50%;}
+.p-bl{background:var(--blue-dim);color:#93c5fd;border:1px solid rgba(59,130,246,.15);}
+.p-bl::before{background:var(--blue);}
+.p-gr{background:var(--green-dim);color:#6ee7b7;border:1px solid rgba(16,185,129,.15);}
+.p-gr::before{background:var(--green);}
+.p-go{background:var(--gold-dim);color:#fcd34d;border:1px solid rgba(245,158,11,.15);}
+.p-go::before{background:var(--gold);}
+
+/* TRACKER */
+.tw{display:flex;align-items:center;gap:.9rem;background:var(--card2);border:1px solid var(--border2);border-radius:14px;padding:1rem 1.1rem;margin-bottom:1.25rem;}
+.tw-av{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#0ea5e9,#06b6d4);display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;color:white;flex-shrink:0;}
+.tw-name{font-size:.9rem;font-weight:600;color:var(--text);}
+.tw-sub{font-size:.72rem;color:var(--text-soft);margin-top:.1rem;}
+.tw-acts{margin-left:auto;display:flex;gap:.4rem;}
+.tw-btn{width:34px;height:34px;border-radius:50%;background:var(--blue-dim);border:1px solid rgba(59,130,246,.15);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.85rem;transition:all .2s;}
+.tw-btn:hover{background:var(--blue);}
+
+/* STEPS */
+.steps{display:flex;flex-direction:column;}
+.step{display:flex;align-items:flex-start;gap:.9rem;}
+.slw{display:flex;flex-direction:column;align-items:center;}
+.sdot{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;flex-shrink:0;}
+.sline{width:1.5px;height:32px;margin:2px 0;}
+.s-done .sdot{background:var(--green);color:white;box-shadow:0 0 0 4px var(--green-dim);}
+.s-done .sline{background:var(--green);}
+.s-active .sdot{background:var(--blue);color:white;box-shadow:0 0 0 4px var(--blue-dim),0 4px 14px var(--blue-glow);}
+.s-active .sline{background:var(--border);}
+.s-wait .sdot{background:var(--card2);color:var(--text-soft);border:1.5px solid var(--border2);}
+.s-wait .sline{background:var(--border);}
+.stxt{padding-top:.35rem;padding-bottom:1.2rem;}
+.slbl{font-size:.85rem;font-weight:600;color:var(--text);}
+.stm{font-size:.72rem;color:var(--text-soft);margin-top:.15rem;}
+
+/* MAP */
+.map-ph{background:var(--card2);border:1px solid var(--border);border-radius:14px;height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.5rem;position:relative;overflow:hidden;}
+.map-ph::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(59,130,246,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(59,130,246,.04) 1px,transparent 1px);background-size:28px 28px;}
+.map-ph::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 70% at 60% 40%,rgba(6,182,212,.06),transparent 70%);}
+.mpin{font-size:2rem;position:relative;z-index:1;animation:pb 2.5s ease-in-out infinite;}
+@keyframes pb{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.mlbl{font-size:.75rem;font-weight:600;color:var(--text-mid);position:relative;z-index:1;}
+
+/* NEARBY */
+.ni{display:flex;align-items:center;gap:.8rem;padding:.75rem 0;border-bottom:1px solid var(--border);}
+.ni:last-child{border-bottom:none;padding-bottom:0;}
+.ni:first-child{padding-top:0;}
+.n-av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;color:white;flex-shrink:0;}
+.n-name{font-size:.83rem;font-weight:600;color:var(--text);}
+.n-skill{font-size:.7rem;color:var(--text-soft);margin-top:.1rem;}
+.n-dist{font-size:.78rem;font-weight:700;color:var(--cyan);}
+.n-star{font-size:.68rem;color:var(--gold);}
+.n-bk{padding:.3rem .75rem;border-radius:100px;background:var(--blue-dim);border:1px solid rgba(59,130,246,.15);color:var(--blue);font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:700;cursor:pointer;transition:all .2s;margin-left:.5rem;}
+.n-bk:hover{background:var(--blue);color:white;}
+
+/* BOOKINGS TABLE */
+.ph{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:1.5rem;}
+.ph h2{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:700;font-style:italic;color:white;margin-bottom:.25rem;}
+.ph p{font-size:.83rem;color:var(--text-mid);}
+.ftabs{display:flex;gap:.35rem;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:.3rem;}
+.ft{padding:.45rem 1rem;border-radius:9px;border:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:600;color:var(--text-soft);cursor:pointer;transition:all .2s;}
+.ft.on{background:var(--lift);color:var(--text);border:1px solid var(--border2);}
+table.bkt{width:100%;border-collapse:collapse;}
+table.bkt thead th{padding:.7rem 1.25rem;font-size:.7rem;font-weight:600;color:var(--text-soft);text-transform:uppercase;letter-spacing:.8px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap;}
+table.bkt tbody tr{border-bottom:1px solid var(--border);transition:background .2s;}
+table.bkt tbody tr:last-child{border-bottom:none;}
+table.bkt tbody tr:hover{background:rgba(255,255,255,.02);}
+table.bkt td{padding:.9rem 1.25rem;font-size:.85rem;color:var(--text-mid);vertical-align:middle;}
+.td-svc{display:flex;align-items:center;gap:.75rem;}
+.td-ico{width:36px;height:36px;border-radius:10px;background:var(--card2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+.td-nm{font-size:.875rem;font-weight:600;color:var(--text);}
+.td-id{font-size:.7rem;color:var(--text-soft);margin-top:.1rem;}
+.td-acts{display:flex;gap:.4rem;}
+.abt{padding:.3rem .7rem;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:600;border:none;cursor:pointer;transition:all .2s;}
+.ab-rb{background:var(--blue-dim);color:var(--blue);}
+.ab-rb:hover{background:var(--blue);color:white;}
+.ab-cx{background:var(--red-dim);color:#fca5a5;}
+.ab-cx:hover{background:var(--red);color:white;}
+.ab-tr{background:var(--cyan-dim);color:var(--cyan);}
+.ab-tr:hover{background:var(--cyan);color:var(--ink);}
+
+/* PROFILE */
+.profile-wrap{display:grid;grid-template-columns:300px 1fr;gap:1.25rem;}
+.prof-card{background:var(--card);border:1px solid var(--border);border-radius:18px;overflow:hidden;}
+.prof-cover{height:90px;background:linear-gradient(135deg,#0e2040,#0c3060);position:relative;}
+.prof-cover::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 100% at 50% 100%,rgba(59,130,246,0.15),transparent 60%);}
+.prof-av-w{padding:0 1.5rem;margin-top:-28px;position:relative;z-index:1;}
+.prof-av{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--cyan));display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:700;color:white;border:3px solid var(--card);box-shadow:0 6px 20px var(--blue-glow);}
+.prof-info{padding:.75rem 1.5rem 1.5rem;}
+.prof-name{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;color:white;margin-bottom:.15rem;}
+.prof-email{font-size:.78rem;color:var(--text-soft);}
+.prof-badges{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.75rem;}
+.pb{font-size:.68rem;font-weight:700;padding:.2rem .6rem;border-radius:100px;}
+.pb-g{background:var(--green-dim);color:#6ee7b7;border:1px solid rgba(16,185,129,.15);}
+.pb-b{background:var(--blue-dim);color:#93c5fd;border:1px solid rgba(59,130,246,.15);}
+.prof-stats{padding:1rem 1.5rem;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:.6rem;}
+.ps-r{display:flex;justify-content:space-between;align-items:center;}
+.ps-l{font-size:.78rem;color:var(--text-soft);}
+.ps-v{font-size:.85rem;font-weight:600;color:var(--text);}
+.fsec{margin-bottom:1.5rem;}
+.fsec-t{font-size:.72rem;font-weight:600;color:var(--text-soft);text-transform:uppercase;letter-spacing:1px;margin-bottom:.85rem;display:flex;align-items:center;gap:.5rem;}
+.fsec-t::after{content:'';flex:1;height:1px;background:var(--border);}
+.fg2{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;}
+.fg{display:flex;flex-direction:column;gap:.4rem;}
+.fl{font-size:.72rem;font-weight:600;color:var(--text-soft);text-transform:uppercase;letter-spacing:.6px;}
+.fi{padding:.75rem 1rem;background:var(--card2);border:1px solid var(--border);border-radius:11px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.875rem;outline:none;transition:all .2s;appearance:none;width:100%;}
+.fi:focus{border-color:rgba(59,130,246,.4);box-shadow:0 0 0 3px rgba(59,130,246,.07);}
+.fi::placeholder{color:var(--text-soft);}
+
+/* SETTINGS */
+.set-wrap{display:grid;grid-template-columns:220px 1fr;gap:1.25rem;}
+.set-nav{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:.5rem;height:fit-content;}
+.sni{display:flex;align-items:center;gap:.65rem;padding:.65rem .85rem;border-radius:10px;font-size:.84rem;font-weight:500;color:var(--text-mid);cursor:pointer;transition:all .2s;}
+.sni:hover{background:rgba(255,255,255,.04);color:var(--text);}
+.sni.on{background:var(--blue-dim);color:var(--blue);}
+.tog-r{display:flex;align-items:center;justify-content:space-between;padding:1rem 0;border-bottom:1px solid var(--border);}
+.tog-r:last-child{border-bottom:none;}
+.tr-t{font-size:.875rem;font-weight:600;color:var(--text);margin-bottom:.2rem;}
+.tr-s{font-size:.78rem;color:var(--text-soft);}
+.sw{position:relative;width:42px;height:23px;flex-shrink:0;cursor:pointer;}
+.sw input{opacity:0;width:0;height:0;}
+.sw-track{position:absolute;inset:0;border-radius:100px;background:var(--border2);transition:background .3s;}
+.sw input:checked+.sw-track{background:var(--blue);}
+.sw-k{position:absolute;top:2.5px;left:2.5px;width:18px;height:18px;background:white;border-radius:50%;transition:transform .3s;pointer-events:none;}
+.sw input:checked~.sw-k{transform:translateX(19px);}
+.lgout{width:100%;padding:.8rem;background:var(--red-dim);border:1px solid rgba(244,63,94,.15);border-radius:11px;color:#fca5a5;font-family:'DM Sans',sans-serif;font-size:.875rem;font-weight:600;cursor:pointer;transition:all .2s;text-align:left;display:flex;align-items:center;gap:.6rem;}
+.lgout:hover{background:var(--red);color:white;border-color:var(--red);}
+
+/* TOAST */
+.tc{position:fixed;bottom:2rem;right:2rem;z-index:9999;display:flex;flex-direction:column;gap:.5rem;}
+.toast{background:var(--card2);border:1px solid var(--border2);color:var(--text);padding:.85rem 1.25rem;border-radius:14px;font-size:.85rem;font-weight:600;box-shadow:0 12px 40px rgba(0,0,0,.4);display:flex;align-items:center;gap:.65rem;animation:tIn .3s ease;max-width:320px;}
+@keyframes tIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+.toast.ok::before{content:'✓';width:22px;height:22px;border-radius:50%;background:var(--green);color:white;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0;}
+
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:5px;}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <a href="index.html" class="sb-brand">
+    <div class="sb-mark">🌿</div>
+    <span class="sb-name">Eco<span>Work</span></span>
+  </a>
+  <div class="sb-user">
+    <div class="sb-av" id="sbAv">SR</div>
+    <div><div class="sb-uname" id="sbName">Loading...</div><div class="sb-urole">Customer Account</div></div>
+    <div class="sb-verified">✓ Verified</div>
+  </div>
+  <div class="sb-sec">Navigation</div>
+  <ul class="sb-nav">
+    <li><button class="sbl on" onclick="nav('overview',this)"><span class="ico">⬡</span> Overview</button></li>
+    <li><button class="sbl" onclick="nav('bookings',this)"><span class="ico">◫</span> My Bookings <span class="sbl-badge" id="bookingCount">0</span></button></li>
+    <li><button class="sbl" onclick="nav('tracker',this)"><span class="ico">◎</span> Track Worker</button></li>
+    <li><button class="sbl" onclick="nav('nearby',this)"><span class="ico">◈</span> Nearby Workers</button></li>
+  </ul>
+  <div class="sb-sec">Account</div>
+  <ul class="sb-nav">
+    <li><button class="sbl" onclick="nav('profile',this)"><span class="ico">◯</span> My Profile</button></li>
+    <li><button class="sbl" onclick="nav('settings',this)"><span class="ico">◌</span> Settings</button></li>
+  </ul>
+  <div class="sb-bottom">
+    <button class="sb-bookbtn" onclick="location.href='service-detail.html'">＋ &nbsp;Book a Service</button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="tb-pg" id="tbPg">Overview</div>
+    <div class="tb-right">
+      <div class="tb-search">🔍 Search services...</div>
+      <div class="tb-ibtn">🔔<div class="npip"></div></div>
+      <div class="tb-div"></div>
+      <div class="tb-user" onclick="toggleUserMenu()">
+        <div class="tb-av" id="tbAv">SR</div>
+        <div class="tb-uname" id="tbUn">Loading...</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- OVERVIEW -->
+    <div class="pg on" id="pg-overview">
+      <div class="hero">
+        <div class="hero-in">
+          <div>
+            <div class="hero-greet"><div class="ldot"></div> Live · <span id="nearbyWorkers">0</span> workers nearby</div>
+            <h1 id="greeting">Good morning, <em>User.</em></h1>
+            <p id="statusText">Loading your bookings...</p>
+          </div>
+          <div class="hero-acts">
+            <button class="btn-p" onclick="location.href='service-detail.html'">＋ &nbsp;New Booking</button>
+            <button class="btn-g" onclick="nav('tracker',null)">Track Active →</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="kpis">
+        <div class="kpi kb"><div class="kpi-top"><div class="kpi-ico" style="background:var(--blue-dim)">📋</div><div class="kpi-tr tr-up" id="totalBookingsTrend">—</div></div><div class="kpi-num" id="totalBookings">0</div><div class="kpi-lbl">Total Bookings</div></div>
+        <div class="kpi kg"><div class="kpi-top"><div class="kpi-ico" style="background:var(--green-dim)">✓</div><div class="kpi-tr tr-up" id="completedTrend">—</div></div><div class="kpi-num" id="completedBookings">0</div><div class="kpi-lbl">Completed</div></div>
+        <div class="kpi kgo"><div class="kpi-top"><div class="kpi-ico" style="background:var(--gold-dim)">💸</div><div class="kpi-tr tr-up">—</div></div><div class="kpi-num" style="font-size:1.6rem" id="totalSpent">₹0</div><div class="kpi-lbl">Total Spent</div></div>
+        <div class="kpi kr"><div class="kpi-top"><div class="kpi-ico" style="background:var(--blue-dim)">🔄</div><div class="kpi-tr tr-bl" id="activeStatus">Live</div></div><div class="kpi-num" id="activeBookings">0</div><div class="kpi-lbl">In Progress</div></div>
+      </div>
+
+      <div class="g2">
+        <div class="card">
+          <div class="ch"><div class="ct">◫ &nbsp;Recent Bookings</div><button class="ca" onclick="nav('bookings',null)">View all →</button></div>
+          <div class="cb" id="recentBookings">
+            <div class="bkr"><div style="text-align:center;width:100%;padding:2rem;color:var(--text-soft)">Loading bookings...</div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ch"><div class="ct">◎ &nbsp;Active Booking</div><button class="ca" onclick="nav('tracker',null)">Full view →</button></div>
+          <div class="cb" id="activeBookingCard">
+            <div class="tw"><div class="tw-av">—</div><div><div class="tw-name">No active booking</div><div class="tw-sub">Book a service to get started</div></div></div>
+            <div class="steps">
+              <div class="step s-wait"><div class="slw"><div class="sdot">1</div><div class="sline"></div></div><div class="stxt"><div class="slbl">Book a Service</div><div class="stm">Choose from available services</div></div></div>
+              <div class="step s-wait"><div class="slw"><div class="sdot">2</div><div class="sline"></div></div><div class="stxt"><div class="slbl">Worker Assigned</div><div class="stm">We'll match you with a pro</div></div></div>
+              <div class="step s-wait"><div class="slw"><div class="sdot">3</div><div class="sline"></div></div><div class="stxt"><div class="slbl">Service Completed</div><div class="stm">Pay after satisfaction</div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="g3">
+        <div class="card">
+          <div class="ch"><div class="ct">◈ &nbsp;Nearby Workers</div><button class="ca" onclick="nav('nearby',null)">See map →</button></div>
+          <div class="cb" id="nearbyWorkersList">
+            <div class="ni"><div style="text-align:center;width:100%;padding:1rem;color:var(--text-soft)">Loading workers...</div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ch"><div class="ct">Quick Book</div></div>
+          <div class="cb" style="display:flex;flex-direction:column;gap:.5rem;">
+            <button onclick="location.href='service-detail.html?service=solar'" style="display:flex;align-items:center;gap:.75rem;padding:.72rem .9rem;background:var(--card2);border:1px solid var(--border);border-radius:11px;color:var(--text-mid);font-family:'DM Sans',sans-serif;font-size:.83rem;font-weight:500;cursor:pointer;transition:all .2s;width:100%;text-align:left;" onmouseover="this.style.borderColor='var(--border2)';this.style.color='var(--text)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-mid)'">☀️ <span style="flex:1">Solar Panels</span><span style="font-size:.7rem;opacity:.4">→</span></button>
+            <button onclick="location.href='service-detail.html?service=ev'" style="display:flex;align-items:center;gap:.75rem;padding:.72rem .9rem;background:var(--card2);border:1px solid var(--border);border-radius:11px;color:var(--text-mid);font-family:'DM Sans',sans-serif;font-size:.83rem;font-weight:500;cursor:pointer;transition:all .2s;width:100%;text-align:left;" onmouseover="this.style.borderColor='var(--border2)';this.style.color='var(--text)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-mid)'">🔌 <span style="flex:1">EV Charging</span><span style="font-size:.7rem;opacity:.4">→</span></button>
+            <button onclick="location.href='service-detail.html?service=gardening'" style="display:flex;align-items:center;gap:.75rem;padding:.72rem .9rem;background:var(--card2);border:1px solid var(--border);border-radius:11px;color:var(--text-mid);font-family:'DM Sans',sans-serif;font-size:.83rem;font-weight:500;cursor:pointer;transition:all .2s;width:100%;text-align:left;" onmouseover="this.style.borderColor='var(--border2)';this.style.color='var(--text)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-mid)'">🌱 <span style="flex:1">Gardening</span><span style="font-size:.7rem;opacity:.4">→</span></button>
+            <button onclick="location.href='service-detail.html?service=waste'" style="display:flex;align-items:center;gap:.75rem;padding:.72rem .9rem;background:var(--card2);border:1px solid var(--border);border-radius:11px;color:var(--text-mid);font-family:'DM Sans',sans-serif;font-size:.83rem;font-weight:500;cursor:pointer;transition:all .2s;width:100%;text-align:left;" onmouseover="this.style.borderColor='var(--border2)';this.style.color='var(--text)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-mid)'">♻️ <span style="flex:1">Waste Management</span><span style="font-size:.7rem;opacity:.4">→</span></button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ch"><div class="ct">◈ &nbsp;Your Area</div><button class="ca" onclick="nav('nearby',null)">Full map →</button></div>
+          <div class="cb">
+            <div class="map-ph" style="height:180px;"><div class="mpin">📍</div><div class="mlbl" id="userLocation">Loading location...</div></div>
+            <div style="display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.75rem;">
+              <span style="font-size:.72rem;font-weight:600;padding:.25rem .65rem;border-radius:100px;background:var(--card2);border:1px solid var(--border);color:var(--text-soft)">📍 <span id="userCity">—</span></span>
+              <span style="font-size:.72rem;font-weight:600;padding:.25rem .65rem;border-radius:100px;background:var(--green-dim);border:1px solid rgba(16,185,129,.15);color:#6ee7b7">● <span id="onlineWorkers">0</span> Online</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOOKINGS -->
+    <div class="pg" id="pg-bookings">
+      <div class="ph"><div><h2>My Bookings</h2><p>Complete history of all your eco-service bookings</p></div><button class="btn-p" onclick="location.href='service-detail.html'">＋ &nbsp;New Booking</button></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:.75rem;">
+        <div class="ftabs">
+          <button class="ft on" onclick="filt(this,'all')">All &nbsp;<span style="opacity:.5" id="allCount">0</span></button>
+          <button class="ft" onclick="filt(this,'progress')">In Progress</button>
+          <button class="ft" onclick="filt(this,'done')">Completed</button>
+          <button class="ft" onclick="filt(this,'pending')">Scheduled</button>
+        </div>
+      </div>
+      <div class="card">
+        <table class="bkt">
+          <thead><tr><th>Service</th><th>Worker</th><th>Date</th><th>Amount</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="bookingsTableBody">
+            <tr><td colspan="6" style="text-align:center;padding:2rem;">Loading bookings...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TRACKER -->
+    <div class="pg" id="pg-tracker">
+      <div class="ph"><div><h2>Track Your Worker</h2><p>Real-time location and progress for your active booking</p></div></div>
+      <div id="trackerContent" style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;">
+        <div class="card">
+          <div class="ch"><div class="ct">No Active Booking</div></div>
+          <div class="cb" style="text-align:center;padding:3rem;">
+            <div style="font-size:3rem;margin-bottom:1rem;">📋</div>
+            <p style="color:var(--text-soft);margin-bottom:1.5rem;">You don't have any active bookings right now.</p>
+            <button class="btn-p" onclick="location.href='service-detail.html'">Book a Service</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NEARBY -->
+    <div class="pg" id="pg-nearby">
+      <div class="ph"><div><h2>Nearby Workers</h2><p>Certified professionals in your area</p></div></div>
+      <div style="display:grid;grid-template-columns:1.5fr 1fr;gap:1.25rem;">
+        <div class="card">
+          <div class="ch"><div class="ct">◈ &nbsp;Available Workers</div><span style="font-size:.75rem;color:var(--text-soft)" id="nearbyCount">0 online</span></div>
+          <div class="cb" id="nearbyWorkersDetail">
+            <div class="ni"><div style="text-align:center;width:100%;padding:2rem;color:var(--text-soft)">Loading workers...</div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ch"><div class="ct">Filter by Service</div></div>
+          <div class="cb" style="display:flex;flex-direction:column;gap:.45rem;">
+            <button class="ft on" style="width:100%;text-align:left;border-radius:10px;padding:.65rem .9rem">🌿 All Services</button>
+            <button class="ft" style="width:100%;text-align:left;border-radius:10px;padding:.65rem .9rem" onclick="filterWorkers('solar')">☀️ Solar Panels</button>
+            <button class="ft" style="width:100%;text-align:left;border-radius:10px;padding:.65rem .9rem" onclick="filterWorkers('gardening')">🌱 Gardening</button>
+            <button class="ft" style="width:100%;text-align:left;border-radius:10px;padding:.65rem .9rem" onclick="filterWorkers('energy')">⚡ Energy Audit</button>
+            <button class="ft" style="width:100%;text-align:left;border-radius:10px;padding:.65rem .9rem" onclick="filterWorkers('ev')">🔌 EV Charging</button>
+            <button class="ft" style="width:100%;text-align:left;border-radius:10px;padding:.65rem .9rem" onclick="filterWorkers('waste')">♻️ Waste Management</button>
+            <button class="ft" style="width:100%;text-align:left;border-radius:10px;padding:.65rem .9rem" onclick="filterWorkers('water')">💧 Water Conservation</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROFILE -->
+    <div class="pg" id="pg-profile">
+      <div class="ph"><div><h2>My Profile</h2><p>Manage your personal information and account details</p></div><button class="btn-p" onclick="saveProfile()">Save Changes</button></div>
+      <div class="profile-wrap">
+        <div class="prof-card">
+          <div class="prof-cover"></div>
+          <div class="prof-av-w"><div class="prof-av" id="profileAv">SR</div></div>
+          <div class="prof-info">
+            <div class="prof-name" id="profileName">Loading...</div>
+            <div class="prof-email" id="profileEmail">—</div>
+            <div class="prof-badges"><span class="pb pb-g">✓ Verified</span><span class="pb pb-b">Customer</span></div>
+          </div>
+          <div class="prof-stats">
+            <div class="ps-r"><span class="ps-l">Total Bookings</span><span class="ps-v" id="profileBookings">0</span></div>
+            <div class="ps-r"><span class="ps-l">Member Since</span><span class="ps-v" id="profileMemberSince">—</span></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="cb">
+            <div class="fsec">
+              <div class="fsec-t">Personal Information</div>
+              <div class="fg2">
+                <div class="fg"><label class="fl">First Name</label><input class="fi" type="text" id="editFirstName" placeholder="First Name"></div>
+                <div class="fg"><label class="fl">Last Name</label><input class="fi" type="text" id="editLastName" placeholder="Last Name"></div>
+                <div class="fg"><label class="fl">Email Address</label><input class="fi" type="email" id="editEmail" placeholder="Email"></div>
+                <div class="fg"><label class="fl">Mobile Number</label><input class="fi" type="tel" id="editMobile" placeholder="+91 "></div>
+              </div>
+            </div>
+            <div class="fsec">
+              <div class="fsec-t">Location</div>
+              <div class="fg2">
+                <div class="fg"><label class="fl">City</label><input class="fi" type="text" id="editCity" placeholder="City"></div>
+                <div class="fg"><label class="fl">Address</label><input class="fi" type="text" id="editAddress" placeholder="Address"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="pg" id="pg-settings">
+      <div class="ph"><div><h2>Settings</h2><p>Manage your preferences and account security</p></div></div>
+      <div class="set-wrap">
+        <div class="set-nav">
+          <div class="sni on">🔔 Notifications</div>
+          <div class="sni">🔑 Security</div>
+          <div class="sni">🌐 Preferences</div>
+        </div>
+        <div>
+          <div class="card" style="margin-bottom:1rem;">
+            <div class="ch"><div class="ct">Notifications</div></div>
+            <div class="cb">
+              <div class="tog-r"><div><div class="tr-t">Booking Confirmations</div><div class="tr-s">Receive alerts when a booking is confirmed</div></div><label class="sw"><input type="checkbox" checked><span class="sw-track"></span><span class="sw-k"></span></label></div>
+              <div class="tog-r"><div><div class="tr-t">Worker En Route Alerts</div><div class="tr-s">Know when your worker starts heading to you</div></div><label class="sw"><input type="checkbox" checked><span class="sw-track"></span><span class="sw-k"></span></label></div>
+              <div class="tog-r"><div><div class="tr-t">Job Completion</div><div class="tr-s">Notification when your service is complete</div></div><label class="sw"><input type="checkbox" checked><span class="sw-track"></span><span class="sw-k"></span></label></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="ch"><div class="ct">Account</div></div>
+            <div class="cb" style="display:flex;flex-direction:column;gap:.6rem;">
+              <button style="display:flex;align-items:center;gap:.75rem;padding:.85rem 1rem;background:var(--card2);border:1px solid var(--border);border-radius:11px;color:var(--text-mid);font-family:'DM Sans',sans-serif;font-size:.875rem;font-weight:500;cursor:pointer;transition:all .2s;width:100%;" onmouseover="this.style.borderColor='var(--border2)'" onmouseout="this.style.borderColor='var(--border)'">🔑 &nbsp;Change Password</button>
+              <button class="lgout" onclick="logout()">⏻ &nbsp;Sign Out</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="tc" id="tc"></div>
+
+<script>
+// ============================================
+// USER DASHBOARD - EcoWorkConnect
+// ============================================
+
+const API_URL = 'https://greenserve-platform.onrender.com/api';
+
+// Check if user is logged in
+function checkAuth() {
+  const token = localStorage.getItem('token');
+  const user = localStorage.getItem('user');
+  
+  if (!token || !user) {
+    window.location.href = 'user-login.html';
+    return null;
+  }
+  
+  return JSON.parse(user);
+}
+
+// Load user data
+function loadUserData() {
+  const user = checkAuth();
+  if (!user) return;
+  
+  // Update UI with user data
+  const firstName = user.first_name || user.firstName || 'User';
+  const lastName = user.last_name || user.lastName || '';
+  const fullName = firstName + ' ' + lastName;
+  const initials = (firstName[0] + (lastName[0] || '')).toUpperCase();
+  
+  // Update all avatar elements
+  document.getElementById('sbAv').textContent = initials;
+  document.getElementById('tbAv').textContent = initials;
+  document.getElementById('profileAv').textContent = initials;
+  
+  // Update name elements
+  document.getElementById('sbName').textContent = fullName;
+  document.getElementById('tbUn').textContent = fullName;
+  document.getElementById('profileName').textContent = fullName;
+  
+  // Update greeting
+  const hour = new Date().getHours();
+  let greeting = 'Good morning';
+  if (hour >= 12) greeting = 'Good afternoon';
+  if (hour >= 17) greeting = 'Good evening';
+  document.getElementById('greeting').innerHTML = `${greeting}, <em>${firstName}.</em>`;
+  
+  // Update email
+  if (user.email) {
+    document.getElementById('profileEmail').textContent = user.email;
+    document.getElementById('editEmail').value = user.email;
+  }
+  
+  // Update profile form
+  document.getElementById('editFirstName').value = firstName;
+  document.getElementById('editLastName').value = lastName;
+  document.getElementById('editMobile').value = user.mobile || '';
+  document.getElementById('editCity').value = user.city || '';
+  document.getElementById('editAddress').value = user.address || '';
+  
+  // Member since
+  if (user.createdAt) {
+    const date = new Date(user.createdAt);
+    document.getElementById('profileMemberSince').textContent = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+  }
+  
+  // Load bookings
+  loadBookings();
+  
+  // Load nearby workers
+  loadNearbyWorkers();
+}
+
+// Load bookings from API
+async function loadBookings() {
+  const token = localStorage.getItem('token');
+  
+  try {
+    const response = await fetch(`${API_URL}/bookings/my-bookings`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    
+    if (response.ok) {
+      const data = await response.json();
+      const bookings = data.data || [];
+      
+      updateDashboardWithBookings(bookings);
+    } else {
+      // Use mock data if API fails
+      updateDashboardWithBookings(getMockBookings());
+    }
+  } catch (error) {
+    console.error('Error loading bookings:', error);
+    updateDashboardWithBookings(getMockBookings());
+  }
+}
+
+// Mock bookings for demo
+function getMockBookings() {
+  return [
+    { id: 'ECO-001', service: 'Solar Panel Installation', worker: 'Ravi Kumar', date: '2026-03-05', amount: 288000, status: 'in_progress', icon: '☀️' },
+    { id: 'ECO-002', service: 'Gardening - Monthly Plan', worker: 'Suresh Naidu', date: '2026-02-28', amount: 4000, status: 'completed', icon: '🌱' },
+    { id: 'ECO-003', service: 'Waste Management', worker: 'Arjun Reddy', date: '2026-02-20', amount: 1500, status: 'completed', icon: '♻️' }
+  ];
+}
+
+// Update dashboard with bookings
+function updateDashboardWithBookings(bookings) {
+  const total = bookings.length;
+  const completed = bookings.filter(b => b.status === 'completed').length;
+  const active = bookings.filter(b => b.status === 'in_progress' || b.status === 'pending').length;
+  const totalSpent = bookings.reduce((sum, b) => sum + (b.amount || 0), 0);
+  
+  // Update KPIs
+  document.getElementById('totalBookings').textContent = total;
+  document.getElementById('completedBookings').textContent = completed;
+  document.getElementById('activeBookings').textContent = active;
+  document.getElementById('totalSpent').textContent = '₹' + (totalSpent / 100000).toFixed(1) + 'L';
+  document.getElementById('bookingCount').textContent = total;
+  document.getElementById('allCount').textContent = total;
+  document.getElementById('profileBookings').textContent = total;
+  
+  // Update status text
+  const statusText = active > 0 
+    ? `You have ${active} active booking${active > 1 ? 's' : ''} in progress.`
+    : 'Ready to book your next eco-service?';
+  document.getElementById('statusText').textContent = statusText;
+  
+  // Update recent bookings
+  updateRecentBookings(bookings.slice(0, 5));
+  
+  // Update full bookings table
+  updateBookingsTable(bookings);
+  
+  // Update tracker
+  updateTracker(bookings);
+}
+
+// Update recent bookings list
+function updateRecentBookings(bookings) {
+  const container = document.getElementById('recentBookings');
+  
+  if (bookings.length === 0) {
+    container.innerHTML = '<div class="bkr"><div style="text-align:center;width:100%;padding:2rem;color:var(--text-soft)">No bookings yet. Book your first service!</div></div>';
+    return;
+  }
+  
+  container.innerHTML = bookings.map(b => `
+    <div class="bkr">
+      <div class="bk-ico">${b.icon || '🔧'}</div>
+      <div style="flex:1">
+        <div class="bk-n">${b.service}</div>
+        <div class="bk-m">${b.worker || 'TBD'} · ${formatDate(b.date)}</div>
+      </div>
+      <div style="text-align:right">
+        <div class="bk-p">₹${(b.amount || 0).toLocaleString()}</div>
+        <div class="pill p-${getStatusColor(b.status)}">${formatStatus(b.status)}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// Update full bookings table
+function updateBookingsTable(bookings) {
+  const tbody = document.getElementById('bookingsTableBody');
+  
+  if (bookings.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:2rem;">No bookings yet</td></tr>';
+    return;
+  }
+  
+  tbody.innerHTML = bookings.map(b => `
+    <tr data-s="${b.status}">
+      <td>
+        <div class="td-svc">
+          <div class="td-ico">${b.icon || '🔧'}</div>
+          <div>
+            <div class="td-nm">${b.service}</div>
+            <div class="td-id">#${b.id}</div>
+          </div>
+        </div>
+      </td>
+      <td>${b.worker || 'TBD'}</td>
+      <td>${formatDate(b.date)}</td>
+      <td style="font-weight:600;color:var(--text)">₹${(b.amount || 0).toLocaleString()}</td>
+      <td><div class="pill p-${getStatusColor(b.status)}">${formatStatus(b.status)}</div></td>
+      <td>
+        <div class="td-acts">
+          ${b.status === 'in_progress' ? '<button class="abt ab-tr" onclick="nav(\'tracker\',null)">Track</button>' : ''}
+          ${b.status === 'completed' ? '<button class="abt ab-rb">Rebook</button>' : ''}
+          ${b.status === 'pending' ? '<button class="abt ab-cx">Cancel</button>' : ''}
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+// Update tracker page
+function updateTracker(bookings) {
+  const activeBooking = bookings.find(b => b.status === 'in_progress');
+  const container = document.getElementById('trackerContent');
+  
+  if (!activeBooking) {
+    container.innerHTML = `
+      <div class="card" style="grid-column:span 2;">
+        <div class="ch"><div class="ct">No Active Booking</div></div>
+        <div class="cb" style="text-align:center;padding:3rem;">
+          <div style="font-size:3rem;margin-bottom:1rem;">📋</div>
+          <p style="color:var(--text-soft);margin-bottom:1.5rem;">You don't have any active bookings right now.</p>
+          <button class="btn-p" onclick="location.href='service-detail.html'">Book a Service</button>
+        </div>
+      </div>
+    `;
+    return;
+  }
+  
+  // Show active booking tracker
+  container.innerHTML = `
+    <div class="card">
+      <div class="ch"><div class="ct">${activeBooking.icon || '🔧'} &nbsp;${activeBooking.service}</div><div class="pill p-bl" style="margin:0">In Progress</div></div>
+      <div class="cb">
+        <div class="map-ph" style="height:220px;margin-bottom:1.25rem;">
+          <div class="mpin" style="font-size:2.5rem">📍</div>
+          <div class="mlbl">${activeBooking.worker || 'Worker'} · En route · ETA 30 min</div>
+        </div>
+        <div class="tw">
+          <div class="tw-av">${(activeBooking.worker || 'W')[0]}</div>
+          <div>
+            <div class="tw-name">${activeBooking.worker || 'Worker'}</div>
+            <div class="tw-sub">Service Professional · ⭐ 4.9</div>
+          </div>
+          <div class="tw-acts">
+            <div class="tw-btn">📞</div>
+            <div class="tw-btn">💬</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ch"><div class="ct">◎ &nbsp;Job Progress</div></div>
+      <div class="cb">
+        <div class="steps">
+          <div class="step s-done"><div class="slw"><div class="sdot">✓</div><div class="sline"></div></div><div class="stxt"><div class="slbl">Booking Confirmed</div><div class="stm">Completed</div></div></div>
+          <div class="step s-done"><div class="slw"><div class="sdot">✓</div><div class="sline"></div></div><div class="stxt"><div class="slbl">Worker Assigned</div><div class="stm">Completed</div></div></div>
+          <div class="step s-active"><div class="slw"><div class="sdot">→</div><div class="sline"></div></div><div class="stxt"><div class="slbl">Worker En Route</div><div class="stm">ETA 30 minutes</div></div></div>
+          <div class="step s-wait"><div class="slw"><div class="sdot">4</div></div><div class="stxt"><div class="slbl">Service In Progress</div><div class="stm">Pending</div></div></div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// Load nearby workers
+async function loadNearbyWorkers() {
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const city = user.city || 'Vijayawada';
+  
+  document.getElementById('userCity').textContent = city;
+  document.getElementById('userLocation').textContent = city + ' · Finding workers...';
+  
+  // Mock workers data
+  const workers = [
+    { name: 'Ravi Kumar', skill: 'Solar · EV', distance: '1.2 km', rating: 4.9, initials: 'RK', color: 'linear-gradient(135deg,#0ea5e9,#06b6d4)' },
+    { name: 'Suresh Naidu', skill: 'Gardening · Waste', distance: '2.4 km', rating: 4.8, initials: 'SN', color: 'linear-gradient(135deg,#1d4ed8,#3b82f6)' },
+    { name: 'Arjun Reddy', skill: 'Maintenance', distance: '3.1 km', rating: 4.7, initials: 'AR', color: 'linear-gradient(135deg,#0369a1,#0ea5e9)' },
+    { name: 'Priya Menon', skill: 'Energy · Water', distance: '4.5 km', rating: 4.9, initials: 'PM', color: 'linear-gradient(135deg,#065f74,#0d9488)' }
+  ];
+  
+  document.getElementById('nearbyWorkers').textContent = workers.length;
+  document.getElementById('onlineWorkers').textContent = workers.length;
+  document.getElementById('nearbyCount').textContent = workers.length + ' online';
+  document.getElementById('userLocation').textContent = city + ' · ' + workers.length + ' workers in 5 km';
+  
+  // Update nearby workers list
+  const listHTML = workers.map(w => `
+    <div class="ni">
+      <div class="n-av" style="background:${w.color}">${w.initials}</div>
+      <div>
+        <div class="n-name">${w.name}</div>
+        <div class="n-skill">${w.skill} · ⭐ ${w.rating}</div>
+      </div>
+      <div style="margin-left:auto;text-align:right">
+        <div class="n-dist">${w.distance}</div>
+      </div>
+      <button class="n-bk" onclick="location.href='service-detail.html'">Book</button>
+    </div>
+  `).join('');
+  
+  document.getElementById('nearbyWorkersList').innerHTML = listHTML;
+  document.getElementById('nearbyWorkersDetail').innerHTML = listHTML;
+}
+
+// Helper functions
+function formatDate(dateStr) {
+  if (!dateStr) return '—';
+  const date = new Date(dateStr);
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+function formatStatus(status) {
+  const map = {
+    'in_progress': 'In Progress',
+    'completed': 'Completed',
+    'pending': 'Scheduled',
+    'cancelled': 'Cancelled'
+  };
+  return map[status] || status;
+}
+
+function getStatusColor(status) {
+  const map = {
+    'in_progress': 'bl',
+    'completed': 'gr',
+    'pending': 'go',
+    'cancelled': 'red'
+  };
+  return map[status] || 'bl';
+}
+
+// Navigation
+const pages = {overview:'Overview',bookings:'My Bookings',tracker:'Track Worker',nearby:'Nearby Workers',profile:'Profile',settings:'Settings'};
+
+function nav(page, btn) {
+  document.querySelectorAll('.pg').forEach(p => p.classList.remove('on'));
+  document.getElementById('pg-' + page).classList.add('on');
+  document.getElementById('tbPg').textContent = pages[page] || page;
+  if (btn) {
+    document.querySelectorAll('.sbl').forEach(b => b.classList.remove('on'));
+    btn.classList.add('on');
+  }
+}
+
+function filt(btn, s) {
+  document.querySelectorAll('.ft').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  document.querySelectorAll('#bookingsTableBody tr').forEach(r => {
+    r.style.display = (s === 'all' || r.dataset.s === s) ? '' : 'none';
+  });
+}
+
+function filterWorkers(type) {
+  toast('Filtering workers by: ' + type, 'ok');
+}
+
+function saveProfile() {
+  toast('Profile updated successfully!', 'ok');
+}
+
+function logout() {
+  localStorage.removeItem('token');
+  localStorage.removeItem('user');
+  window.location.href = 'user-login.html';
+}
+
+function toggleUserMenu() {
+  // Could show dropdown menu
+}
+
+// Toast notifications
+function toast(msg, type = 'ok') {
+  const c = document.getElementById('tc');
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.textContent = msg;
+  c.appendChild(t);
+  setTimeout(() => t.remove(), 3500);
+}
+
+// Initialize on load
+document.addEventListener('DOMContentLoaded', loadUserData);
+</script>
+</body>
+</html>

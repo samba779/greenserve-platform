@@ -329,7 +329,7 @@ async function doLogin(){
   try{
     const r=await fetch(`${API}/auth/login`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mobile,password,userType:'user'})});
     const d=await r.json();
-    if(d.success){localStorage.setItem('token',d.data.token);localStorage.setItem('user',JSON.stringify(d.data.user));toast('Welcome back! Redirecting…',true);setTimeout(()=>location.href='services.html',1200);}
+    if(d.success){localStorage.setItem('token',d.data.token);localStorage.setItem('user',JSON.stringify(d.data.user));toast('Welcome back! Redirecting…',true);setTimeout(()=>location.href='user-dashboard.html',1200);}
     else if(d.data?.requiresVerification){mob=mobile;document.getElementById('otpNote').textContent=`OTP sent to +91 ${mobile}`;sw('otp');}
     else toast(d.message||'Login failed');
   }catch{toast('Network error. Try again.');}
