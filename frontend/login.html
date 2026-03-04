@@ -86,7 +86,6 @@
             window.location.href = 'https://greenserve-platform.onrender.com/api/auth/google';
         }
 
-        // Handle Google OAuth callback
         window.addEventListener('load', function() {
             const urlParams = new URLSearchParams(window.location.search);
             const token = urlParams.get('token');
