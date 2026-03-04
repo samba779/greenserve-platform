@@ -15,6 +15,8 @@ const connectDB = async () => {
     try {
       const userCollection = db.collection('users');
       const userIndexes = await userCollection.indexes();
+      
+      // Drop mobile unique index
       const mobileUniqueIndex = userIndexes.find(idx => 
         idx.key && idx.key.mobile === 1 && idx.unique === true
       );
@@ -22,14 +24,25 @@ const connectDB = async () => {
         await userCollection.dropIndex(mobileUniqueIndex.name);
         console.log('✅ Dropped unique index on mobile from users collection');
       }
+      
+      // Drop email unique index
+      const emailUniqueIndex = userIndexes.find(idx => 
+        idx.key && idx.key.email === 1 && idx.unique === true
+      );
+      if (emailUniqueIndex) {
+        await userCollection.dropIndex(emailUniqueIndex.name);
+        console.log('✅ Dropped unique index on email from users collection');
+      }
     } catch (idxErr) {
-      console.log('ℹ️ No mobile unique index to drop in users (or already dropped)');
+      console.log('ℹ️ No unique indexes to drop in users (or already dropped)');
     }
 
-    // Check and drop mobile unique index from workers collection  
+    // Check and drop mobile and email unique index from workers collection  
     try {
       const workerCollection = db.collection('workers');
       const workerIndexes = await workerCollection.indexes();
+      
+      // Drop mobile unique index
       const workerMobileUniqueIndex = workerIndexes.find(idx =>
         idx.key && idx.key.mobile === 1 && idx.unique === true
       );
@@ -37,8 +50,17 @@ const connectDB = async () => {
         await workerCollection.dropIndex(workerMobileUniqueIndex.name);
         console.log('✅ Dropped unique index on mobile from workers collection');
       }
+      
+      // Drop email unique index
+      const workerEmailUniqueIndex = workerIndexes.find(idx =>
+        idx.key && idx.key.email === 1 && idx.unique === true
+      );
+      if (workerEmailUniqueIndex) {
+        await workerCollection.dropIndex(workerEmailUniqueIndex.name);
+        console.log('✅ Dropped unique index on email from workers collection');
+      }
     } catch (idxErr) {
-      console.log('ℹ️ No mobile unique index to drop in workers (or already dropped)');
+      console.log('ℹ️ No unique indexes to drop in workers (or already dropped)');
     }
 
   } catch (error) {
