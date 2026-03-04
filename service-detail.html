@@ -289,8 +289,17 @@
             const serviceId = urlParams.get('id') || 'solar';
             const service = services[serviceId] || services.solar;
 
+            console.log('🔍 URL Service ID:', serviceId);
+            console.log('📋 Service Data:', service);
+
             // Set service ID in booking form
-            document.getElementById('serviceId').value = serviceId;
+            const serviceIdField = document.getElementById('serviceId');
+            if (serviceIdField) {
+                serviceIdField.value = serviceId;
+                console.log('✅ Service ID set in form:', serviceIdField.value);
+            } else {
+                console.error('❌ Service ID field not found!');
+            }
 
             document.title = service.title + ' - GreenServe';
             document.querySelector('.service-detail-header h1').textContent = service.title;

@@ -178,6 +178,9 @@ function handleFormSubmit(e) {
                         window.location.href = `otp-verify.html?mobile=${encodeURIComponent(mobile)}`;
                     }
                 } else if (formId === 'bookingForm') {
+                    console.log('📋 Booking form data:', data);
+                    console.log('🆔 Service ID in booking:', data.serviceId);
+                    
                     if (result.data && result.data._id) {
                         localStorage.setItem('lastBooking', JSON.stringify(result.data));
                     }
