@@ -16,8 +16,7 @@ const bookingSchema = new mongoose.Schema({
     ref: 'Worker'
   },
   service_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Service',
+    type: String,
     required: true
   },
   category_id: {
