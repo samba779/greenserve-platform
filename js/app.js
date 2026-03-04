@@ -236,9 +236,9 @@ function handleFormSubmit(e) {
                 } else if (formId === 'bookingForm') {
                     if (result.data && result.data._id) {
                         localStorage.setItem('lastBooking', JSON.stringify(result.data));
-                        showToast('Booking successful! Redirecting...', 'success');
+                        showToast('Booking successful! Redirecting to tracking...', 'success');
                         setTimeout(() => {
-                            window.location.href = 'bookings.html';
+                            window.location.href = 'tracking.html';
                         }, 1000);
                     } else {
                         showToast('Booking failed. Please try again.', 'error');
