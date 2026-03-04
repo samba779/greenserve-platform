@@ -1,6 +1,18 @@
 const { pool } = require('../config/database');
 const { v4: uuidv4 } = require('uuid');
 
+// Hardcoded services to match frontend
+const services = {
+  solar: { id: 'solar', title: 'Solar Services', base_price: 150000, category_id: 1 },
+  energy: { id: 'energy', title: 'Energy Audit', base_price: 5000, category_id: 2 },
+  biogas: { id: 'biogas', title: 'Bio-Gas Services', base_price: 45000, category_id: 3 },
+  gardening: { id: 'gardening', title: 'Gardening & Landscaping', base_price: 3000, category_id: 4 },
+  waste: { id: 'waste', title: 'Waste Management', base_price: 1500, category_id: 5 },
+  water: { id: 'water', title: 'Water Conservation', base_price: 25000, category_id: 6 },
+  ev: { id: 'ev', title: 'EV Charging Support', base_price: 35000, category_id: 7 },
+  maintenance: { id: 'maintenance', title: 'Green Maintenance', base_price: 1500, category_id: 8 }
+};
+
 // Generate unique booking ID
 const generateBookingId = () => {
   return 'GR' + Math.floor(100000 + Math.random() * 900000);
@@ -12,20 +24,20 @@ const createBooking = async (req, res) => {
     const { id: userId } = req.user;
     const { serviceId, bookingDate, bookingTime, address, city, latitude, longitude, notes } = req.body;
 
-    // Get service details
-    const [services] = await pool.execute(
-      'SELECT * FROM services WHERE id = ? AND is_active = TRUE',
-      [serviceId]
-    );
+    console.log('🔍 Booking Request:', { serviceId, userId, bookingDate, bookingTime });
 
-    if (services.length === 0) {
+    // Get service details from hardcoded services
+    const service = services[serviceId];
+    
+    if (!service) {
+      console.log('❌ Service not found:', serviceId);
       return res.status(404).json({
         success: false,
         message: 'Service not found'
       });
     }
 
-    const service = services[0];
+    console.log('✅ Service found:', service);
     
     // Calculate pricing
     const basePrice = parseFloat(service.base_price);
