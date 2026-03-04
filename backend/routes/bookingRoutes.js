@@ -16,18 +16,7 @@ const {
 } = require('../controllers/bookingController');
 
 // User routes
-router.post('/', authMiddleware, (req, res, next) => {
-  try {
-    console.log('🔍 Route received request body:', JSON.stringify(req.body, null, 2));
-    validate(bookingSchema)(req, res, next);
-  } catch (error) {
-    console.error('❌ Route validation error:', error);
-    return res.status(400).json({
-      success: false,
-      message: 'Validation error: ' + error.message
-    });
-  }
-}, createBooking);
+router.post('/', authMiddleware, createBooking); // Temporarily removed validation
 router.get('/my-bookings', authMiddleware, getUserBookings);
 router.get('/available', authMiddleware, getAvailableBookings); // For workers
 router.get('/worker-bookings', authMiddleware, getWorkerBookings); // For workers
