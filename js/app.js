@@ -165,11 +165,16 @@ function handleFormSubmit(e) {
                     console.log('📱 Redirecting to OTP with mobile:', mobile);
                     window.location.href = `otp-verify.html?mobile=${encodeURIComponent(mobile)}`;
                 } else if (formId === 'loginForm') {
-                    if (result.data && result.data.token) {
+                    if (result.success && result.data && result.data.token) {
                         localStorage.setItem('token', result.data.token);
                         localStorage.setItem('user', JSON.stringify(result.data.user));
+                        window.location.href = 'services.html';
+                    } else if (result.data && result.data.requiresVerification) {
+                        // User not verified, redirect to OTP page
+                        const mobile = result.data.mobile || data.mobile;
+                        showToast('Please verify your mobile number', 'warning');
+                        window.location.href = `otp-verify.html?mobile=${encodeURIComponent(mobile)}`;
                     }
-                    window.location.href = 'services.html';
                 } else if (formId === 'bookingForm') {
                     if (result.data && result.data._id) {
                         localStorage.setItem('lastBooking', JSON.stringify(result.data));

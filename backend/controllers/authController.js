@@ -282,9 +282,25 @@ const login = async (req, res) => {
     }
 
     if (!user.is_verified) {
+      // Generate new OTP for unverified user
+      const otp = generateOTP();
+      const otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000);
+      
+      user.otp_code = otp;
+      user.otp_expires_at = otpExpiresAt;
+      await user.save();
+      
+      // Send OTP via SMS
+      const smsSent = await sendOTPviaSMS(mobile, otp);
+      
       return res.status(401).json({
         success: false,
-        message: 'Please verify your mobile number first'
+        message: 'Please verify your mobile number first',
+        data: {
+          requiresVerification: true,
+          mobile: mobile,
+          otp: smsSent ? null : otp // Show OTP only if SMS failed
+        }
       });
     }
 
