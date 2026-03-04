@@ -28,7 +28,7 @@ function checkAuthStatus() {
     const authButtons = document.getElementById('authButtons');
     const userName = document.getElementById('userName');
     
-    if (token && user._id) {
+    if (token && user.id) {
         // User is logged in
         if (userMenu) userMenu.style.display = 'flex';
         if (authButtons) authButtons.style.display = 'none';
@@ -627,16 +627,6 @@ function detectLocation(inputId) {
 // Export functions for global access
 window.showToast = showToast;
 window.cancelBooking = cancelBooking;
-window.acceptBooking = acceptBooking;
-window.rejectBooking = rejectBooking;
-window.startService = startService;
-window.completeService = completeService;
-window.getCurrentLocation = getCurrentLocation;
-window.selectAddress = selectAddress;
-window.scrollToSection = scrollToSection;
-window.openModal = openModal;
-window.closeModal = closeModal;
-window.formatCurrency = formatCurrency;
 // Google Sign-In Callback Handler
 function handleGoogleCallback() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -660,9 +650,15 @@ function handleGoogleSignIn() {
     showToast('Google sign-in coming soon!', 'info');
 }
 
-window.calculateTotal = calculateTotal;
-window.togglePassword = togglePassword;
-window.validateEmail = validateEmail;
-window.detectLocation = detectLocation;
+window.acceptBooking = acceptBooking;
+window.rejectBooking = rejectBooking;
+window.startService = startService;
+window.completeService = completeService;
+window.getCurrentLocation = getCurrentLocation;
+window.selectAddress = selectAddress;
+window.scrollToSection = scrollToSection;
+window.openModal = openModal;
+window.closeModal = closeModal;
+window.formatCurrency = formatCurrency;
 window.handleGoogleSignIn = handleGoogleSignIn;
 window.handleGoogleCallback = handleGoogleCallback;
