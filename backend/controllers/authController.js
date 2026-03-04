@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 const Worker = require('../models/Worker');
 const { generateToken } = require('../middleware/auth');
+const nodemailer = require('nodemailer');
 const axios = require('axios');
 
 // Generate OTP
@@ -21,6 +22,52 @@ const sendOTPviaSMS = async (mobile, otp) => {
   } catch (error) {
     console.error('❌ SMS sending failed:', error.message);
     console.log(`🔔 OTP for ${mobile}: ${otp}`);
+    return false;
+  }
+};
+
+// Send OTP via Email (Render-compatible)
+const sendOTPviaEmail = async (email, otp, firstName) => {
+  try {
+    // Create transporter using Render's email service or environment variables
+    const transporter = nodemailer.createTransport({
+      service: process.env.EMAIL_SERVICE || 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER || process.env.SMTP_USER,
+        pass: process.env.EMAIL_PASS || process.env.SMTP_PASS
+      }
+    });
+
+    const mailOptions = {
+      from: process.env.EMAIL_FROM || '"GreenServe" <noreply@greenserve.com>',
+      to: email,
+      subject: 'Your GreenServe Verification Code',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; border-radius: 10px;">
+            <h2 style="color: white; text-align: center; margin: 0;">🌿 Welcome to GreenServe!</h2>
+          </div>
+          <div style="background: white; padding: 30px; border-radius: 8px;">
+            <p>Hi ${firstName},</p>
+            <p>Thank you for choosing GreenServe! Your verification code is:</p>
+            <div style="background: #f8f9fa; border: 2px dashed #6c757d; padding: 15px; margin: 20px 0; text-align: center; font-size: 24px; font-weight: bold; letter-spacing: 3px;">
+              ${otp}
+            </div>
+            <p style="color: #666; margin-top: 20px;">This code will expire in 10 minutes. Please enter it in verification form.</p>
+            <p style="color: #666; font-size: 14px;">If you didn't request this code, please ignore this email.</p>
+            <div style="text-align: center; margin-top: 30px;">
+              <p style="color: #28a745; margin: 0;">Best regards,<br>The GreenServe Team 🌿</p>
+            </div>
+          </div>
+        </div>
+      `,
+    };
+
+    await transporter.sendMail(mailOptions);
+    console.log('📧 OTP email sent to:', email);
+    return true;
+  } catch (error) {
+    console.error('❌ Email sending failed:', error);
     return false;
   }
 };
@@ -143,22 +190,11 @@ const registerWorker = async (req, res) => {
         existingWorker.otp_expires_at = otpExpiresAt;
         await existingWorker.save();
 
-        // Send OTP via Email or SMS based on what user provided
-        let otpSent;
-        if (email) {
-          // User provided email - send OTP via email
-          otpSent = await sendOTPviaEmail(email, otp, firstName);
-          console.log('📧 OTP email sent to:', email);
-        } else {
-          // User only provided mobile - send OTP via SMS (if gateway works)
-          otpSent = await sendOTPviaSMS(mobile, otp);
-          console.log('📱 OTP SMS sent to:', mobile);
-        }
-
+        const smsSent = await sendOTPviaSMS(mobile, otp);
         return res.status(200).json({
           success: true,
-          message: email ? 'OTP sent to your email. Please check your inbox and verify.' : 'OTP sent to your mobile number. Please verify.',
-          data: { workerId: existingWorker._id, [email ? 'email' : 'mobile']: email || mobile, otp: otpSent ? null : otp }
+          message: 'OTP resent. Please verify your mobile number.',
+          data: { workerId: existingWorker._id, mobile, otp: smsSent ? null : otp }
         });
       }
 
