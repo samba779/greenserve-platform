@@ -100,7 +100,7 @@ const registerUser = async (req, res) => {
         existingUser.otp_expires_at = otpExpiresAt;
         await existingUser.save();
 
-        const smsSent = await sendOTPviaSMS(mobile, otp);
+        const smsSent = await sendOTPviaEmail(mobile, otp);
         return res.status(200).json({
           success: true,
           message: 'Account updated successfully. Please verify your mobile number.',
@@ -142,7 +142,7 @@ const registerUser = async (req, res) => {
     await user.save();
     console.log('✅ User saved:', user._id);
 
-    const smsSent = await sendOTPviaSMS(mobile, otp);
+    const smsSent = await sendOTPviaEmail(mobile, otp);
     res.status(201).json({
       success: true,
       message: 'Registered successfully. Please verify your mobile number.',
@@ -190,7 +190,7 @@ const registerWorker = async (req, res) => {
         existingWorker.otp_expires_at = otpExpiresAt;
         await existingWorker.save();
 
-        const smsSent = await sendOTPviaSMS(mobile, otp);
+        const smsSent = await sendOTPviaEmail(mobile, otp);
         return res.status(200).json({
           success: true,
           message: 'OTP resent. Please verify your mobile number.',
@@ -232,7 +232,7 @@ const registerWorker = async (req, res) => {
     await worker.save();
     console.log('✅ Worker saved:', worker._id);
 
-    const smsSent = await sendOTPviaSMS(mobile, otp);
+    const smsSent = await sendOTPviaEmail(mobile, otp);
     res.status(201).json({
       success: true,
       message: 'Worker registered successfully. Please verify your mobile number.',
@@ -309,7 +309,7 @@ const resendOTP = async (req, res) => {
     user.otp_expires_at = new Date(Date.now() + 10 * 60 * 1000);
     await user.save();
 
-    const smsSent = await sendOTPviaSMS(mobile, otp);
+    const smsSent = await sendOTPviaEmail(mobile, otp);
     res.json({
       success: true,
       message: 'OTP resent successfully',
@@ -337,7 +337,7 @@ const login = async (req, res) => {
       user.otp_code = otp;
       user.otp_expires_at = new Date(Date.now() + 10 * 60 * 1000);
       await user.save();
-      const smsSent = await sendOTPviaSMS(mobile, otp);
+      const smsSent = await sendOTPviaEmail(mobile, otp);
 
       return res.status(401).json({
         success: false,
@@ -388,7 +388,7 @@ const forgotPassword = async (req, res) => {
     user.otp_expires_at = new Date(Date.now() + 10 * 60 * 1000);
     await user.save();
 
-    const smsSent = await sendOTPviaSMS(mobile, otp);
+    const smsSent = await sendOTPviaEmail(mobile, otp);
     res.json({
       success: true,
       message: 'OTP sent for password reset',
