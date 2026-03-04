@@ -122,10 +122,9 @@
                 }
             }
             
-            // Auto-submit after filling
+            // Auto-submit after filling using proper event
             setTimeout(() => {
-                const form = document.getElementById('otpForm');
-                if (form) form.submit();
+                submitOTPForm();
             }, 500);
         }
         
