@@ -1,96 +1,300 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EcoWorkConnect - Worker Login</title>
-    <link rel="stylesheet" href="css/styles.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EcoWorkConnect – Worker Login</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0a1628;--navy2:#0e2040;--blue:#1a56db;--blue2:#1e40af;
+  --sky:#3b82f6;--aqua:#06b6d4;--aqua-dim:rgba(6,182,212,0.1);
+  --blue-dim:rgba(26,86,219,0.08);--blue-glow:rgba(26,86,219,0.18);
+  --white:#ffffff;--off:#f8faff;--off2:#f1f5fd;
+  --border:rgba(26,86,219,0.12);--border-f:rgba(26,86,219,0.4);
+  --text:#0a1628;--text-mid:#4b6280;--text-soft:#94a3b8;
+  --gold:#f59e0b;--r:14px;
+  --shadow:0 4px 24px rgba(26,86,219,0.08);
+  --shadow-lg:0 12px 48px rgba(26,86,219,0.14);
+}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--off);color:var(--text);min-height:100vh;margin:0;padding:0;}
+
+/* ── MAIN WRAPPER ── */
+.wrap{max-width:480px;margin:0 auto;padding:2rem 1.5rem;min-height:100vh;display:flex;flex-direction:column;justify-content:center;}
+
+/* ── HEADER ── */
+.hdr{text-align:center;margin-bottom:2rem;}
+.logo{display:inline-flex;align-items:center;gap:.6rem;text-decoration:none;margin-bottom:1.5rem;}
+.logo-mark{width:44px;height:44px;background:linear-gradient(135deg,var(--gold),#f97316);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;box-shadow:0 4px 18px rgba(245,158,11,0.35);}
+.logo-text{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--navy);}
+
+.l-eyebrow{display:inline-flex;align-items:center;gap:.5rem;background:rgba(245,158,11,0.08);border:1px solid var(--border);border-radius:100px;padding:.4rem 1rem;font-size:.75rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:1rem;}
+.l-title{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;line-height:1.15;color:var(--navy);margin-bottom:.5rem;}
+.l-title em{font-style:italic;background:linear-gradient(90deg,var(--gold),#f97316);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.l-sub{font-size:.9rem;color:var(--text-mid);line-height:1.6;max-width:360px;margin:0 auto;}
+
+.box{width:100%;max-width:440px;animation:fadeUp .5s ease both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+/* Toggle */
+.toggle{display:grid;grid-template-columns:1fr 1fr;gap:.35rem;background:var(--off2);border:1px solid var(--border);border-radius:14px;padding:.3rem;margin-bottom:1.75rem;}
+.t-btn{padding:.6rem;border-radius:10px;border:none;background:transparent;color:var(--text-soft);font-family:'Plus Jakarta Sans',sans-serif;font-size:.83rem;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:.4rem;}
+.t-btn.on{background:white;color:var(--gold);box-shadow:0 2px 10px rgba(245,158,11,0.12);}
+
+/* Header */
+.bh{margin-bottom:1.75rem;}
+.b-badge{display:inline-flex;align-items:center;gap:.4rem;background:var(--gold-dim);border:1px solid var(--border);border-radius:100px;padding:.3rem .85rem;font-size:.72rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:.85rem;}
+.b-title{font-family:'Playfair Display',serif;font-size:1.9rem;font-style:italic;color:var(--navy);line-height:1.15;margin-bottom:.35rem;}
+.b-sub{font-size:.85rem;color:var(--text-mid);}
+.b-sub a{color:var(--gold);font-weight:700;text-decoration:none;}
+.b-sub a:hover{text-decoration:underline;}
+
+/* Form card */
+.fc{background:white;border:1.5px solid var(--border);border-radius:20px;padding:1.75rem;margin-bottom:1rem;box-shadow:var(--shadow);}
+.fg{margin-bottom:1rem;}
+.fg:last-child{margin-bottom:0;}
+.fl{display:flex;align-items:center;justify-content:space-between;font-size:.72rem;font-weight:700;color:var(--text-soft);text-transform:uppercase;letter-spacing:.7px;margin-bottom:.4rem;}
+.fl a{color:var(--gold);font-weight:700;text-decoration:none;font-size:.72rem;}
+.fl a:hover{text-decoration:underline;}
+.iw{position:relative;}
+.fi{width:100%;padding:.78rem 1rem;background:var(--off);border:1.5px solid var(--border);border-radius:12px;color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;font-size:.875rem;outline:none;transition:all .2s;appearance:none;}
+.fi::placeholder{color:var(--text-soft);}
+.fi:focus{border-color:var(--border-f);background:white;box-shadow:0 0 0 3px rgba(245,158,11,0.07);}
+.fi-eye{position:absolute;right:.85rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text-soft);font-size:.95rem;transition:color .2s;}
+.fi-eye:hover{color:var(--gold);}
+.ph-row{display:flex;gap:.5rem;}
+.cc{width:72px;flex-shrink:0;padding:.78rem .6rem;background:var(--off);border:1.5px solid var(--border);border-radius:12px;color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;font-size:.875rem;font-weight:700;outline:none;appearance:none;text-align:center;cursor:pointer;}
+
+/* Submit */
+.btn-sub{width:100%;padding:.88rem;background:linear-gradient(135deg,var(--gold),#f97316);color:white;border:none;border-radius:12px;font-family:'Plus Jakarta Sans',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer;box-shadow:0 4px 18px rgba(245,158,11,0.25);transition:all .25s;letter-spacing:.2px;}
+.btn-sub:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(245,158,11,0.35);}
+
+/* Alt link */
+.alt{text-align:center;font-size:.82rem;color:var(--text-soft);margin-top:.85rem;}
+.alt a{color:var(--gold);font-weight:700;text-decoration:none;}
+
+/* Toast */
+.toast{position:fixed;top:1.25rem;right:1.25rem;background:white;border:1px solid var(--border);border-radius:12px;padding:1rem 1.25rem;box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:.75rem;font-size:.9rem;font-weight:500;color:var(--text);opacity:0;transform:translateY(-10px);transition:all .3s ease;z-index:1000;}
+.toast.on{opacity:1;transform:translateY(0);}
+.toast i{color:var(--gold);font-size:1.1rem;}
+
+.view{display:none;}.view.on{display:block;}
+</style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="index.html" class="nav-logo">
-                <i class="fas fa-leaf"></i>
-                <span>EcoWorkConnect</span>
-            </a>
-            <ul class="nav-menu">
-                <li><a href="index.html" class="nav-link">Home</a></li>
-                <li><a href="services.html" class="nav-link">Services</a></li>
-                <li><a href="worker-portal.html" class="nav-link">Worker Portal</a></li>
-            </ul>
-            <div class="nav-auth">
-                <a href="login-choice.html" class="btn btn-outline">Back to Login Choice</a>
-            </div>
-            <button class="mobile-menu-toggle" id="mobileMenuToggle">
-                <i class="fas fa-bars"></i>
-            </button>
+
+<div class="wrap">
+  <!-- Header -->
+  <div class="hdr">
+    <a href="index.html" class="logo">
+      <div class="logo-mark">⚒️</div>
+      <span class="logo-text">EcoWork</span>
+    </a>
+    <div class="l-eyebrow">Partner Portal</div>
+    <h1 class="l-title">Welcome <em>Partner</em></h1>
+    <p class="l-sub">Access your professional dashboard and manage eco-service jobs</p>
+  </div>
+
+  <!-- Toggle -->
+  <div class="toggle">
+    <button class="t-btn on" id="btn-login" onclick="sw('login')">Sign In</button>
+    <button class="t-btn" id="btn-reg" onclick="sw('reg')">Create Account</button>
+  </div>
+
+  <div class="box">
+    <!-- Login View -->
+    <div class="view on" id="v-login">
+      <div class="bh">
+        <div class="b-badge">🔐 Secure Access</div>
+        <div class="b-title">Sign In</div>
+        <div class="b-sub">Enter your credentials to access your dashboard</div>
+      </div>
+
+      <div class="fc">
+        <div class="fg">
+          <label class="fl">Mobile Number</label>
+          <input class="fi" type="tel" id="loginMobile" placeholder="98765 43210" maxlength="10">
         </div>
-    </nav>
 
-    <!-- Worker Login Section -->
-    <section class="auth-section">
-        <div class="container">
-            <div class="auth-card">
-                <div class="auth-header">
-                    <i class="fas fa-briefcase"></i>
-                    <h2>Worker Login</h2>
-                    <p>Access your professional dashboard and manage jobs</p>
-                </div>
-
-                <form id="loginForm" class="auth-form">
-                    <div class="form-group">
-                        <label class="form-label">Mobile Number</label>
-                        <input type="tel" id="mobile" class="form-input" placeholder="Enter your mobile number" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Password</label>
-                        <input type="password" id="password" class="form-input" placeholder="Enter your password" required>
-                    </div>
-
-                    <button type="submit" class="btn btn-secondary btn-full" data-original-text="Sign In">
-                        <i class="fas fa-hard-hat"></i> Sign In as Worker
-                    </button>
-                </form>
-
-                <div class="auth-footer">
-                    <p>Don't have an account? <a href="worker-register.html">Register as Worker</a></p>
-                    <p><a href="forgot-password.html">Forgot password?</a></p>
-                    <p><a href="user-login.html">Login as User</a></p>
-                </div>
-            </div>
+        <div class="fg">
+          <label class="fl">Password</label>
+          <div class="iw">
+            <input class="fi" type="password" id="loginPassword" placeholder="Enter your password">
+          </div>
         </div>
-    </section>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-brand">
-                    <a href="index.html" class="footer-logo">
-                        <i class="fas fa-leaf"></i>
-                        <span>GreenServe</span>
-                    </a>
-                    <p>Connecting you with professional green and utility service providers for a sustainable future.</p>
-                </div>
-                <div class="footer-links">
-                    <h4>Services</h4>
-                    <ul>
-                        <li><a href="services.html">All Services</a></li>
-                        <li><a href="service-detail.html?id=solar">Solar</a></li>
-                        <li><a href="service-detail.html?id=gardening">Gardening</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2026 EcoWorkConnect. All rights reserved.</p>
-            </div>
+        <button class="btn-sub" type="button" onclick="doLogin()">Sign In →</button>
+      </div>
+
+      <div class="alt"><a href="#" onclick="forgotPass();return false">Forgot password?</a></div>
+    </div>
+
+    <!-- Registration View -->
+    <div class="view" id="v-reg">
+      <div class="bh">
+        <div class="b-badge">🌱 New Partner</div>
+        <div class="b-title">Join as Partner</div>
+        <div class="b-sub">Create your professional account</div>
+      </div>
+
+      <div class="fc">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;">
+          <div class="fg">
+            <label class="fl">First Name</label>
+            <input class="fi" type="text" id="regFirstName" placeholder="First name">
+          </div>
+          <div class="fg">
+            <label class="fl">Last Name</label>
+            <input class="fi" type="text" id="regLastName" placeholder="Last name">
+          </div>
         </div>
-    </footer>
 
-    <script src="js/app.js"></script>
+        <div class="fg">
+          <label class="fl">Email (Optional)</label>
+          <input class="fi" type="email" id="regEmail" placeholder="your@email.com">
+        </div>
+
+        <div class="fg">
+          <label class="fl">Mobile Number</label>
+          <input class="fi" type="tel" id="regMobile" placeholder="98765 43210" maxlength="10">
+        </div>
+
+        <div class="fg">
+          <label class="fl">City</label>
+          <select class="fi" id="regCity" style="cursor:pointer;">
+            <option value="">Select your city</option>
+            <option value="bangalore">Bangalore</option>
+            <option value="mumbai">Mumbai</option>
+            <option value="delhi">Delhi</option>
+            <option value="hyderabad">Hyderabad</option>
+            <option value="chennai">Chennai</option>
+            <option value="pune">Pune</option>
+            <option value="vijayawada">Vijayawada</option>
+            <option value="guntur">Guntur</option>
+          </select>
+        </div>
+
+        <div class="fg">
+          <label class="fl">Create Password</label>
+          <div class="iw">
+            <input class="fi" type="password" id="regPassword" placeholder="Min 8 characters" minlength="8">
+          </div>
+        </div>
+
+        <button class="btn-sub" type="button" onclick="doRegister()">Create Partner Account →</button>
+      </div>
+    </div>
+
+    <!-- OTP View -->
+    <div class="view" id="v-otp">
+      <div class="bh">
+        <div class="b-badge">📱 Verify Mobile</div>
+        <div class="b-title">Enter your OTP</div>
+        <div class="b-sub" id="otpNote">We sent a 6-digit code to your number</div>
+      </div>
+      <div class="fc">
+        <div class="fg">
+          <label class="fl">6-Digit Code</label>
+          <input class="fi" type="text" id="otpInput" placeholder="Enter 6-digit OTP" maxlength="6" style="text-align:center;letter-spacing:8px;font-size:1.25rem;font-weight:600;">
+        </div>
+        <button class="btn-sub" type="button" onclick="doOTP()">Verify & Continue →</button>
+        <div style="text-align:center;margin-top:1rem;font-size:.8rem;color:var(--text-soft)">Didn't receive? <a href="#" style="color:var(--gold);font-weight:700;text-decoration:none" onclick="resend();return false">Resend OTP</a></div>
+      </div>
+      <div class="alt"><a href="#" onclick="sw('login');return false">← Back to login</a></div>
+    </div>
+  </div>
+
+  <div class="alt" style="margin-top:1.5rem;">
+    Are you a user? <a href="user-login.html" style="color:var(--blue);font-weight:700;">Login as User</a>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"><i>⚠️</i><span id="toastMsg">Something went wrong</span></div>
+
+<script>
+const API='https://greenserve-platform.onrender.com/api';
+let mob='',userType='worker';
+
+function sw(view){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));
+  document.getElementById('v-'+view).classList.add('on');
+  document.querySelectorAll('.t-btn').forEach(b=>b.classList.remove('on'));
+  if(view==='login')document.getElementById('btn-login').classList.add('on');
+  if(view==='reg')document.getElementById('btn-reg').classList.add('on');
+}
+
+function toast(msg,ok){
+  const t=document.getElementById('toast'),m=document.getElementById('toastMsg');
+  m.textContent=msg;t.querySelector('i').textContent=ok?'✅':'⚠️';
+  t.classList.add('on');setTimeout(()=>t.classList.remove('on'),3500);
+}
+
+async function doLogin(){
+  const mobile=document.getElementById('loginMobile').value.trim();
+  const password=document.getElementById('loginPassword').value;
+  if(!mobile||!password){toast('Please enter mobile and password');return;}
+  toast('Signing in...');
+  try{
+    const r=await fetch(`${API}/auth/login`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mobile,password,userType:'worker'})});
+    const d=await r.json();
+    if(d.success){localStorage.setItem('token',d.data.token);localStorage.setItem('user',JSON.stringify(d.data.user));toast('Welcome back! Redirecting…',true);setTimeout(()=>location.href='worker-dashboard.html',1200);}
+    else if(d.data?.requiresVerification){mob=mobile;document.getElementById('otpNote').textContent=`OTP sent to +91 ${mobile}`;sw('otp');}
+    else toast(d.message||'Login failed');
+  }catch{toast('Network error. Try again.');}
+}
+
+async function doRegister(){
+  const firstName=document.getElementById('regFirstName').value.trim();
+  const lastName=document.getElementById('regLastName').value.trim();
+  const email=document.getElementById('regEmail').value.trim();
+  const mobile=document.getElementById('regMobile').value.trim();
+  const city=document.getElementById('regCity').value;
+  const password=document.getElementById('regPassword').value;
+  if(!firstName||!lastName||!mobile||!city||!password){toast('Please fill all required fields');return;}
+  if(password.length<8){toast('Password must be at least 8 characters');return;}
+  toast('Creating account...');
+  try{
+    const r=await fetch(`${API}/auth/worker/register`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({firstName,lastName,email,mobile,password,city,skills:[],userType:'worker'})});
+    const d=await r.json();
+    if(d.success){mob=mobile;document.getElementById('otpNote').textContent=`OTP sent to +91 ${mobile}`;toast('Account created! Verify your mobile',true);sw('otp');}
+    else toast(d.message||'Registration failed');
+  }catch{toast('Network error. Try again.');}
+}
+
+async function doOTP(){
+  const otp=document.getElementById('otpInput').value.trim();
+  if(!otp||otp.length!==6){toast('Please enter 6-digit OTP');return;}
+  try{
+    const r=await fetch(`${API}/auth/verify-otp`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mobile:mob,otp,userType:'worker'})});
+    const d=await r.json();
+    if(d.success){localStorage.setItem('token',d.data.token);localStorage.setItem('user',JSON.stringify(d.data.user));toast('Verified! Redirecting…',true);setTimeout(()=>location.href='worker-dashboard.html',1200);}
+    else toast(d.message||'Invalid OTP');
+  }catch{toast('Network error. Try again.');}
+}
+
+async function resend(){
+  try{await fetch(`${API}/auth/resend-otp`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mobile:mob,userType:'worker'})});toast('OTP resent!',true);}
+  catch{toast('Failed to resend');}
+}
+
+function forgotPass(){toast('Please contact support to reset password');}
+
+const p=new URLSearchParams(location.search);
+const tk=p.get('token');
+if(tk){localStorage.setItem('token',tk);window.history.replaceState({},'',location.pathname);toast('Google sign-in successful!',true);setTimeout(()=>location.href='worker-dashboard.html',1000);}
+
+const urlMobile=p.get('mobile');
+const urlType=p.get('type');
+if(urlMobile){
+  mob=urlMobile;userType=urlType==='worker'?'worker':'user';
+  document.getElementById('otpNote').textContent=`OTP sent to +91 ${urlMobile}`;
+  document.getElementById('v-reg').classList.remove('on');
+  document.getElementById('v-login').classList.remove('on');
+  document.getElementById('v-otp').classList.add('on');
+}
+</script>
+
 </body>
 </html>
