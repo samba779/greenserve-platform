@@ -68,82 +68,45 @@ const registerUser = async (req, res) => {
     const otp = generateOTP();
     const otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
-    // ✅ Check by mobile only
-    const existingUser = await User.findOne({ mobile });
-
-    if (existingUser) {
-      if (!existingUser.is_verified) {
-        // Unverified ghost record — update it and resend OTP
-        console.log('⚠️ Unverified user found, updating for re-registration');
-        existingUser.first_name = firstName;
-        existingUser.last_name = lastName;
-        existingUser.email = email || null;
-        existingUser.password = hashedPassword;
-        existingUser.address = address || null;
-        existingUser.city = city || null;
-        existingUser.otp_code = otp;
-        existingUser.otp_expires_at = otpExpiresAt;
-        await existingUser.save();
-
-        const smsSent = await sendOTPviaEmail(mobile, otp);
-        return res.status(200).json({
-          success: true,
-          message: 'Account updated successfully. Please verify your mobile number.',
-          data: { userId: existingUser._id, mobile, otp: smsSent ? null : otp }
-        });
-      }
-
-      // If user exists and is verified, block registration
-      console.log('🚫 Verified user already exists with this mobile number');
-      return res.status(400).json({
-        success: false,
-        message: 'This mobile number is already registered and verified. Please login instead.',
-        data: {
-          existingUser: {
-            first_name: existingUser.first_name,
-            last_name: existingUser.last_name,
-            email: existingUser.email,
-            mobile: existingUser.mobile,
-            is_verified: existingUser.is_verified,
-            created_at: existingUser.createdAt
-          }
-        }
-      });
-    }
-
-    // ✅ New user
-    const user = new User({
+    // ✅ Allow multiple users with same mobile - create new account every time
+    console.log('✅ Creating new user account');
+    
+    const newUser = new User({
       first_name: firstName,
       last_name: lastName,
       email: email || null,
-      mobile,
+      mobile: mobile,
       password: hashedPassword,
       address: address || null,
       city: city || null,
+      is_verified: false,
       otp_code: otp,
       otp_expires_at: otpExpiresAt
     });
 
-    await user.save();
-    console.log('✅ User saved:', user._id);
+    await newUser.save();
+    console.log('✅ New user created:', newUser._id);
 
     const smsSent = await sendOTPviaEmail(mobile, otp);
+    
     res.status(201).json({
       success: true,
-      message: 'Registered successfully. Please verify your mobile number.',
-      data: { userId: user._id, mobile, otp: smsSent ? null : otp }
+      message: 'Account created! Please verify with OTP',
+      data: {
+        userId: newUser._id,
+        mobile: mobile,
+        requiresVerification: true,
+        otpSent: smsSent
+      }
     });
 
   } catch (error) {
-    console.error('❌ Registration error:', error);
-    if (error.code === 11000) {
-      const field = Object.keys(error.keyPattern)[0];
-      return res.status(400).json({
-        success: false,
-        message: `This ${field} is already registered. Please login instead.`
-      });
-    }
-    res.status(500).json({ success: false, message: 'Registration failed. Please try again.' });
+    console.error('❌ Registration Error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Registration failed. Please try again.',
+      error: error.message
+    });
   }
 };
 
@@ -157,83 +120,47 @@ const registerWorker = async (req, res) => {
     const otp = generateOTP();
     const otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
-    // ✅ FIX: Check mobile only (not broken $or with duplicate email key)
-    const existingWorker = await Worker.findOne({ mobile });
+    // ✅ Allow multiple workers with same mobile - create new account every time
+    console.log('✅ Creating new worker account');
 
-    if (existingWorker) {
-      if (!existingWorker.is_verified) {
-        console.log('⚠️ Unverified worker found, updating for re-registration');
-        existingWorker.first_name = firstName;
-        existingWorker.last_name = lastName;
-        existingWorker.email = email || null;
-        existingWorker.password = hashedPassword;
-        existingWorker.city = city || null;
-        existingWorker.address = address || null;
-        existingWorker.years_of_experience = yearsOfExperience;
-        existingWorker.skills = skills || [];
-        existingWorker.otp_code = otp;
-        existingWorker.otp_expires_at = otpExpiresAt;
-        await existingWorker.save();
-
-        const smsSent = await sendOTPviaEmail(mobile, otp);
-        return res.status(200).json({
-          success: true,
-          message: 'OTP resent. Please verify your mobile number.',
-          data: { workerId: existingWorker._id, mobile, otp: smsSent ? null : otp }
-        });
-      }
-
-      return res.status(400).json({
-        success: false,
-        message: 'This mobile number is already registered as a worker. Please login instead.'
-      });
-    }
-
-    // ✅ Check email separately — only if provided AND verified
-    if (email) {
-      const emailExists = await Worker.findOne({ email, is_verified: true });
-      if (emailExists) {
-        return res.status(400).json({
-          success: false,
-          message: 'This email is already registered. Please login instead.'
-        });
-      }
-    }
-
-    const worker = new Worker({
+    const newWorker = new Worker({
       first_name: firstName,
       last_name: lastName,
       email: email || null,
-      mobile,
+      mobile: mobile,
       password: hashedPassword,
       city: city || null,
       address: address || null,
-      years_of_experience: yearsOfExperience,
+      years_of_experience: yearsOfExperience || 0,
       skills: skills || [],
+      is_verified: false,
       otp_code: otp,
       otp_expires_at: otpExpiresAt
     });
 
-    await worker.save();
-    console.log('✅ Worker saved:', worker._id);
+    await newWorker.save();
+    console.log('✅ New worker created:', newWorker._id);
 
     const smsSent = await sendOTPviaEmail(mobile, otp);
+
     res.status(201).json({
       success: true,
-      message: 'Worker registered successfully. Please verify your mobile number.',
-      data: { workerId: worker._id, mobile, otp: smsSent ? null : otp }
+      message: 'Worker account created! Please verify with OTP',
+      data: {
+        workerId: newWorker._id,
+        mobile: mobile,
+        requiresVerification: true,
+        otpSent: smsSent
+      }
     });
 
   } catch (error) {
-    console.error('Worker registration error:', error);
-    if (error.code === 11000) {
-      const field = Object.keys(error.keyPattern)[0];
-      return res.status(400).json({
-        success: false,
-        message: `This ${field} is already registered. Please login instead.`
-      });
-    }
-    res.status(500).json({ success: false, message: 'Worker registration failed. Please try again.' });
+    console.error('❌ Worker Registration Error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Worker registration failed. Please try again.',
+      error: error.message
+    });
   }
 };
 
