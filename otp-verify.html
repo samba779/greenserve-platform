@@ -67,6 +67,9 @@
         const urlParams = new URLSearchParams(window.location.search);
         const mobile = urlParams.get('mobile');
         
+        console.log('🔍 URL Parameters:', window.location.search);
+        console.log('📱 Mobile from URL:', mobile);
+        
         if (mobile) {
             const mobileText = document.querySelector('.form-header p');
             if (mobileText) {
@@ -74,6 +77,13 @@
             }
             // Set hidden mobile field
             document.getElementById('mobileValue').value = mobile;
+            console.log('✅ Mobile set in hidden field:', mobile);
+        } else {
+            console.error('❌ No mobile number found in URL!');
+            showToast('Mobile number not found. Please register again.', 'error');
+            setTimeout(() => {
+                window.location.href = 'register.html';
+            }, 3000);
         }
         
         // Add form submission handler to ensure OTP is set
