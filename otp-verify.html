@@ -76,8 +76,9 @@
             document.getElementById('mobileValue').value = mobile;
         }
         
-        // Combine OTP digits and submit
-        function submitOTPForm() {
+        // Add form submission handler to ensure OTP is set
+        const otpForm = document.getElementById('otpForm');
+        otpForm.addEventListener('submit', function(e) {
             const inputs = document.querySelectorAll('.otp-input');
             let otpValue = '';
             inputs.forEach(input => {
@@ -89,10 +90,14 @@
             
             if (otpValue.length === 6) {
                 document.getElementById('otpValue').value = otpValue;
-                // Trigger the form submission through app.js handler
-                const form = document.getElementById('otpForm');
-                const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
-                form.dispatchEvent(submitEvent);
+                
+                // Small delay to ensure values are set
+                setTimeout(() => {
+                    // Trigger the form submission through app.js handler
+                    const form = document.getElementById('otpForm');
+                    const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
+                    form.dispatchEvent(submitEvent);
+                }, 100);
             }
         }
         
