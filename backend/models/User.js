@@ -32,7 +32,6 @@ const userSchema = new mongoose.Schema({
   },
   mobile: {
     type: String,
-    unique: true,
     sparse: true,
     required: function() {
       return !this.googleId; // Required only if not Google user
