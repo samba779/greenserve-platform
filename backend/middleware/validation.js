@@ -56,7 +56,8 @@ const workerRegistrationSchema = Joi.object({
 // Login Schema
 const loginSchema = Joi.object({
   mobile: Joi.string().pattern(/^[0-9]{10}$/).required(),
-  password: Joi.string().required()
+  password: Joi.string().required(),
+  userType: Joi.string().valid('user', 'worker').optional()
 });
 
 // OTP Verification Schema
