@@ -56,15 +56,26 @@ const registerUser = async (req, res) => {
         const smsSent = await sendOTPviaSMS(mobile, otp);
         return res.status(200).json({
           success: true,
-          message: 'OTP resent. Please verify your mobile number.',
+          message: 'Account updated successfully. Please verify your mobile number.',
           data: { userId: existingUser._id, mobile, otp: smsSent ? null : otp }
         });
       }
 
-      // Verified duplicate
+      // If user exists and is verified, block registration
+      console.log('🚫 Verified user already exists with this mobile number');
       return res.status(400).json({
         success: false,
-        message: 'This mobile number is already registered. Please login instead.'
+        message: 'This mobile number is already registered and verified. Please login instead.',
+        data: {
+          existingUser: {
+            first_name: existingUser.first_name,
+            last_name: existingUser.last_name,
+            email: existingUser.email,
+            mobile: existingUser.mobile,
+            is_verified: existingUser.is_verified,
+            created_at: existingUser.createdAt
+          }
+        }
       });
     }
 

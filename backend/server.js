@@ -93,6 +93,9 @@ app.use('/api/payments', paymentRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/admin', adminRoutes);
 
+// Cleanup Routes (for development/debugging)
+app.use('/api/cleanup', require('./routes/cleanupRoutes'));
+
 // Admin Panel Route
 app.get('/admin', (req, res) => {
   res.sendFile(__dirname + '/public/admin.html');
