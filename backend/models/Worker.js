@@ -13,14 +13,12 @@ const workerSchema = new mongoose.Schema({
   },
   email: {
     type: String,
-    unique: true,
     sparse: true,
     lowercase: true
   },
   mobile: {
     type: String,
-    required: true,
-    unique: true
+    required: true
   },
   password: {
     type: String,
@@ -43,6 +41,10 @@ const workerSchema = new mongoose.Schema({
   years_of_experience: {
     type: Number,
     default: 0
+  },
+  skills: {
+    type: [String],
+    default: []
   },
   is_verified: {
     type: Boolean,
