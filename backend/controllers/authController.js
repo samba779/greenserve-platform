@@ -87,17 +87,26 @@ const registerUser = async (req, res) => {
     await newUser.save();
     console.log('✅ New user created:', newUser._id);
 
-    // Send OTP via email
-    const smsSent = await sendOTPviaEmail(email || mobile, otp, firstName);
+    // Auto-verify user (skip OTP) and generate token immediately
+    newUser.is_verified = true;
+    newUser.otp_code = undefined;
+    newUser.otp_expires_at = undefined;
+    await newUser.save();
+    
+    const token = generateToken(newUser._id, 'user');
     
     res.status(201).json({
       success: true,
-      message: 'Account created! Please verify with OTP',
+      message: 'Account created successfully!',
       data: {
-        userId: newUser._id,
-        mobile: mobile,
-        requiresVerification: true,
-        otpSent: smsSent
+        token,
+        user: {
+          id: newUser._id,
+          firstName: newUser.first_name,
+          lastName: newUser.last_name,
+          email: newUser.email,
+          mobile: newUser.mobile
+        }
       }
     });
 

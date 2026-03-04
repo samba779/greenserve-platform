@@ -274,7 +274,13 @@ async function doReg(){
   try{
     const r=await fetch(`${API}/auth/register`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({firstName,lastName,email,mobile,password,city,address})});
     const d=await r.json();
-    if(d.success){mob=mobile;document.getElementById('otpNote').textContent=`OTP sent to +91 ${mobile}`;toast('Account created! Verify your mobile',true);sw('otp');}
+    if(d.success && d.data.token){
+      // Auto-login after registration (no OTP)
+      localStorage.setItem('token',d.data.token);
+      localStorage.setItem('user',JSON.stringify(d.data.user));
+      toast('Account created! Welcome 🎉',true);
+      setTimeout(()=>location.href='user-dashboard.html',1200);
+    }
     else toast(d.message||'Registration failed');
   }catch{toast('Network error. Try again.');}
 }
