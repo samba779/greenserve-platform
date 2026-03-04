@@ -812,6 +812,95 @@ function logout(){
   window.location.href='worker-login.html';
 }
 
+// Worker location tracking
+function updateWorkerLocation() {
+  if (!navigator.geolocation) {
+    toast('Geolocation not supported');
+    return;
+  }
+  
+  navigator.geolocation.getCurrentPosition(
+    async (position) => {
+      const location = {
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+        timestamp: new Date()
+      };
+      
+      // Store locally
+      localStorage.setItem('workerLocation', JSON.stringify(location));
+      
+      // Send to server
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch('https://greenserve-platform.onrender.com/api/workers/location', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(location)
+        });
+        
+        if (response.ok) {
+          toast('Location updated','ok');
+        }
+      } catch (error) {
+        console.error('Failed to update location:', error);
+      }
+    },
+    (error) => {
+      toast('Location access denied');
+    },
+    { enableHighAccuracy: true, timeout: 10000 }
+  );
+}
+
+// Update location when going online
+toggleAvail = function() {
+  available = document.getElementById('availCheck').checked;
+  const st = document.getElementById('availStatus');
+  const txt = document.getElementById('availText');
+  const pill = document.getElementById('onlinePill');
+  
+  if (available) {
+    st.className = 'avail-status avail-on';
+    txt.textContent = 'Online · Accepting Jobs';
+    st.querySelector('.avail-dot').style.background = 'var(--green)';
+    pill.className = 'online-pill';
+    pill.innerHTML = '<div class="op-dot"></div> Online · Available';
+    toast('You are now online and accepting jobs', 'ok');
+    
+    // Update location when going online
+    updateWorkerLocation();
+    
+    // Start periodic location updates
+    startLocationTracking();
+  } else {
+    st.className = 'avail-status avail-off';
+    txt.textContent = 'Offline · Not Available';
+    st.querySelector('.avail-dot').style.background = 'var(--text-soft)';
+    pill.className = 'online-pill off';
+    pill.innerHTML = '<div class="op-dot"></div> Offline';
+    toast('You are now offline');
+    
+    // Stop location tracking
+    stopLocationTracking();
+  }
+}
+
+let locationInterval;
+function startLocationTracking() {
+  // Update location every 30 seconds when online
+  locationInterval = setInterval(updateWorkerLocation, 30000);
+}
+
+function stopLocationTracking() {
+  if (locationInterval) {
+    clearInterval(locationInterval);
+  }
+}
+
 function toast(msg,type='info'){
   const c=document.getElementById('tc');
   const t=document.createElement('div');
