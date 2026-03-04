@@ -222,7 +222,11 @@ function getMockBookings() {
       location: '123 Green Street, Koramangala',
       price: 288000,
       status: 'in_progress',
-      worker: 'Ravi Kumar'
+      worker: 'Ravi Kumar',
+      paymentStatus: 'pending',
+      locationMatched: true,
+      userLocation: { lat: 12.9716, lng: 77.5946 },
+      workerLocation: { lat: 12.9720, lng: 77.5950 }
     },
     {
       id: 'ECO-002',
@@ -233,7 +237,9 @@ function getMockBookings() {
       location: '456 Garden Lane, Indiranagar',
       price: 4000,
       status: 'completed',
-      worker: 'Suresh Naidu'
+      worker: 'Suresh Naidu',
+      paymentStatus: 'paid',
+      locationMatched: true
     },
     {
       id: 'ECO-003',
@@ -244,7 +250,9 @@ function getMockBookings() {
       location: '789 Tech Park, Whitefield',
       price: 35000,
       status: 'pending',
-      worker: 'Not assigned'
+      worker: 'Not assigned',
+      paymentStatus: 'pending',
+      locationMatched: false
     }
   ];
 }
@@ -338,6 +346,7 @@ function createBookingCard(booking) {
         <div class="booking-price">
           ₹${booking.price.toLocaleString()}
           <span>Total Amount</span>
+          ${booking.paymentStatus ? `<span style="color:${booking.paymentStatus === 'paid' ? 'var(--green)' : 'var(--gold)'};font-size:0.7rem;">${booking.paymentStatus === 'paid' ? '✓ Paid' : '⏳ Pending'}</span>` : ''}
         </div>
       </div>
       
