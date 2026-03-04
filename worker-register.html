@@ -1,469 +1,453 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Partner Registration - EcoWorkConnect</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-:root{
-  --navy:#0a1628;--navy2:#0e2040;--blue:#1a56db;--blue2:#1e40af;
-  --sky:#3b82f6;--aqua:#06b6d4;--aqua-dim:rgba(6,182,212,0.1);
-  --blue-dim:rgba(26,86,219,0.08);--blue-glow:rgba(26,86,219,0.18);
-  --white:#ffffff;--off:#f8faff;--off2:#f1f5fd;
-  --border:rgba(26,86,219,0.12);--border-f:rgba(26,86,219,0.4);
-  --text:#0a1628;--text-mid:#4b6280;--text-soft:#94a3b8;
-  --gold:#f59e0b;--gold-dim:rgba(245,158,11,0.08);--gold-glow:rgba(245,158,11,0.18);
-  --green:#10b981;
-  --shadow:0 4px 24px rgba(26,86,219,0.08);
-  --shadow-lg:0 12px 48px rgba(26,86,219,0.14);
-}
-body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--off);color:var(--text);min-height:100vh;margin:0;padding:0;}
-
-.wrap{max-width:720px;margin:0 auto;padding:2rem 1.5rem;}
-
-/* Header */
-.hdr{text-align:center;margin-bottom:2rem;}
-.logo{display:inline-flex;align-items:center;gap:.6rem;text-decoration:none;margin-bottom:1rem;}
-.logo-mark{width:44px;height:44px;background:linear-gradient(135deg,var(--gold),#f97316);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;box-shadow:0 4px 18px rgba(245,158,11,0.35);}
-.logo-text{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--navy);}
-.logo-text span{color:var(--gold);}
-
-.hdr h1{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;color:var(--navy);margin-bottom:.5rem;}
-.hdr p{color:var(--text-mid);font-size:.9rem;}
-
-/* Progress Steps */
-.steps{display:flex;justify-content:center;gap:1rem;margin-bottom:2.5rem;}
-.step{display:flex;flex-direction:column;align-items:center;gap:.4rem;flex:1;max-width:100px;}
-.step-num{width:36px;height:36px;border-radius:50%;background:var(--off2);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.9rem;font-weight:700;color:var(--text-soft);transition:all .3s;}
-.step.on .step-num{background:linear-gradient(135deg,var(--gold),#f97316);border-color:var(--gold);color:white;box-shadow:0 4px 15px rgba(245,158,11,0.3);}
-.step.done .step-num{background:var(--green);border-color:var(--green);color:white;}
-.step-lbl{font-size:.7rem;font-weight:600;color:var(--text-soft);text-transform:uppercase;letter-spacing:.5px;}
-.step.on .step-lbl{color:var(--gold);}
-.step-line{flex:1;height:2px;background:var(--border);margin-top:18px;min-width:40px;}
-.step-line.on{background:linear-gradient(90deg,var(--gold),#f97316);}
-
-/* Form Container */
-.form-card{background:white;border:1.5px solid var(--border);border-radius:20px;padding:2rem;margin-bottom:1.5rem;box-shadow:var(--shadow);}
-.form-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:600;margin-bottom:1.5rem;display:flex;align-items:center;gap:.75rem;}
-.form-title i{color:var(--gold);}
-
-/* Form Elements */
-.fg2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;}
-.fg{display:flex;flex-direction:column;gap:.4rem;margin-bottom:1rem;}
-.fl{font-size:.7rem;font-weight:700;color:var(--text-soft);text-transform:uppercase;letter-spacing:.6px;}
-.fi{padding:.85rem 1rem;background:var(--off);border:1.5px solid var(--border);border-radius:12px;color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;font-size:.9rem;outline:none;transition:all .2s;width:100%;}
-.fi:focus{border-color:var(--gold);background:white;box-shadow:0 0 0 3px rgba(245,158,11,0.07);}
-.fi::placeholder{color:var(--text-soft);}
-select.fi{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%234b6280'%3E%3Cpath d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 1rem center;padding-right:2.5rem;}
-
-/* Skills Grid */
-.skills-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.75rem;margin-bottom:1.5rem;}
-.skill-box{display:flex;align-items:center;gap:.6rem;padding:.85rem;background:var(--off);border:1.5px solid var(--border);border-radius:12px;cursor:pointer;transition:all .2s;}
-.skill-box:hover{border-color:var(--border-f);}
-.skill-box.on{border-color:var(--gold);background:var(--gold-dim);}
-.skill-box input{display:none;}
-.skill-box i{color:var(--gold);font-size:1rem;width:20px;text-align:center;}
-.skill-box.on i{color:var(--gold);}
-.skill-box span{font-size:.8rem;font-weight:500;color:var(--text);}
-
-/* Experience */
-.exp-wrap{display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:1.5rem;}
-.exp-opt{padding:.6rem 1.2rem;background:var(--off);border:1.5px solid var(--border);border-radius:100px;font-size:.8rem;font-weight:500;color:var(--text-mid);cursor:pointer;transition:all .2s;}
-.exp-opt:hover{border-color:var(--border-f);color:var(--text);}
-.exp-opt.on{border-color:var(--gold);background:var(--gold-dim);color:var(--gold);}
-.exp-opt input{display:none;}
-
-/* File Upload */
-.upload-area{border:2px dashed var(--border);border-radius:16px;padding:2rem;text-align:center;background:var(--off);transition:all .2s;cursor:pointer;}
-.upload-area:hover{border-color:var(--gold);background:rgba(245,158,11,0.03);}
-.upload-area i{font-size:2.5rem;color:var(--gold);margin-bottom:1rem;}
-.upload-area h4{font-size:1rem;font-weight:600;margin-bottom:.3rem;color:var(--navy);}
-.upload-area p{font-size:.8rem;color:var(--text-mid);}
-.upload-area input[type="file"]{display:none;}
-.file-list{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1rem;}
-.file-tag{display:flex;align-items:center;gap:.4rem;background:var(--gold-dim);border:1px solid rgba(245,158,11,0.2);border-radius:8px;padding:.4rem .75rem;font-size:.75rem;color:var(--gold);}
-.file-tag i{cursor:pointer;}
-
-/* Navigation Buttons */
-.btn-wrap{display:flex;justify-content:space-between;gap:1rem;margin-top:2rem;}
-.btn-p{padding:.9rem 2rem;border-radius:100px;background:linear-gradient(135deg,var(--gold),#f97316);color:white;border:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(245,158,11,0.25);transition:all .25s;display:flex;align-items:center;gap:.5rem;}
-.btn-p:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(245,158,11,0.35);}
-.btn-g{padding:.9rem 2rem;border-radius:100px;background:transparent;color:var(--text-mid);border:1.5px solid var(--border);font-family:'Plus Jakarta Sans',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s;}
-.btn-g:hover{border-color:var(--gold);color:var(--gold);}
-.btn-p:disabled{opacity:.5;cursor:not-allowed;transform:none;}
-
-/* Sections */
-.section{display:none;animation:fadeIn .3s ease;}
-.section.on{display:block;}
-@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-
-/* Checkbox */
-.chk-wrap{display:flex;align-items:flex-start;gap:.6rem;margin:1.5rem 0;cursor:pointer;}
-.chk-wrap input[type="checkbox"]{width:18px;height:18px;accent-color:var(--gold);margin-top:2px;}
-.chk-wrap span{font-size:.8rem;color:var(--text-mid);line-height:1.5;}
-.chk-wrap a{color:var(--gold);text-decoration:none;}
-.chk-wrap a:hover{text-decoration:underline;}
-
-/* Footer */
-.alt{text-align:center;margin-top:1.5rem;}
-.alt a{color:var(--text-mid);text-decoration:none;font-size:.85rem;}
-.alt a:hover{color:var(--gold);}
-
-/* Toast */
-.toast{position:fixed;top:1.25rem;right:1.25rem;background:white;border:1px solid var(--border);border-radius:12px;padding:1rem 1.25rem;box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:.75rem;font-size:.9rem;font-weight:500;color:var(--text);opacity:0;transform:translateY(-10px);transition:all .3s ease;z-index:1000;}
-.toast.on{opacity:1;transform:translateY(0);}
-.toast i{color:var(--gold);font-size:1.1rem;}
-
-@media (max-width:640px){
-  .fg2{grid-template-columns:1fr;}
-  .skills-grid{grid-template-columns:1fr;}
-  .steps{gap:.5rem;}
-  .step-line{min-width:20px;}
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Worker Registration - EcoWorkConnect</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        html{scroll-behavior:smooth}
+        :root{
+            --ink:#080c10;--ink2:#0d1219;--ink3:#121820;
+            --panel:#0f1520;--card:#131c28;--card2:#162030;--lift:#1a2638;
+            --blue:#3b82f6;--blue2:#2563eb;--blue-glow:rgba(59,130,246,0.18);--blue-dim:rgba(59,130,246,0.08);
+            --cyan:#06b6d4;--cyan-dim:rgba(6,182,212,0.08);
+            --gold:#f59e0b;--gold-dim:rgba(245,158,11,0.1);
+            --green:#10b981;--green-dim:rgba(16,185,129,0.1);
+            --red:#f43f5e;--red-dim:rgba(244,63,94,0.08);
+            --border:rgba(255,255,255,0.055);--border2:rgba(255,255,255,0.09);
+            --text:#e2e8f0;--text-mid:#7d93ab;--text-soft:#3d5068;
+            --teal:#14b8a6;--teal-dim:rgba(20,184,166,0.1);
+        }
+        body{font-family:'DM Sans',sans-serif;background:var(--ink);color:var(--text);min-height:100vh;margin:0;padding:0;}
+        
+        .wrap{max-width:720px;margin:0 auto;padding:2rem 1.5rem;}
+        
+        /* Header */
+        .hdr{text-align:center;margin-bottom:2rem;}
+        .logo{display:inline-flex;align-items:center;gap:.6rem;text-decoration:none;margin-bottom:1rem;}
+        .logo-mark{width:44px;height:44px;background:linear-gradient(135deg,var(--teal),var(--cyan));border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;box-shadow:0 4px 18px rgba(20,184,166,0.35);}
+        .logo-text{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:700;color:var(--text);}
+        .logo-text span{color:var(--teal);}
+        
+        .hdr h1{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:700;color:var(--text);margin-bottom:.5rem;}
+        .hdr p{color:var(--text-mid);font-size:.9rem;}
+        
+        /* Progress Steps */
+        .steps{display:flex;justify-content:center;gap:1rem;margin-bottom:2.5rem;}
+        .step{display:flex;flex-direction:column;align-items:center;gap:.4rem;flex:1;max-width:100px;}
+        .step-num{width:36px;height:36px;border-radius:50%;background:var(--card);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.9rem;font-weight:700;color:var(--text-mid);transition:all .3s;}
+        .step.on .step-num{background:linear-gradient(135deg,var(--teal),var(--cyan));border-color:var(--teal);color:white;box-shadow:0 4px 15px rgba(20,184,166,0.3);}
+        .step.done .step-num{background:var(--green);border-color:var(--green);color:white;}
+        .step-lbl{font-size:.7rem;font-weight:600;color:var(--text-soft);text-transform:uppercase;letter-spacing:.5px;}
+        .step.on .step-lbl{color:var(--teal);}
+        .step-line{flex:1;height:2px;background:var(--border);margin-top:18px;min-width:40px;}
+        .step-line.on{background:linear-gradient(90deg,var(--teal),var(--cyan));}
+        
+        /* Form Container */
+        .form-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:2rem;margin-bottom:1.5rem;}
+        .form-title{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;margin-bottom:1.5rem;display:flex;align-items:center;gap:.75rem;}
+        .form-title i{color:var(--teal);}
+        
+        /* Form Elements */
+        .fg2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;}
+        .fg{display:flex;flex-direction:column;gap:.4rem;margin-bottom:1rem;}
+        .fl{font-size:.7rem;font-weight:600;color:var(--text-soft);text-transform:uppercase;letter-spacing:.6px;}
+        .fi{padding:.85rem 1rem;background:var(--card2);border:1px solid var(--border);border-radius:12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.9rem;outline:none;transition:all .2s;width:100%;}
+        .fi:focus{border-color:rgba(20,184,166,0.4);box-shadow:0 0 0 3px rgba(20,184,166,0.07);}
+        .fi::placeholder{color:var(--text-soft);}
+        select.fi{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%237d93ab'%3E%3Cpath d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 1rem center;padding-right:2.5rem;}
+        
+        /* Skills Grid */
+        .skills-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.75rem;margin-bottom:1.5rem;}
+        .skill-box{display:flex;align-items:center;gap:.6rem;padding:.85rem;background:var(--card2);border:1px solid var(--border);border-radius:12px;cursor:pointer;transition:all .2s;}
+        .skill-box:hover{border-color:var(--border2);}
+        .skill-box.on{border-color:var(--teal);background:var(--teal-dim);}
+        .skill-box input{display:none;}
+        .skill-box i{color:var(--teal);font-size:1rem;width:20px;text-align:center;}
+        .skill-box.on i{color:var(--green);}
+        .skill-box span{font-size:.8rem;font-weight:500;color:var(--text);}
+        
+        /* Experience */
+        .exp-wrap{display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:1.5rem;}
+        .exp-opt{padding:.6rem 1.2rem;background:var(--card2);border:1px solid var(--border);border-radius:100px;font-size:.8rem;font-weight:500;color:var(--text-mid);cursor:pointer;transition:all .2s;}
+        .exp-opt:hover{border-color:var(--border2);color:var(--text);}
+        .exp-opt.on{border-color:var(--teal);background:var(--teal-dim);color:var(--teal);}
+        .exp-opt input{display:none;}
+        
+        /* File Upload */
+        .upload-area{border:2px dashed var(--border);border-radius:16px;padding:2rem;text-align:center;background:var(--card2);transition:all .2s;cursor:pointer;}
+        .upload-area:hover{border-color:var(--teal);background:rgba(20,184,166,0.03);}
+        .upload-area i{font-size:2.5rem;color:var(--teal);margin-bottom:1rem;}
+        .upload-area h4{font-size:1rem;font-weight:600;margin-bottom:.3rem;}
+        .upload-area p{font-size:.8rem;color:var(--text-mid);}
+        .upload-area input[type="file"]{display:none;}
+        .file-list{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1rem;}
+        .file-tag{display:flex;align-items:center;gap:.4rem;background:var(--teal-dim);border:1px solid rgba(20,184,166,0.2);border-radius:8px;padding:.4rem .75rem;font-size:.75rem;color:var(--teal);}
+        .file-tag i{cursor:pointer;}
+        
+        /* Navigation Buttons */
+        .btn-wrap{display:flex;justify-content:space-between;gap:1rem;margin-top:2rem;}
+        .btn-p{padding:.9rem 2rem;border-radius:100px;background:linear-gradient(135deg,var(--teal),var(--cyan));color:white;border:none;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;box-shadow:0 4px 20px rgba(20,184,166,0.3);transition:all .25s;display:flex;align-items:center;gap:.5rem;}
+        .btn-p:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(20,184,166,0.4);}
+        .btn-g{padding:.9rem 2rem;border-radius:100px;background:transparent;color:var(--text-mid);border:1px solid var(--border2);font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .2s;}
+        .btn-g:hover{border-color:var(--teal);color:var(--teal);}
+        .btn-p:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+        
+        /* Sections */
+        .section{display:none;animation:fadeIn .3s ease;}
+        .section.on{display:block;}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+        
+        /* Checkbox */
+        .chk-wrap{display:flex;align-items:flex-start;gap:.6rem;margin:1.5rem 0;cursor:pointer;}
+        .chk-wrap input[type="checkbox"]{width:18px;height:18px;accent-color:var(--teal);margin-top:2px;}
+        .chk-wrap span{font-size:.8rem;color:var(--text-mid);line-height:1.5;}
+        .chk-wrap a{color:var(--teal);text-decoration:none;}
+        .chk-wrap a:hover{text-decoration:underline;}
+        
+        /* Footer */
+        .alt{text-align:center;margin-top:1.5rem;}
+        .alt a{color:var(--text-mid);text-decoration:none;font-size:.85rem;}
+        .alt a:hover{color:var(--teal);}
+        
+        @media (max-width:640px){
+            .fg2{grid-template-columns:1fr;}
+            .skills-grid{grid-template-columns:1fr;}
+            .steps{gap:.5rem;}
+            .step-line{min-width:20px;}
+        }
+    </style>
 </head>
 <body>
 
 <div class="wrap">
-  <!-- Header -->
-  <div class="hdr">
-    <a href="index.html" class="logo">
-      <div class="logo-mark">⚒️</div>
-      <span class="logo-text">Eco<span>Work</span></span>
-    </a>
-    <h1>Become a Partner</h1>
-    <p>Join our network of verified eco-service professionals</p>
-  </div>
+    <!-- Header -->
+    <div class="hdr">
+        <a href="index.html" class="logo">
+            <div class="logo-mark">⚒️</div>
+            <span class="logo-text">Eco<span>Work</span></span>
+        </a>
+        <h1>Become a Partner</h1>
+        <p>Join our network of verified eco-service professionals</p>
+    </div>
 
-  <!-- Progress Steps -->
-  <div class="steps">
-    <div class="step on" id="step1">
-      <div class="step-num">1</div>
-      <span class="step-lbl">Personal</span>
+    <!-- Progress Steps -->
+    <div class="steps">
+        <div class="step on" id="step1">
+            <div class="step-num">1</div>
+            <span class="step-lbl">Personal</span>
+        </div>
+        <div class="step-line on"></div>
+        <div class="step" id="step2">
+            <div class="step-num">2</div>
+            <span class="step-lbl">Skills</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step" id="step3">
+            <div class="step-num">3</div>
+            <span class="step-lbl">Documents</span>
+        </div>
     </div>
-    <div class="step-line on"></div>
-    <div class="step" id="step2">
-      <div class="step-num">2</div>
-      <span class="step-lbl">Skills</span>
-    </div>
-    <div class="step-line"></div>
-    <div class="step" id="step3">
-      <div class="step-num">3</div>
-      <span class="step-lbl">Documents</span>
-    </div>
-  </div>
 
-  <!-- Step 1: Personal Info -->
-  <div class="section on" id="sec-personal">
-    <div class="form-card">
-      <h2 class="form-title"><i class="fas fa-user"></i> Personal Information</h2>
-      
-      <div class="fg2">
-        <div class="fg">
-          <label class="fl">First Name *</label>
-          <input class="fi" type="text" id="wFirstName" placeholder="Your first name" required>
+    <!-- Step 1: Personal Info -->
+    <div class="section on" id="sec-personal">
+        <div class="form-card">
+            <h2 class="form-title"><i class="fas fa-user"></i> Personal Information</h2>
+            
+            <div class="fg2">
+                <div class="fg">
+                    <label class="fl">First Name *</label>
+                    <input class="fi" type="text" id="wFirstName" placeholder="Your first name" required>
+                </div>
+                <div class="fg">
+                    <label class="fl">Last Name *</label>
+                    <input class="fi" type="text" id="wLastName" placeholder="Your last name" required>
+                </div>
+            </div>
+            
+            <div class="fg">
+                <label class="fl">Mobile Number *</label>
+                <input class="fi" type="tel" id="wMobile" placeholder="+91 98765 43210" maxlength="10" required>
+            </div>
+            
+            <div class="fg">
+                <label class="fl">Email Address</label>
+                <input class="fi" type="email" id="wEmail" placeholder="your@email.com">
+            </div>
+            
+            <div class="fg">
+                <label class="fl">City *</label>
+                <select class="fi" id="wCity" required>
+                    <option value="">Select your city</option>
+                    <option value="bangalore">Bangalore</option>
+                    <option value="mumbai">Mumbai</option>
+                    <option value="delhi">Delhi</option>
+                    <option value="hyderabad">Hyderabad</option>
+                    <option value="chennai">Chennai</option>
+                    <option value="pune">Pune</option>
+                    <option value="vijayawada">Vijayawada</option>
+                    <option value="guntur">Guntur</option>
+                </select>
+            </div>
+            
+            <div class="fg">
+                <label class="fl">Create Password *</label>
+                <input class="fi" type="password" id="wPassword" placeholder="Min 8 characters" minlength="8" required>
+            </div>
         </div>
-        <div class="fg">
-          <label class="fl">Last Name *</label>
-          <input class="fi" type="text" id="wLastName" placeholder="Your last name" required>
+        
+        <div class="btn-wrap">
+            <div></div>
+            <button class="btn-p" onclick="goToStep(2)">Next: Skills →</button>
         </div>
-      </div>
-      
-      <div class="fg">
-        <label class="fl">Mobile Number *</label>
-        <input class="fi" type="tel" id="wMobile" placeholder="98765 43210" maxlength="10" required>
-      </div>
-      
-      <div class="fg">
-        <label class="fl">Email Address</label>
-        <input class="fi" type="email" id="wEmail" placeholder="your@email.com">
-      </div>
-      
-      <div class="fg">
-        <label class="fl">City *</label>
-        <select class="fi" id="wCity" required>
-          <option value="">Select your city</option>
-          <option value="bangalore">Bangalore</option>
-          <option value="mumbai">Mumbai</option>
-          <option value="delhi">Delhi</option>
-          <option value="hyderabad">Hyderabad</option>
-          <option value="chennai">Chennai</option>
-          <option value="pune">Pune</option>
-          <option value="vijayawada">Vijayawada</option>
-          <option value="guntur">Guntur</option>
-        </select>
-      </div>
-      
-      <div class="fg">
-        <label class="fl">Create Password *</label>
-        <input class="fi" type="password" id="wPassword" placeholder="Min 8 characters" minlength="8" required>
-      </div>
     </div>
-    
-    <div class="btn-wrap">
-      <div></div>
-      <button class="btn-p" onclick="goToStep(2)">Next: Skills →</button>
-    </div>
-  </div>
 
-  <!-- Step 2: Skills -->
-  <div class="section" id="sec-skills">
-    <div class="form-card">
-      <h2 class="form-title"><i class="fas fa-tools"></i> Select Your Skills</h2>
-      <p style="font-size:.85rem;color:var(--text-mid);margin-bottom:1rem;">Choose all services you can provide</p>
-      
-      <div class="skills-grid">
-        <label class="skill-box" onclick="toggleSkill(this)">
-          <input type="checkbox" name="skills" value="Solar Installation">
-          <i class="fas fa-sun"></i>
-          <span>Solar Installation</span>
-        </label>
-        <label class="skill-box" onclick="toggleSkill(this)">
-          <input type="checkbox" name="skills" value="EV Charging">
-          <i class="fas fa-charging-station"></i>
-          <span>EV Charging Setup</span>
-        </label>
-        <label class="skill-box" onclick="toggleSkill(this)">
-          <input type="checkbox" name="skills" value="Gardening">
-          <i class="fas fa-leaf"></i>
-          <span>Green Gardening</span>
-        </label>
-        <label class="skill-box" onclick="toggleSkill(this)">
-          <input type="checkbox" name="skills" value="Water Harvesting">
-          <i class="fas fa-water"></i>
-          <span>Water Harvesting</span>
-        </label>
-        <label class="skill-box" onclick="toggleSkill(this)">
-          <input type="checkbox" name="skills" value="Energy Audit">
-          <i class="fas fa-bolt"></i>
-          <span>Energy Audit</span>
-        </label>
-        <label class="skill-box" onclick="toggleSkill(this)">
-          <input type="checkbox" name="skills" value="Green Maintenance">
-          <i class="fas fa-wrench"></i>
-          <span>Green Maintenance</span>
-        </label>
-        <label class="skill-box" onclick="toggleSkill(this)">
-          <input type="checkbox" name="skills" value="Bio-Gas Systems">
-          <i class="fas fa-fire"></i>
-          <span>Bio-Gas Systems</span>
-        </label>
-        <label class="skill-box" onclick="toggleSkill(this)">
-          <input type="checkbox" name="skills" value="Waste Management">
-          <i class="fas fa-recycle"></i>
-          <span>Waste Management</span>
-        </label>
-      </div>
-      
-      <h3 class="form-title" style="font-size:1.1rem;margin-top:1.5rem;"><i class="fas fa-star"></i> Years of Experience</h3>
-      <div class="exp-wrap">
-        <label class="exp-opt" onclick="selectExp(this)">
-          <input type="radio" name="experience" value="0-1">
-          < 1 Year
-        </label>
-        <label class="exp-opt" onclick="selectExp(this)">
-          <input type="radio" name="experience" value="1-3">
-          1-3 Years
-        </label>
-        <label class="exp-opt on" onclick="selectExp(this)">
-          <input type="radio" name="experience" value="3-5" checked>
-          3-5 Years
-        </label>
-        <label class="exp-opt" onclick="selectExp(this)">
-          <input type="radio" name="experience" value="5-10">
-          5-10 Years
-        </label>
-        <label class="exp-opt" onclick="selectExp(this)">
-          <input type="radio" name="experience" value="10+">
-          10+ Years
-        </label>
-      </div>
+    <!-- Step 2: Skills -->
+    <div class="section" id="sec-skills">
+        <div class="form-card">
+            <h2 class="form-title"><i class="fas fa-tools"></i> Select Your Skills</h2>
+            <p style="font-size:.85rem;color:var(--text-mid);margin-bottom:1rem;">Choose all services you can provide</p>
+            
+            <div class="skills-grid">
+                <label class="skill-box" onclick="toggleSkill(this)">
+                    <input type="checkbox" name="skills" value="Solar Installation">
+                    <i class="fas fa-sun"></i>
+                    <span>Solar Installation</span>
+                </label>
+                <label class="skill-box" onclick="toggleSkill(this)">
+                    <input type="checkbox" name="skills" value="EV Charging">
+                    <i class="fas fa-charging-station"></i>
+                    <span>EV Charging Setup</span>
+                </label>
+                <label class="skill-box" onclick="toggleSkill(this)">
+                    <input type="checkbox" name="skills" value="Gardening">
+                    <i class="fas fa-leaf"></i>
+                    <span>Green Gardening</span>
+                </label>
+                <label class="skill-box" onclick="toggleSkill(this)">
+                    <input type="checkbox" name="skills" value="Water Harvesting">
+                    <i class="fas fa-water"></i>
+                    <span>Water Harvesting</span>
+                </label>
+                <label class="skill-box" onclick="toggleSkill(this)">
+                    <input type="checkbox" name="skills" value="Energy Audit">
+                    <i class="fas fa-bolt"></i>
+                    <span>Energy Audit</span>
+                </label>
+                <label class="skill-box" onclick="toggleSkill(this)">
+                    <input type="checkbox" name="skills" value="Green Maintenance">
+                    <i class="fas fa-wrench"></i>
+                    <span>Green Maintenance</span>
+                </label>
+                <label class="skill-box" onclick="toggleSkill(this)">
+                    <input type="checkbox" name="skills" value="Bio-Gas Systems">
+                    <i class="fas fa-fire"></i>
+                    <span>Bio-Gas Systems</span>
+                </label>
+                <label class="skill-box" onclick="toggleSkill(this)">
+                    <input type="checkbox" name="skills" value="Waste Management">
+                    <i class="fas fa-recycle"></i>
+                    <span>Waste Management</span>
+                </label>
+            </div>
+            
+            <h3 class="form-title" style="font-size:1.1rem;margin-top:1.5rem;"><i class="fas fa-star"></i> Years of Experience</h3>
+            <div class="exp-wrap">
+                <label class="exp-opt" onclick="selectExp(this)">
+                    <input type="radio" name="experience" value="0-1">
+                    < 1 Year
+                </label>
+                <label class="exp-opt" onclick="selectExp(this)">
+                    <input type="radio" name="experience" value="1-3">
+                    1-3 Years
+                </label>
+                <label class="exp-opt on" onclick="selectExp(this)">
+                    <input type="radio" name="experience" value="3-5" checked>
+                    3-5 Years
+                </label>
+                <label class="exp-opt" onclick="selectExp(this)">
+                    <input type="radio" name="experience" value="5-10">
+                    5-10 Years
+                </label>
+                <label class="exp-opt" onclick="selectExp(this)">
+                    <input type="radio" name="experience" value="10+">
+                    10+ Years
+                </label>
+            </div>
+        </div>
+        
+        <div class="btn-wrap">
+            <button class="btn-g" onclick="goToStep(1)">← Back</button>
+            <button class="btn-p" onclick="goToStep(3)">Next: Documents →</button>
+        </div>
     </div>
-    
-    <div class="btn-wrap">
-      <button class="btn-g" onclick="goToStep(1)">← Back</button>
-      <button class="btn-p" onclick="goToStep(3)">Next: Documents →</button>
-    </div>
-  </div>
 
-  <!-- Step 3: Documents -->
-  <div class="section" id="sec-documents">
-    <div class="form-card">
-      <h2 class="form-title"><i class="fas fa-file-upload"></i> Upload Documents</h2>
-      <p style="font-size:.85rem;color:var(--text-mid);margin-bottom:1rem;">Required for verification (PDF, JPG, PNG up to 5MB)</p>
-      
-      <div class="fg">
-        <label class="fl">Government ID Proof *</label>
-        <div class="upload-area" onclick="document.getElementById('idProof').click()">
-          <i class="fas fa-id-card"></i>
-          <h4>Click to upload ID Proof</h4>
-          <p>Aadhar, PAN, Driving License, or Passport</p>
-          <input type="file" id="idProof" accept=".pdf,.jpg,.jpeg,.png" onchange="handleFile(this,'idList')">
-          <div class="file-list" id="idList"></div>
+    <!-- Step 3: Documents -->
+    <div class="section" id="sec-documents">
+        <div class="form-card">
+            <h2 class="form-title"><i class="fas fa-file-upload"></i> Upload Documents</h2>
+            <p style="font-size:.85rem;color:var(--text-mid);margin-bottom:1rem;">Required for verification (PDF, JPG, PNG up to 5MB)</p>
+            
+            <div class="fg">
+                <label class="fl">Government ID Proof *</label>
+                <div class="upload-area" onclick="document.getElementById('idProof').click()">
+                    <i class="fas fa-id-card"></i>
+                    <h4>Click to upload ID Proof</h4>
+                    <p>Aadhar, PAN, Driving License, or Passport</p>
+                    <input type="file" id="idProof" accept=".pdf,.jpg,.jpeg,.png" onchange="handleFile(this,'idList')">
+                    <div class="file-list" id="idList"></div>
+                </div>
+            </div>
+            
+            <div class="fg">
+                <label class="fl">Professional Certificates</label>
+                <div class="upload-area" onclick="document.getElementById('certificates').click()">
+                    <i class="fas fa-certificate"></i>
+                    <h4>Click to upload Certificates</h4>
+                    <p>Training certificates, licenses, or awards</p>
+                    <input type="file" id="certificates" accept=".pdf,.jpg,.jpeg,.png" multiple onchange="handleFile(this,'certList')">
+                    <div class="file-list" id="certList"></div>
+                </div>
+            </div>
+            
+            <div class="fg">
+                <label class="fl">Profile Photo</label>
+                <div class="upload-area" onclick="document.getElementById('photo').click()">
+                    <i class="fas fa-camera"></i>
+                    <h4>Click to upload Photo</h4>
+                    <p>Professional headshot for your profile</p>
+                    <input type="file" id="photo" accept=".jpg,.jpeg,.png" onchange="handleFile(this,'photoList')">
+                    <div class="file-list" id="photoList"></div>
+                </div>
+            </div>
         </div>
-      </div>
-      
-      <div class="fg">
-        <label class="fl">Professional Certificates</label>
-        <div class="upload-area" onclick="document.getElementById('certificates').click()">
-          <i class="fas fa-certificate"></i>
-          <h4>Click to upload Certificates</h4>
-          <p>Training certificates, licenses, or awards</p>
-          <input type="file" id="certificates" accept=".pdf,.jpg,.jpeg,.png" multiple onchange="handleFile(this,'certList')">
-          <div class="file-list" id="certList"></div>
+        
+        <div class="form-card" style="margin-top:1.5rem;">
+            <label class="chk-wrap">
+                <input type="checkbox" id="wTerms" required>
+                <span>I confirm all information is accurate and I agree to the <a href="#">Terms of Service</a> and <a href="#">Partner Agreement</a>. I understand my documents will be verified.</span>
+            </label>
         </div>
-      </div>
-      
-      <div class="fg">
-        <label class="fl">Profile Photo</label>
-        <div class="upload-area" onclick="document.getElementById('photo').click()">
-          <i class="fas fa-camera"></i>
-          <h4>Click to upload Photo</h4>
-          <p>Professional headshot for your profile</p>
-          <input type="file" id="photo" accept=".jpg,.jpeg,.png" onchange="handleFile(this,'photoList')">
-          <div class="file-list" id="photoList"></div>
+        
+        <div class="btn-wrap">
+            <button class="btn-g" onclick="goToStep(2)">← Back</button>
+            <button class="btn-p" onclick="submitRegistration()">
+                <i class="fas fa-check-circle"></i> Complete Registration
+            </button>
         </div>
-      </div>
     </div>
-    
-    <div class="form-card" style="margin-top:1.5rem;">
-      <label class="chk-wrap">
-        <input type="checkbox" id="wTerms" required>
-        <span>I confirm all information is accurate and I agree to the <a href="#">Terms of Service</a> and <a href="#">Partner Agreement</a>. I understand my documents will be verified.</span>
-      </label>
-    </div>
-    
-    <div class="btn-wrap">
-      <button class="btn-g" onclick="goToStep(2)">← Back</button>
-      <button class="btn-p" onclick="submitRegistration()">
-        <i class="fas fa-check-circle"></i> Complete Registration
-      </button>
-    </div>
-  </div>
 
-  <div class="alt">
-    Already registered? <a href="worker-login.html">Sign in here</a>
-  </div>
+    <div class="alt">
+        Already registered? <a href="worker-login.html">Sign in here</a>
+    </div>
 </div>
-
-<!-- Toast -->
-<div class="toast" id="toast"><i>⚠️</i><span id="toastMsg">Something went wrong</span></div>
 
 <script>
 const API = 'https://greenserve-platform.onrender.com/api';
 
 function goToStep(step) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('on'));
-  document.getElementById('sec-' + (step === 1 ? 'personal' : step === 2 ? 'skills' : 'documents')).classList.add('on');
-  
-  document.querySelectorAll('.step').forEach((s, i) => {
-    s.classList.remove('on', 'done');
-    if (i + 1 < step) s.classList.add('done');
-    if (i + 1 === step) s.classList.add('on');
-  });
-  
-  document.querySelectorAll('.step-line').forEach((l, i) => {
-    l.classList.toggle('on', i < step - 1);
-  });
+    // Hide all sections
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('on'));
+    document.getElementById('sec-' + (step === 1 ? 'personal' : step === 2 ? 'skills' : 'documents')).classList.add('on');
+    
+    // Update progress
+    document.querySelectorAll('.step').forEach((s, i) => {
+        s.classList.remove('on', 'done');
+        if (i + 1 < step) s.classList.add('done');
+        if (i + 1 === step) s.classList.add('on');
+    });
+    
+    // Update lines
+    document.querySelectorAll('.step-line').forEach((l, i) => {
+        l.classList.toggle('on', i < step - 1);
+    });
 }
 
 function toggleSkill(el) {
-  el.classList.toggle('on');
-  el.querySelector('input').checked = el.classList.contains('on');
+    el.classList.toggle('on');
+    el.querySelector('input').checked = el.classList.contains('on');
 }
 
 function selectExp(el) {
-  document.querySelectorAll('.exp-opt').forEach(e => e.classList.remove('on'));
-  el.classList.add('on');
-  el.querySelector('input').checked = true;
+    document.querySelectorAll('.exp-opt').forEach(e => e.classList.remove('on'));
+    el.classList.add('on');
+    el.querySelector('input').checked = true;
 }
 
 function handleFile(input, listId) {
-  const list = document.getElementById(listId);
-  list.innerHTML = '';
-  
-  Array.from(input.files).forEach(file => {
-    const tag = document.createElement('div');
-    tag.className = 'file-tag';
-    tag.innerHTML = `<i class="fas fa-file"></i> ${file.name} <i class="fas fa-times" onclick="this.parentElement.remove()"></i>`;
-    list.appendChild(tag);
-  });
-}
-
-function toast(msg, ok) {
-  const t = document.getElementById('toast'), m = document.getElementById('toastMsg');
-  m.textContent = msg;
-  t.querySelector('i').textContent = ok ? '✅' : '⚠️';
-  t.classList.add('on');
-  setTimeout(() => t.classList.remove('on'), 3500);
+    const list = document.getElementById(listId);
+    list.innerHTML = '';
+    
+    Array.from(input.files).forEach(file => {
+        const tag = document.createElement('div');
+        tag.className = 'file-tag';
+        tag.innerHTML = `<i class="fas fa-file"></i> ${file.name} <i class="fas fa-times" onclick="this.parentElement.remove()"></i>`;
+        list.appendChild(tag);
+    });
 }
 
 async function submitRegistration() {
-  const firstName = document.getElementById('wFirstName').value.trim();
-  const lastName = document.getElementById('wLastName').value.trim();
-  const mobile = document.getElementById('wMobile').value.trim();
-  const password = document.getElementById('wPassword').value;
-  const city = document.getElementById('wCity').value;
-  
-  if (!firstName || !lastName || !mobile || !password || !city) {
-    toast('Please fill all required fields in Personal Information');
-    goToStep(1);
-    return;
-  }
-  
-  const skills = Array.from(document.querySelectorAll('input[name="skills"]:checked')).map(s => s.value);
-  if (skills.length === 0) {
-    toast('Please select at least one skill');
-    goToStep(2);
-    return;
-  }
-  
-  const experience = document.querySelector('input[name="experience"]:checked')?.value || '3-5';
-  
-  if (!document.getElementById('wTerms').checked) {
-    toast('Please agree to the Terms of Service');
-    return;
-  }
-  
-  toast('Creating your account...');
-  
-  const data = {
-    firstName,
-    lastName,
-    email: document.getElementById('wEmail').value.trim(),
-    mobile,
-    password,
-    city,
-    skills,
-    experience,
-    userType: 'worker'
-  };
-  
-  try {
-    const response = await fetch(`${API}/auth/worker/register`, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(data)
-    });
+    // Validate
+    const firstName = document.getElementById('wFirstName').value.trim();
+    const lastName = document.getElementById('wLastName').value.trim();
+    const mobile = document.getElementById('wMobile').value.trim();
+    const password = document.getElementById('wPassword').value;
+    const city = document.getElementById('wCity').value;
     
-    const result = await response.json();
-    
-    if (result.success) {
-      toast('Registration successful! Redirecting to OTP...', true);
-      setTimeout(() => {
-        window.location.href = `worker-login.html?mobile=${encodeURIComponent(mobile)}&type=worker`;
-      }, 1500);
-    } else {
-      toast(result.message || 'Registration failed. Please try again.');
+    if (!firstName || !lastName || !mobile || !password || !city) {
+        alert('Please fill all required fields in Personal Information');
+        goToStep(1);
+        return;
     }
-  } catch (error) {
-    console.error('Registration error:', error);
-    toast('Network error. Please check your connection and try again.');
-  }
+    
+    const skills = Array.from(document.querySelectorAll('input[name="skills"]:checked')).map(s => s.value);
+    if (skills.length === 0) {
+        alert('Please select at least one skill');
+        goToStep(2);
+        return;
+    }
+    
+    const experience = document.querySelector('input[name="experience"]:checked')?.value || '3-5';
+    
+    if (!document.getElementById('wTerms').checked) {
+        alert('Please agree to the Terms of Service');
+        return;
+    }
+    
+    const data = {
+        firstName,
+        lastName,
+        email: document.getElementById('wEmail').value.trim(),
+        mobile,
+        password,
+        city,
+        skills,
+        experience,
+        userType: 'worker'
+    };
+    
+    try {
+        const response = await fetch(`${API}/auth/worker/register`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            alert('Registration successful! Please verify your mobile number.');
+            window.location.href = `user-login.html?mobile=${encodeURIComponent(mobile)}&type=worker`;
+        } else {
+            alert(result.message || 'Registration failed. Please try again.');
+        }
+    } catch (error) {
+        console.error('Registration error:', error);
+        alert('Network error. Please check your connection and try again.');
+    }
 }
 </script>
 
