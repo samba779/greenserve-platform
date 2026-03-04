@@ -87,7 +87,8 @@ const registerUser = async (req, res) => {
     await newUser.save();
     console.log('✅ New user created:', newUser._id);
 
-    const smsSent = await sendOTPviaEmail(mobile, otp);
+    // Send OTP via email
+    const smsSent = await sendOTPviaEmail(email || mobile, otp, firstName);
     
     res.status(201).json({
       success: true,
@@ -141,7 +142,9 @@ const registerWorker = async (req, res) => {
     await newWorker.save();
     console.log('✅ New worker created:', newWorker._id);
 
-    const smsSent = await sendOTPviaEmail(mobile, otp);
+    // Send OTP via email (fallback to mobile if no email provided)
+    const targetEmail = email || mobile;
+    const smsSent = await sendOTPviaEmail(targetEmail, otp, firstName);
 
     res.status(201).json({
       success: true,

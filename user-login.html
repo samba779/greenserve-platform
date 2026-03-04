@@ -298,6 +298,17 @@ async function resend(){
 const p=new URLSearchParams(location.search);
 const tk=p.get('token');
 if(tk){localStorage.setItem('token',tk);window.history.replaceState({},'',location.pathname);toast('Google sign-in successful!',true);setTimeout(()=>location.href='user-dashboard.html',1000);}
+
+// Handle worker registration redirect to OTP
+const urlMobile = p.get('mobile');
+const urlType = p.get('type');
+if(urlMobile){
+  mob = urlMobile;
+  userType = urlType === 'worker' ? 'worker' : 'user';
+  document.getElementById('otpNote').textContent = `OTP sent to +91 ${urlMobile}`;
+  document.getElementById('v-reg').classList.remove('on');
+  document.getElementById('v-otp').classList.add('on');
+}
 </script>
 </body>
 </html>
