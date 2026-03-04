@@ -194,14 +194,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--off);color:var(
       <div class="fc">
         <div class="fg">
           <label class="fl">6-Digit Code</label>
-          <div class="otp-inputs">
-            <input class="otp-input" type="text" maxlength="1" id="o1">
-            <input class="otp-input" type="text" maxlength="1" id="o2">
-            <input class="otp-input" type="text" maxlength="1" id="o3">
-            <input class="otp-input" type="text" maxlength="1" id="o4">
-            <input class="otp-input" type="text" maxlength="1" id="o5">
-            <input class="otp-input" type="text" maxlength="1" id="o6">
-          </div>
+          <input class="fi" type="text" id="otpInput" placeholder="Enter 6-digit OTP" maxlength="6" style="text-align:center;letter-spacing:8px;font-size:1.25rem;font-weight:600;">
         </div>
         <button class="btn-sub" onclick="doOTP()">Verify & Continue →</button>
         <div style="text-align:center;margin-top:1rem;font-size:.8rem;color:var(--text-soft)">Didn't receive? <a href="#" style="color:var(--blue);font-weight:700;text-decoration:none" onclick="resend();return false">Resend OTP</a></div>
@@ -245,12 +238,7 @@ function sw(tab){
 
 function tp(id,btn){const i=document.getElementById(id);i.type=i.type==='password'?'text':'password';btn.textContent=i.type==='password'?'👁':'🙈';}
 
-document.querySelectorAll('.otp-input').forEach((inp,i,arr)=>{
-  inp.addEventListener('input',e=>{if(e.target.value&&i<arr.length-1)arr[i+1].focus();});
-  inp.addEventListener('keydown',e=>{if(e.key==='Backspace'&&!e.target.value&&i>0)arr[i-1].focus();});
-});
-
-function otp(){return['o1','o2','o3','o4','o5','o6'].map(id=>document.getElementById(id).value).join('');}
+function otp(){return document.getElementById('otpInput').value.trim();}
 
 function toast(msg,ok=false){
   let c=document.querySelector('.tc-wrap');
