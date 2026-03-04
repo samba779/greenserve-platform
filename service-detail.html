@@ -3,558 +3,1006 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EcoWorkConnect - Book Service</title>
-    <link rel="stylesheet" href="css/styles.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>EcoWorkConnect – Book a Service</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@400;500;700;800&family=Zodiak:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#0d1f0f;
+  --bg2:#111c12;
+  --surface:#162018;
+  --surface2:#1c2b1e;
+  --border:rgba(120,200,100,0.1);
+  --green:#5ecb6b;
+  --green2:#3da84a;
+  --green-dim:rgba(94,203,107,0.15);
+  --gold:#e8c547;
+  --cream:#f0ead8;
+  --text:#e8f0e9;
+  --text-mid:#8aab8e;
+  --text-soft:#4a6b4e;
+  --r:18px;
+  --r-sm:10px;
+}
+
+body{
+  font-family:'Cabinet Grotesk',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* GRAIN OVERLAY */
+body::after{
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;
+  z-index:999;
+  opacity:0.6;
+}
+
+/* NAV */
+nav{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1rem 2.5rem;
+  border-bottom:1px solid var(--border);
+  background:rgba(13,31,15,0.8);
+  backdrop-filter:blur(20px);
+  position:sticky;top:0;z-index:100;
+}
+
+.logo{
+  font-family:'Zodiak',serif;
+  font-size:1.4rem;font-weight:700;
+  color:var(--green);
+  display:flex;align-items:center;gap:0.5rem;
+  text-decoration:none;
+}
+
+.logo-mark{
+  width:28px;height:28px;
+  background:var(--green);
+  clip-path:polygon(50% 0%,100% 38%,82% 100%,18% 100%,0% 38%);
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.7rem;color:#0d1f0f;
+}
+
+.nav-links{display:flex;gap:2rem;list-style:none;}
+.nav-links a{color:var(--text-mid);text-decoration:none;font-size:0.875rem;font-weight:500;transition:color .2s;}
+.nav-links a:hover{color:var(--green);}
+
+.nav-right{display:flex;align-items:center;gap:1rem;}
+.user-pill{
+  display:flex;align-items:center;gap:0.6rem;
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:100px;padding:0.35rem 0.9rem 0.35rem 0.35rem;
+}
+.user-dot{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--green2),var(--green));display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;color:#0d1f0f;}
+.user-name{font-size:0.85rem;font-weight:600;}
+
+/* PAGE */
+.page{max-width:1280px;margin:0 auto;padding:2.5rem 2rem 5rem;}
+
+/* PAGE TITLE */
+.page-eyebrow{
+  display:flex;align-items:center;gap:0.6rem;
+  font-size:0.78rem;font-weight:700;
+  color:var(--green);text-transform:uppercase;letter-spacing:1.5px;
+  margin-bottom:0.75rem;
+}
+.page-title{
+  font-family:'Zodiak',serif;
+  font-size:clamp(2rem,4vw,3rem);
+  font-weight:700;
+  color:var(--text);
+  line-height:1.1;
+  margin-bottom:0.5rem;
+}
+.page-title em{color:var(--green);font-style:italic;}
+
+.page-sub{color:var(--text-mid);font-size:0.95rem;margin-bottom:2.5rem;max-width:500px;}
+
+/* SERVICE PICKER */
+.service-picker{
+  display:flex;gap:0.6rem;flex-wrap:wrap;
+  margin-bottom:2.5rem;
+}
+
+.svc-btn{
+  display:flex;align-items:center;gap:0.5rem;
+  padding:0.55rem 1.1rem;
+  border:1.5px solid var(--border);
+  border-radius:100px;
+  background:var(--surface);
+  color:var(--text-mid);
+  font-family:'Cabinet Grotesk',sans-serif;
+  font-size:0.85rem;font-weight:600;
+  cursor:pointer;
+  transition:all .2s;
+  white-space:nowrap;
+}
+.svc-btn:hover{border-color:var(--green);color:var(--text);}
+.svc-btn.active{
+  background:var(--green);
+  border-color:var(--green);
+  color:#0d1f0f;
+}
+.svc-btn .svc-emoji{font-size:1rem;}
+
+/* MAIN LAYOUT */
+.main{display:grid;grid-template-columns:1fr 420px;gap:2rem;align-items:start;}
+
+/* LEFT */
+.left{display:flex;flex-direction:column;gap:1.5rem;}
+
+/* SERVICE HEADER CARD */
+.svc-header{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  padding:2rem;
+  position:relative;
+  overflow:hidden;
+  transition:all .3s;
+}
+
+.svc-header::before{
+  content:'';
+  position:absolute;
+  top:-60px;right:-60px;
+  width:200px;height:200px;
+  background:radial-gradient(circle,var(--green-dim),transparent 70%);
+  pointer-events:none;
+}
+
+.svc-header-top{display:flex;align-items:flex-start;gap:1.25rem;margin-bottom:1.25rem;}
+
+.svc-big-icon{
+  width:64px;height:64px;min-width:64px;
+  background:var(--green-dim);
+  border:1px solid rgba(94,203,107,0.2);
+  border-radius:16px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.8rem;
+}
+
+.svc-header h2{
+  font-family:'Zodiak',serif;
+  font-size:1.6rem;font-weight:700;
+  color:var(--text);line-height:1.2;
+  margin-bottom:0.35rem;
+}
+
+.svc-header p{color:var(--text-mid);font-size:0.9rem;line-height:1.55;}
+
+.svc-meta{display:flex;gap:0.75rem;flex-wrap:wrap;margin-top:1rem;}
+.meta-chip{
+  display:flex;align-items:center;gap:0.4rem;
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:100px;
+  padding:0.3rem 0.8rem;
+  font-size:0.78rem;color:var(--text-mid);font-weight:500;
+}
+.meta-chip .dot{width:6px;height:6px;border-radius:50%;background:var(--green);}
+
+.svc-rating{
+  margin-left:auto;text-align:right;flex-shrink:0;
+}
+.rating-score{
+  font-family:'Zodiak',serif;
+  font-size:2.2rem;font-weight:700;color:var(--green);
+  line-height:1;
+}
+.rating-stars{color:var(--gold);font-size:0.85rem;letter-spacing:2px;margin:.2rem 0;}
+.rating-count{font-size:0.75rem;color:var(--text-soft);}
+
+/* FEATURES */
+.panel{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  overflow:hidden;
+}
+
+.panel-head{
+  padding:1.1rem 1.5rem;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+
+.panel-title{
+  font-family:'Zodiak',serif;
+  font-size:1rem;font-weight:700;color:var(--text);
+}
+
+.panel-body{padding:1.25rem 1.5rem;}
+
+.features-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;
+}
+
+.feat{
+  display:flex;align-items:flex-start;gap:0.6rem;
+  font-size:0.875rem;color:var(--text-mid);line-height:1.4;
+}
+
+.feat-check{
+  width:18px;height:18px;min-width:18px;
+  background:var(--green-dim);
+  border:1px solid rgba(94,203,107,0.3);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.6rem;color:var(--green);
+  margin-top:2px;font-weight:900;
+}
+
+/* PRICING */
+.pricing-row{display:grid;gap:0.75rem;}
+
+.price-card{
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--surface2);
+  border:1.5px solid var(--border);
+  border-radius:var(--r-sm);
+  padding:1rem 1.25rem;
+  cursor:pointer;
+  transition:all .2s;
+}
+
+.price-card:hover{border-color:rgba(94,203,107,0.3);}
+.price-card.featured{border-color:var(--green);background:rgba(94,203,107,0.06);}
+
+.price-left{display:flex;align-items:center;gap:0.75rem;}
+.price-badge{
+  width:40px;height:40px;border-radius:10px;
+  background:var(--green-dim);
+  border:1px solid rgba(94,203,107,0.2);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Zodiak',serif;font-size:0.75rem;font-weight:700;color:var(--green);
+}
+.price-name{font-weight:700;font-size:0.9rem;color:var(--text);}
+.price-desc{font-size:0.78rem;color:var(--text-soft);}
+
+.price-right{text-align:right;}
+.price-amount{font-family:'Zodiak',serif;font-size:1.1rem;font-weight:700;color:var(--text);}
+.price-popular{
+  font-size:0.68rem;font-weight:700;
+  color:#0d1f0f;background:var(--green);
+  border-radius:100px;padding:0.15rem 0.5rem;
+  display:inline-block;margin-top:0.2rem;
+}
+
+/* REVIEWS */
+.review{
+  padding:1rem 0;
+  border-bottom:1px solid var(--border);
+}
+.review:last-child{border:none;padding-bottom:0;}
+
+.rv-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:.4rem;}
+.rv-user{display:flex;align-items:center;gap:.6rem;}
+.rv-av{
+  width:32px;height:32px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.72rem;font-weight:700;
+}
+.rv-name{font-weight:700;font-size:.875rem;color:var(--text);}
+.rv-stars{color:var(--gold);font-size:.72rem;}
+.rv-date{font-size:.75rem;color:var(--text-soft);}
+.rv-text{font-size:.85rem;color:var(--text-mid);line-height:1.5;}
+
+/* RIGHT - BOOKING FORM */
+.booking-panel{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  overflow:hidden;
+  position:sticky;top:84px;
+  animation:riseIn .5s .1s ease both;
+}
+
+@keyframes riseIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+.bp-head{
+  padding:1.5rem;
+  border-bottom:1px solid var(--border);
+  background:linear-gradient(135deg,var(--surface2),var(--surface));
+  position:relative;overflow:hidden;
+}
+
+.bp-head::after{
+  content:'';position:absolute;
+  top:-30px;right:-30px;
+  width:120px;height:120px;
+  background:radial-gradient(circle,var(--green-dim),transparent 70%);
+}
+
+.bp-head h3{
+  font-family:'Zodiak',serif;
+  font-size:1.15rem;font-weight:700;color:var(--text);
+  margin-bottom:.2rem;
+}
+.bp-head p{font-size:.8rem;color:var(--text-mid);}
+
+.bp-body{padding:1.25rem;}
+
+/* LIVE BADGE */
+.live-badge{
+  display:flex;align-items:center;gap:.65rem;
+  background:rgba(94,203,107,0.07);
+  border:1px solid rgba(94,203,107,0.2);
+  border-radius:var(--r-sm);
+  padding:.7rem .9rem;
+  margin-bottom:1.1rem;
+}
+
+.pulse{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--green);flex-shrink:0;
+  animation:ping 1.5s infinite;
+  box-shadow:0 0 0 0 rgba(94,203,107,.4);
+}
+
+@keyframes ping{
+  0%{box-shadow:0 0 0 0 rgba(94,203,107,.4);}
+  70%{box-shadow:0 0 0 8px rgba(94,203,107,0);}
+  100%{box-shadow:0 0 0 0 rgba(94,203,107,0);}
+}
+
+.live-text{font-size:.8rem;color:var(--text-mid);line-height:1.4;}
+.live-text strong{color:var(--green);font-weight:700;}
+
+/* FORM */
+.fg{margin-bottom:1rem;}
+
+.fl{
+  display:block;
+  font-size:.72rem;font-weight:700;
+  color:var(--text-soft);
+  text-transform:uppercase;letter-spacing:.8px;
+  margin-bottom:.4rem;
+}
+
+.fi,.fs{
+  width:100%;
+  padding:.7rem .9rem;
+  background:var(--surface2);
+  border:1.5px solid var(--border);
+  border-radius:var(--r-sm);
+  color:var(--text);
+  font-family:'Cabinet Grotesk',sans-serif;
+  font-size:.875rem;
+  outline:none;
+  transition:all .2s;
+  appearance:none;
+}
+
+.fi:focus,.fs:focus{
+  border-color:var(--green);
+  background:rgba(94,203,107,0.04);
+  box-shadow:0 0 0 3px rgba(94,203,107,0.1);
+}
+
+.fi::placeholder{color:var(--text-soft);}
+
+.fi-wrap{position:relative;}
+.fi-btn{
+  position:absolute;right:.4rem;top:50%;transform:translateY(-50%);
+  width:30px;height:30px;border-radius:7px;
+  background:var(--green-dim);border:1px solid rgba(94,203,107,.2);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:.85rem;transition:background .2s;
+}
+.fi-btn:hover{background:rgba(94,203,107,.25);}
+
+/* TIME SLOTS */
+.time-grid{display:grid;grid-template-columns:1fr 1fr;gap:.4rem;}
+
+.ts{
+  border:1.5px solid var(--border);
+  border-radius:var(--r-sm);
+  padding:.55rem .6rem;
+  text-align:center;
+  cursor:pointer;
+  font-size:.78rem;font-weight:600;
+  color:var(--text-soft);
+  transition:all .2s;
+  background:var(--surface2);
+}
+
+.ts:hover{border-color:rgba(94,203,107,.3);color:var(--text-mid);}
+.ts.on{border-color:var(--green);color:var(--green);background:rgba(94,203,107,0.08);}
+
+/* PRICE BOX */
+.price-box{
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:var(--r-sm);
+  padding:.9rem 1rem;
+  margin-bottom:1rem;
+}
+
+.pr{
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:.82rem;color:var(--text-mid);margin-bottom:.4rem;
+}
+
+.pr:last-child{
+  margin:0;padding-top:.5rem;
+  border-top:1px dashed var(--border);
+  font-weight:700;font-size:.95rem;
+  color:var(--text);
+}
+
+.pr:last-child span:last-child{
+  color:var(--green);
+  font-family:'Zodiak',serif;font-size:1.05rem;
+}
+
+/* BOOK BTN */
+.btn-book{
+  width:100%;padding:.9rem;
+  background:var(--green);
+  color:#0d1f0f;
+  border:none;border-radius:var(--r-sm);
+  font-family:'Cabinet Grotesk',sans-serif;
+  font-size:.95rem;font-weight:800;
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:.5rem;
+  transition:all .2s;
+  box-shadow:0 4px 20px rgba(94,203,107,0.25);
+  letter-spacing:.3px;
+}
+
+.btn-book:hover{
+  background:#6ed97b;
+  transform:translateY(-2px);
+  box-shadow:0 8px 28px rgba(94,203,107,0.35);
+}
+
+.trust{
+  display:flex;justify-content:center;gap:1rem;
+  margin-top:.75rem;flex-wrap:wrap;
+}
+
+.trust-item{
+  font-size:.7rem;color:var(--text-soft);
+  display:flex;align-items:center;gap:.3rem;
+}
+
+/* STEPS */
+.steps{
+  display:flex;align-items:center;
+  margin-bottom:2rem;gap:0;
+}
+
+.step{
+  display:flex;flex-direction:column;align-items:center;gap:.3rem;
+  flex:1;position:relative;
+}
+
+.step:not(:last-child)::after{
+  content:'';position:absolute;
+  top:13px;left:50%;width:100%;height:1.5px;
+  background:var(--border);
+}
+
+.step.done:not(:last-child)::after{background:var(--green2);}
+
+.sn{
+  width:26px;height:26px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.7rem;font-weight:700;
+  background:var(--surface2);color:var(--text-soft);
+  border:1.5px solid var(--border);z-index:1;transition:all .3s;
+}
+
+.step.done .sn{background:var(--green2);color:#0d1f0f;border-color:var(--green2);}
+.step.active .sn{background:var(--surface2);color:var(--green);border-color:var(--green);box-shadow:0 0 0 4px rgba(94,203,107,.12);}
+
+.sl{font-size:.68rem;color:var(--text-soft);font-weight:600;white-space:nowrap;}
+.step.active .sl{color:var(--green);}
+.step.done .sl{color:var(--text-mid);}
+
+/* ANIM */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(12px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+.left > *{animation:fadeUp .4s ease both;}
+.left > *:nth-child(2){animation-delay:.08s;}
+.left > *:nth-child(3){animation-delay:.16s;}
+.left > *:nth-child(4){animation-delay:.24s;}
+
+/* SERVICE TRANSITION */
+.svc-header,
+.features-grid,
+.pricing-row,
+.svc-header h2,
+.svc-header p{
+  transition:opacity .25s,transform .25s;
+}
+
+.switching .svc-header,
+.switching .features-grid,
+.switching .pricing-row{
+  opacity:0;transform:translateY(6px);
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px){
+  .main{grid-template-columns:1fr;gap:1.5rem;}
+  .booking-panel{position:relative;top:0;}
+  .steps{flex-direction:column;gap:1rem;}
+  .svc-header{padding:1.5rem;}
+  .svc-big-icon{width:48px;height:48px;font-size:1.5rem;}
+  .svc-header h2{font-size:1.3rem;}
+  .time-grid{grid-template-columns:1fr;gap:.3rem;}
+  .ts{padding:.4rem .5rem;font-size:.7rem;}
+  .price-card{flex-direction:column;gap:.5rem;}
+  .price-left{gap:.5rem;}
+  .features-grid{grid-template-columns:1fr;gap:.4rem;}
+}
+</style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="index.html" class="nav-logo">
-                <i class="fas fa-leaf"></i>
-                <span>EcoWorkConnect</span>
-            </a>
-            <ul class="nav-menu">
-                <li><a href="index.html" class="nav-link">Home</a></li>
-                <li><a href="services.html" class="nav-link active">Services</a></li>
-                <li><a href="bookings.html" class="nav-link">My Bookings</a></li>
-                <li><a href="worker-portal.html" class="nav-link">Worker Portal</a></li>
-            </ul>
-            <div class="nav-auth">
-                <a href="login.html" class="btn btn-outline">Login</a>
-                <a href="register.html" class="btn btn-primary">Sign Up</a>
+
+<nav>
+  <a href="index.html" class="logo">
+    <div class="logo-mark">🌿</div>
+    EcoWorkConnect
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="bookings.html">My Bookings</a></li>
+    <li><a href="worker-portal.html">Worker Portal</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="user-pill">
+      <div class="user-dot">SR</div>
+      <span class="user-name">Samba Rao</span>
+    </div>
+  </div>
+</nav>
+
+<div class="page">
+
+  <!-- STEPS -->
+  <div class="steps">
+    <div class="step done"><div class="sn">✓</div><span class="sl">Login</span></div>
+    <div class="step active"><div class="sn">2</div><span class="sl">Choose & Book</span></div>
+    <div class="step"><div class="sn">3</div><span class="sl">Confirm</span></div>
+    <div class="step"><div class="sn">4</div><span class="sl">Track Worker</span></div>
+  </div>
+
+  <!-- TITLE -->
+  <div class="page-eyebrow">Book a Service</div>
+  <h1 class="page-title">What can we help<br>you with <em>today?</em></h1>
+  <p class="page-sub">Select a service below — prices, features and booking form update automatically.</p>
+
+  <!-- SERVICE PICKER -->
+  <div class="service-picker" id="picker">
+    <button class="svc-btn active" data-svc="solar"><span class="svc-emoji">☀️</span> Solar Panels</button>
+    <button class="svc-btn" data-svc="energy"><span class="svc-emoji">⚡</span> Energy Audit</button>
+    <button class="svc-btn" data-svc="biogas"><span class="svc-emoji">🔥</span> Bio-Gas</button>
+    <button class="svc-btn" data-svc="gardening"><span class="svc-emoji">🌱</span> Gardening</button>
+    <button class="svc-btn" data-svc="waste"><span class="svc-emoji">♻️</span> Waste Mgmt</button>
+    <button class="svc-btn" data-svc="water"><span class="svc-emoji">💧</span> Water Conservation</button>
+    <button class="svc-btn" data-svc="ev"><span class="svc-emoji">🔌</span> EV Charging</button>
+    <button class="svc-btn" data-svc="maintenance"><span class="svc-emoji">🔧</span> Green Maintenance</button>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- LEFT -->
+    <div class="left">
+
+      <!-- SERVICE HEADER -->
+      <div class="svc-header panel">
+        <div class="svc-header-top">
+          <div class="svc-big-icon" id="svcIcon">☀️</div>
+          <div style="flex:1">
+            <h2 id="svcTitle">Solar Panel Installation</h2>
+            <p id="svcDesc">Professional solar panel installation for residential and commercial properties by certified technicians.</p>
+            <div class="svc-meta" id="svcMeta">
+              <span class="meta-chip"><span class="dot"></span> 25-yr Warranty</span>
+              <span class="meta-chip"><span class="dot"></span> Insured & Certified</span>
+              <span class="meta-chip"><span class="dot"></span> Pay After Service</span>
             </div>
-            <button class="mobile-menu-toggle" id="mobileMenuToggle">
-                <i class="fas fa-bars"></i>
-            </button>
+          </div>
+          <div class="svc-rating">
+            <div class="rating-score" id="ratingScore">4.8</div>
+            <div class="rating-stars">★★★★★</div>
+            <div class="rating-count" id="ratingCount">1,247 reviews</div>
+          </div>
         </div>
-    </nav>
+      </div>
 
-    <!-- Service Detail Header -->
-    <section class="service-detail-header">
-        <div class="container" style="display: flex; align-items: center; gap: 1.5rem;">
-            <div style="width: 5rem; height: 5rem; background: rgba(255,255,255,0.2); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; font-size: 2.5rem;">
-                <i class="fas fa-solar-panel"></i>
-            </div>
-            <div>
-                <h1>Solar Panel Installation</h1>
-                <p>Professional solar panel installation for residential and commercial properties</p>
-            </div>
+      <!-- FEATURES -->
+      <div class="panel">
+        <div class="panel-head">
+          <span class="panel-title">What's Included</span>
+          <span style="font-size:.75rem;color:var(--text-soft)" id="featCount">6 services</span>
         </div>
-    </section>
-
-    <!-- Booking Content -->
-    <div class="container" style="padding: 2rem 1.5rem;">
-        <div class="service-detail-content" style="display: grid; grid-template-columns: 1fr 420px; gap: 2rem;">
-            <!-- Left Column - Service Info -->
-            <div>
-                <!-- Service Features -->
-                <div class="card" style="margin-bottom: 1.5rem;">
-                    <div class="card-body">
-                        <h3 style="margin-bottom: 1rem;">What's Included</h3>
-                        <ul class="service-features" style="list-style: none; display: flex; flex-direction: column; gap: 0.75rem;">
-                            <li style="display: flex; align-items: center; gap: 0.75rem;">
-                                <i class="fas fa-check-circle" style="color: var(--primary);"></i>
-                                <span>Free site assessment and consultation</span>
-                            </li>
-                            <li style="display: flex; align-items: center; gap: 0.75rem;">
-                                <i class="fas fa-check-circle" style="color: var(--primary);"></i>
-                                <span>High-quality solar panels with 25-year warranty</span>
-                            </li>
-                            <li style="display: flex; align-items: center; gap: 0.75rem;">
-                                <i class="fas fa-check-circle" style="color: var(--primary);"></i>
-                                <span>Professional installation by certified technicians</span>
-                            </li>
-                            <li style="display: flex; align-items: center; gap: 0.75rem;">
-                                <i class="fas fa-check-circle" style="color: var(--primary);"></i>
-                                <span>Inverter and mounting structure included</span>
-                            </li>
-                            <li style="display: flex; align-items: center; gap: 0.75rem;">
-                                <i class="fas fa-check-circle" style="color: var(--primary);"></i>
-                                <span>Post-installation maintenance support</span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Pricing Info -->
-                <div class="card" style="margin-bottom: 1.5rem;">
-                    <div class="card-body">
-                        <h3 style="margin-bottom: 1rem;">Pricing</h3>
-                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
-                            <div style="text-align: center; padding: 1.5rem; border: 2px solid var(--gray-200); border-radius: var(--radius-lg);">
-                                <div style="font-size: 2rem; font-weight: 700; color: var(--primary);">3 kW</div>
-                                <div style="color: var(--gray-600); margin: 0.5rem 0;">Residential</div>
-                                <div style="font-size: 1.25rem; font-weight: 600;">₹1,50,000</div>
-                            </div>
-                            <div style="text-align: center; padding: 1.5rem; border: 2px solid var(--primary); border-radius: var(--radius-lg); background: var(--primary-light);">
-                                <div style="font-size: 2rem; font-weight: 700; color: var(--primary);">5 kW</div>
-                                <div style="color: var(--gray-600); margin: 0.5rem 0;">Popular</div>
-                                <div style="font-size: 1.25rem; font-weight: 600;">₹2,25,000</div>
-                            </div>
-                            <div style="text-align: center; padding: 1.5rem; border: 2px solid var(--gray-200); border-radius: var(--radius-lg);">
-                                <div style="font-size: 2rem; font-weight: 700; color: var(--primary);">10 kW</div>
-                                <div style="color: var(--gray-600); margin: 0.5rem 0;">Commercial</div>
-                                <div style="font-size: 1.25rem; font-weight: 600;">₹4,00,000</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Reviews Preview -->
-                <div class="card">
-                    <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
-                        <h3>Customer Reviews</h3>
-                        <div style="color: var(--accent);">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                            <span style="color: var(--gray-600); margin-left: 0.5rem;">4.8 (1,247 reviews)</span>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div style="display: flex; flex-direction: column; gap: 1rem;">
-                            <div style="border-bottom: 1px solid var(--gray-100); padding-bottom: 1rem;">
-                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                                    <strong>Rajesh Kumar</strong>
-                                    <span style="color: var(--gray-500); font-size: 0.875rem;">2 days ago</span>
-                                </div>
-                                <div style="color: var(--accent); margin-bottom: 0.5rem;">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                </div>
-                                <p style="color: var(--gray-600); font-size: 0.875rem;">Excellent service! The team was professional and completed the installation in just 2 days. Highly recommended!</p>
-                            </div>
-                            <div>
-                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                                    <strong>Priya Sharma</strong>
-                                    <span style="color: var(--gray-500); font-size: 0.875rem;">1 week ago</span>
-                                </div>
-                                <div style="color: var(--accent); margin-bottom: 0.5rem;">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                </div>
-                                <p style="color: var(--gray-600); font-size: 0.875rem;">Very happy with the installation. My electricity bills have reduced by 70%! Great investment.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Right Column - Booking Form -->
-            <div class="booking-form-card">
-                <h3>Book This Service</h3>
-                <p style="color: var(--gray-600); margin-bottom: 1rem;">Simple 3-step booking process</p>
-                
-                <!-- Hidden service ID -->
-                <input type="hidden" name="serviceId" id="serviceId" value="">
-                
-                <!-- Hidden location fields for GPS -->
-                <input type="hidden" name="latitude"  id="bookingLat"  value="">
-                <input type="hidden" name="longitude" id="bookingLng"  value="">
-                
-                <!-- Capacity Selection -->
-                <div class="form-group">
-                    <label class="form-label">Select Capacity</label>
-                    <select class="form-select" id="capacity" required>
-                        <option value="">Choose option</option>
-                    </select>
-                </div>
-                
-                <!-- Book Now Button -->
-                <button type="button" onclick="openBookingModal()" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
-                    <i class="fas fa-calendar-check"></i> Book Now
-                </button>
-            </div>
+        <div class="panel-body">
+          <div class="features-grid" id="featuresList"></div>
         </div>
+      </div>
+
+      <!-- PRICING -->
+      <div class="panel">
+        <div class="panel-head">
+          <span class="panel-title">Pricing Packages</span>
+        </div>
+        <div class="panel-body">
+          <div class="pricing-row" id="pricingList"></div>
+        </div>
+      </div>
+
+      <!-- REVIEWS -->
+      <div class="panel">
+        <div class="panel-head">
+          <span class="panel-title">Customer Reviews</span>
+          <span style="color:var(--gold);font-size:.85rem;" id="ratingBadge">★ 4.8 <span style="color:var(--text-soft)">(1,247)</span></span>
+        </div>
+        <div class="panel-body" style="padding-top:.5rem;">
+          <div class="review" id="rv1">
+            <div class="rv-top">
+              <div class="rv-user">
+                <div class="rv-av" style="background:linear-gradient(135deg,#2d6a4f,#5ecb6b);color:#0d1f0f;">RK</div>
+                <div><div class="rv-name">Rajesh Kumar</div><div class="rv-stars">★★★★★</div></div>
+              </div>
+              <span class="rv-date">2 days ago</span>
+            </div>
+            <p class="rv-text" id="rv1text">Excellent service! The team was professional and completed the installation in just 2 days. Electricity bills down 70%!</p>
+          </div>
+          <div class="review" id="rv2">
+            <div class="rv-top">
+              <div class="rv-user">
+                <div class="rv-av" style="background:linear-gradient(135deg,#8b5e3c,#c9a84c);color:#0d1f0f;">PS</div>
+                <div><div class="rv-name">Priya Sharma</div><div class="rv-stars">★★★★★</div></div>
+              </div>
+              <span class="rv-date">1 week ago</span>
+            </div>
+            <p class="rv-text" id="rv2text">Very happy with the installation. The team was punctual and cleaned up perfectly after finishing. Highly recommend!</p>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /left -->
+
+    <!-- RIGHT — BOOKING FORM -->
+    <div class="booking-panel">
+      <div class="bp-head">
+        <h3>Book Now</h3>
+        <p>Workers near you · Pay only after completion</p>
+      </div>
+      <div class="bp-body">
+
+        <div class="live-badge">
+          <div class="pulse"></div>
+          <div class="live-text"><strong id="workerCount">4 certified workers</strong> available within 3 km of your location right now</div>
+        </div>
+
+        <div class="fg">
+          <label class="fl">Select Package</label>
+          <select class="fs" id="packageSelect"></select>
+        </div>
+
+        <div class="fg">
+          <label class="fl">Installation Address</label>
+          <div class="fi-wrap">
+            <input class="fi" type="text" id="addressInput" placeholder="Enter your address" style="padding-right:2.8rem;" value="Veterinary Colony, Vijayawada">
+            <div class="fi-btn" title="Detect location">📍</div>
+          </div>
+        </div>
+
+        <div class="fg">
+          <label class="fl">Preferred Date</label>
+          <input class="fi" type="date" id="dateInput">
+        </div>
+
+        <div class="fg">
+          <label class="fl">Preferred Time</label>
+          <div class="time-grid">
+            <div class="ts" onclick="selectTime(this)">🌅 9 AM – 12 PM</div>
+            <div class="ts" onclick="selectTime(this)">☀️ 12 PM – 3 PM</div>
+            <div class="ts" onclick="selectTime(this)">🌤️ 3 PM – 6 PM</div>
+            <div class="ts" onclick="selectTime(this)">🕐 Anytime</div>
+          </div>
+        </div>
+
+        <div class="fg">
+          <label class="fl">Additional Notes</label>
+          <textarea class="fi" rows="2" placeholder="Any specific requirements…" style="resize:none;"></textarea>
+        </div>
+
+        <div class="price-box">
+          <div class="pr"><span>Base Price</span><span id="basePrice">₹2,25,000</span></div>
+          <div class="pr"><span>Service Charge (10%)</span><span id="svcCharge">₹22,500</span></div>
+          <div class="pr"><span>GST (18%)</span><span id="gstAmt">₹40,500</span></div>
+          <div class="pr"><span>Total</span><span id="totalAmt">₹2,88,000</span></div>
+        </div>
+
+        <button class="btn-book" onclick="confirmBooking()">
+          📅 Confirm Booking
+        </button>
+
+        <div class="trust">
+          <div class="trust-item">🔒 Secure</div>
+          <div class="trust-item">✅ Pay after service</div>
+          <div class="trust-item">❌ Free cancellation</div>
+        </div>
+
+      </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-brand">
-                    <a href="index.html" class="footer-logo">
-                        <i class="fas fa-leaf"></i>
-                        <span>GreenServe</span>
-                    </a>
-                    <p>Connecting you with professional green and utility service providers for a sustainable future.</p>
-                </div>
-                <div class="footer-links">
-                    <h4>Services</h4>
-                    <ul>
-                        <li><a href="services.html">All Services</a></li>
-                        <li><a href="service-detail.html?id=solar">Solar</a></li>
-                        <li><a href="service-detail.html?id=gardening">Gardening</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2026 EcoWorkConnect. All rights reserved.</p>
-            </div>
+  </div><!-- /main -->
+</div><!-- /page -->
+
+<script>
+const SERVICES = {
+  solar:{
+    icon:'☀️',title:'Solar Panel Installation',
+    desc:'Professional solar panel installation for residential and commercial properties by certified technicians.',
+    tags:['25-yr Warranty','Insured & Certified','Pay After Service'],
+    rating:'4.8',reviews:'1,247',workers:'4',
+    features:['Free site assessment & consultation','High-quality panels with 25-yr warranty','Certified technician installation','Inverter & mounting structure included','Post-installation maintenance support','Government subsidy assistance'],
+    pricing:[
+      {size:'3 kW',label:'Residential · Small home',value:150000,featured:false},
+      {size:'5 kW',label:'Family home · Popular choice',value:225000,featured:true},
+      {size:'10 kW',label:'Commercial · Large property',value:400000,featured:false},
+    ],
+    rv1:'Excellent! Team completed installation in 2 days. Electricity bills down 70%. Highly recommended!',
+    rv2:'Very professional team. Punctual and cleaned up after finishing. Already seeing savings on bills.',
+  },
+  energy:{
+    icon:'⚡',title:'Energy Audit',
+    desc:'Professional energy efficiency assessments and recommendations to reduce your carbon footprint and electricity bills.',
+    tags:['Detailed Report','ROI Analysis','Follow-up Support'],
+    rating:'4.7',reviews:'836',workers:'6',
+    features:['Complete energy consumption assessment','Detailed audit report with findings','Efficiency improvement recommendations','ROI and savings analysis','Solar readiness evaluation','Follow-up consultation included'],
+    pricing:[
+      {size:'Basic',label:'1 BHK apartment',value:5000,featured:false},
+      {size:'Standard',label:'2–3 BHK home',value:8000,featured:true},
+      {size:'Premium',label:'Villa or commercial office',value:15000,featured:false},
+    ],
+    rv1:'The audit identified huge energy wastage we never noticed. Saved ₹3,000/month after implementing their suggestions.',
+    rv2:'Very thorough report. Engineer was knowledgeable and explained everything clearly. Worth every rupee.',
+  },
+  biogas:{
+    icon:'🔥',title:'Bio-Gas Services',
+    desc:'Biogas plant installation, maintenance, and consultation for sustainable cooking and energy generation from organic waste.',
+    tags:['Pipeline Setup','Annual Service','Training Included'],
+    rating:'4.6',reviews:'412',workers:'3',
+    features:['Biogas plant installation & setup','Pipeline and burner connection','Waste input training and guidance','Annual maintenance contract','Energy output monitoring','Government scheme assistance'],
+    pricing:[
+      {size:'Small',label:'Household · 1–4 members',value:45000,featured:false},
+      {size:'Medium',label:'Community · 5–20 families',value:120000,featured:true},
+      {size:'Large',label:'Commercial or farm use',value:300000,featured:false},
+    ],
+    rv1:'Excellent installation. Gas output is consistent and team trained us really well. Zero waste now!',
+    rv2:'Very professional. Pipeline was laid neatly and the burner works perfectly. Amazing eco investment.',
+  },
+  gardening:{
+    icon:'🌱',title:'gardening & Landscaping',
+    desc:'Professional gardening, landscaping, and plant care services to transform your outdoor spaces sustainably.',
+    tags:['Eco-Friendly Products','Monthly Plans','Plant Guarantee'],
+    rating:'4.9',reviews:'2,104',workers:'8',
+    features:['Garden design and layout planning','Professional plant care and pruning','Lawn mowing and maintenance','Seasonal planting and replanting','Organic pest and disease control','Irrigation system setup'],
+    pricing:[
+      {size:'Basic',label:'Small garden · One visit',value:2000,featured:false},
+      {size:'Standard',label:'Medium garden · Monthly plan',value:4000,featured:true},
+      {size:'Premium',label:'Large garden · Weekly plan',value:8000,featured:false},
+    ],
+    rv1:'Our garden looks absolutely beautiful now. The team understood exactly what we wanted. Very gentle with plants!',
+    rv2:'Monthly plan is excellent value. Garden is always neat and the plants are thriving. Totally recommend.',
+  },
+  waste:{
+    icon:'♻️',title:'Waste Management',
+    desc:'Comprehensive waste collection, segregation, recycling, and responsible disposal solutions for a cleaner environment.',
+    tags:['Segregation Included','Recycling Certified','Scheduled Pickup'],
+    rating:'4.5',reviews:'678',workers:'5',
+    features:['Scheduled waste collection','Source segregation training','Dry and wet waste processing','Recyclables recovery and sale','Organic composting setup','Monthly compliance report'],
+    pricing:[
+      {size:'Basic',label:'Monthly collection · Small',value:1500,featured:false},
+      {size:'Standard',label:'Weekly collection · Regular',value:4000,featured:true},
+      {size:'Premium',label:'Daily collection · Large premises',value:10000,featured:false},
+    ],
+    rv1:'Finally found a reliable waste management service! Segregation is perfect and they even compost our kitchen waste.',
+    rv2:'Very systematic approach. The team is disciplined and our colony has never been cleaner. Great service.',
+  },
+  water:{
+    icon:'💧',title:'Water Conservation',
+    desc:'Rainwater harvesting, water recycling, and advanced conservation systems to reduce water consumption and costs.',
+    tags:['Custom Design','Filtration Included','Water Audit'],
+    rating:'4.7',reviews:'543',workers:'4',
+    features:['Rainwater harvesting system design','Storage tank installation','Water filtration and treatment setup','Greywater recycling system','Drip irrigation integration','Annual maintenance and water audit'],
+    pricing:[
+      {size:'Basic',label:'Small system · Apartment',value:25000,featured:false},
+      {size:'Standard',label:'Medium system · Bungalow',value:50000,featured:true},
+      {size:'Premium',label:'Large system · Commercial',value:100000,featured:false},
+    ],
+    rv1:'Our water bills dropped by 60% after installing the rainwater harvesting system. Excellent ROI!',
+    rv2:'Very professional team. The filtration system is working brilliantly and water quality is great.',
+  },
+  ev:{
+    icon:'🔌',title:'EV Charging Support',
+    desc:'EV charging station installation, setup, and maintenance for homes and businesses to power your electric vehicles.',
+    tags:['App Integration','24/7 Support','Load Balancing'],
+    rating:'4.8',reviews:'389',workers:'3',
+    features:['Charging station installation','Dedicated circuit wiring','Smart app integration setup','Load balancing configuration','Safety certification and testing','24/7 remote monitoring support'],
+    pricing:[
+      {size:'Home 7kW',label:'AC charger · Standard home use',value:35000,featured:false},
+      {size:'Fast 22kW',label:'AC fast charger · Frequent use',value:75000,featured:true},
+      {size:'DC 50kW',label:'DC rapid charger · Commercial',value:250000,featured:false},
+    ],
+    rv1:'Superb installation! The app integration works flawlessly and charging is much faster than public stations.',
+    rv2:'Very knowledgeable team. Set up the load balancing perfectly so it does not trip our home circuit.',
+  },
+  maintenance:{
+    icon:'🔧',title:'Green Maintenance',
+    desc:'Eco-friendly maintenance and repair services using sustainable practices, non-toxic products, and certified technicians.',
+    tags:['Eco Products Only','Same Day Service','Warranty on Work'],
+    rating:'4.6',reviews:'921',workers:'7',
+    features:['Preventive maintenance scheduling','Eco-friendly product usage only','Certified and background-checked techs','Solar system cleaning and upkeep','Plumbing and electrical green repairs','Annual maintenance contract'],
+    pricing:[
+      {size:'Basic',label:'Single visit · One-time fix',value:1500,featured:false},
+      {size:'Standard',label:'Monthly AMC · Regular upkeep',value:5000,featured:true},
+      {size:'Premium',label:'Annual AMC · Full coverage',value:15000,featured:false},
+    ],
+    rv1:'Technician was on time, used eco-friendly products and did a perfect job. Will definitely book again.',
+    rv2:'Monthly AMC is great value. They proactively spot issues before they become big problems. Very reliable.',
+  },
+};
+
+let currentSvc = 'solar';
+
+function fmt(n){return '₹'+n.toLocaleString('en-IN');}
+
+function renderService(key){
+  const s = SERVICES[key];
+
+  // Header
+  document.getElementById('svcIcon').textContent = s.icon;
+  document.getElementById('svcTitle').textContent = s.title;
+  document.getElementById('svcDesc').textContent = s.desc;
+  document.getElementById('ratingScore').textContent = s.rating;
+  document.getElementById('ratingCount').textContent = s.reviews+' reviews';
+  document.getElementById('ratingBadge').innerHTML = `★ ${s.rating} <span style="color:var(--text-soft)">(${s.reviews})</span>`;
+
+  // Tags
+  document.getElementById('svcMeta').innerHTML = s.tags.map(t=>`<span class="meta-chip"><span class="dot"></span> ${t}</span>`).join('');
+
+  // Features
+  document.getElementById('featCount').textContent = s.features.length+' services';
+  document.getElementById('featuresList').innerHTML = s.features.map(f=>`
+    <div class="feat"><div class="feat-check">✓</div><span>${f}</span></div>
+  `).join('');
+
+  // Pricing list
+  document.getElementById('pricingList').innerHTML = s.pricing.map(p=>`
+    <div class="price-card ${p.featured?'featured':''}" onclick="selectPackage(${p.value})">
+      <div class="price-left">
+        <div class="price-badge">${p.size.split(' ')[0]}</div>
+        <div>
+          <div class="price-name">${p.size}</div>
+          <div class="price-desc">${p.label}</div>
         </div>
-    </footer>
-
-    <script src="js/app.js?v=1.3"></script>
-    <script>
-    const services = {
-        solar:       { title: 'Solar Panel Installation',     icon: 'fa-solar-panel',        description: 'Professional solar panel installation for residential and commercial properties', features: ['Free site assessment','High-quality panels with 25-year warranty','Professional installation','Inverter included','Post-installation support'], pricing: [{size:'3 kW',label:'Residential',price:'₹1,50,000',value:150000},{size:'5 kW',label:'Popular',price:'₹2,25,000',value:225000},{size:'10 kW',label:'Commercial',price:'₹4,00,000',value:400000}] },
-        energy:      { title: 'Energy Audit',                 icon: 'fa-bolt',                description: 'Professional energy efficiency assessments', features: ['Complete energy assessment','Detailed audit report','Recommendations','ROI analysis','Follow-up support'], pricing: [{size:'Basic',label:'1 BHK',price:'₹5,000',value:5000},{size:'Standard',label:'2-3 BHK',price:'₹8,000',value:8000},{size:'Premium',label:'Villa/Office',price:'₹15,000',value:15000}] },
-        biogas:      { title: 'Bio-Gas Services',             icon: 'fa-fire',                description: 'Biogas plant installation and maintenance', features: ['Plant installation','Pipeline setup','Maintenance','Training','Annual service'], pricing: [{size:'Small',label:'Household',price:'₹45,000',value:45000},{size:'Medium',label:'Community',price:'₹1,20,000',value:120000},{size:'Large',label:'Commercial',price:'₹3,00,000',value:300000}] },
-        gardening:   { title: 'Gardening & Landscaping',      icon: 'fa-seedling',            description: 'Professional gardening and plant care services', features: ['Garden design','Plant care','Lawn maintenance','Seasonal planting','Pest control'], pricing: [{size:'Basic',label:'Small Garden',price:'₹2,000',value:2000},{size:'Standard',label:'Medium Garden',price:'₹4,000',value:4000},{size:'Premium',label:'Large Garden',price:'₹8,000',value:8000}] },
-        water:       { title: 'Water Conservation',           icon: 'fa-tint',                description: 'Rainwater harvesting and conservation systems', features: ['System design','Installation','Filtration setup','Maintenance','Water audit'], pricing: [{size:'Basic',label:'Small',price:'₹25,000',value:25000},{size:'Standard',label:'Medium',price:'₹50,000',value:50000},{size:'Premium',label:'Large',price:'₹1,00,000',value:100000}] },
-        ev:          { title: 'EV Charging Support',          icon: 'fa-charging-station',    description: 'EV charging station installation and maintenance', features: ['Station installation','Wiring setup','App integration','Maintenance','24/7 support'], pricing: [{size:'Basic',label:'Home 7kW',price:'₹35,000',value:35000},{size:'Standard',label:'Fast 22kW',price:'₹75,000',value:75000},{size:'Premium',label:'DC 50kW',price:'₹2,50,000',value:250000}] },
-        maintenance: { title: 'Green Maintenance',            icon: 'fa-tools',               description: 'Eco-friendly maintenance and repair services', features: ['Preventive maintenance','Eco-friendly products','Certified technicians','Same day service','Warranty'], pricing: [{size:'Basic',label:'Single Visit',price:'₹1,500',value:1500},{size:'Standard',label:'Monthly AMC',price:'₹5,000',value:5000},{size:'Premium',label:'Annual AMC',price:'₹15,000',value:15000}] }
-    };
-
-    document.addEventListener('DOMContentLoaded', function() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const serviceId = urlParams.get('id') || 'solar';
-        const service = services[serviceId] || services.solar;
-
-        // Set service ID in form
-        const serviceIdField = document.getElementById('serviceId');
-        if (serviceIdField) serviceIdField.value = serviceId;
-
-        document.title = service.title + ' - GreenServe';
-        document.querySelector('.service-detail-header h1').textContent = service.title;
-        document.querySelector('.service-detail-header p').textContent = service.description;
-        document.querySelector('.service-detail-header i').className = 'fas ' + service.icon;
-
-        const featuresList = document.querySelector('.service-features');
-        if (featuresList) {
-            featuresList.innerHTML = service.features.map(f =>
-                `<li style="display:flex;align-items:center;gap:0.75rem;">
-                    <i class="fas fa-check-circle" style="color:var(--primary);"></i><span>${f}</span>
-                </li>`
-            ).join('');
-        }
-
-        const select = document.getElementById('capacity');
-        if (select) {
-            select.innerHTML = '<option value="">Choose option</option>' +
-                service.pricing.map(p =>
-                    `<option value="${p.value}">${p.size} - ${p.price}</option>` 
-                ).join('');
-
-            select.addEventListener('change', function() {
-                const val = parseInt(this.value) || 0;
-                const charge = Math.round(val * 0.10);
-                const tax    = Math.round(val * 0.18);
-                const total  = val + charge + tax;
-                document.getElementById('service-charge').textContent = '₹' + charge.toLocaleString('en-IN');
-                document.getElementById('tax').textContent            = '₹' + tax.toLocaleString('en-IN');
-                document.getElementById('total-amount').textContent   = '₹' + total.toLocaleString('en-IN');
-            });
-            select.dispatchEvent(new Event('change'));
-        }
-
-        // ── Auto-detect GPS on page load for booking location ──────────────
-        autoDetectBookingLocation();
-    });
-
-    /**
-     * Silently grab GPS on page load and store in hidden fields.
-     * Does NOT block the user — fails silently if denied.
-     */
-    function autoDetectBookingLocation() {
-        if (!navigator.geolocation) return;
-        navigator.geolocation.getCurrentPosition(
-            (pos) => {
-                setBookingCoords(pos.coords.latitude, pos.coords.longitude);
-                console.log('📍 Booking location auto-detected:', pos.coords.latitude, pos.coords.longitude);
-            },
-            (err) => {
-                console.log('ℹ️ GPS not available, user must enter address manually');
-            },
-            { enableHighAccuracy: true, timeout: 8000 }
-        );
-    }
-
-    function setBookingCoords(lat, lng) {
-        const latField = document.getElementById('bookingLat');
-        const lngField = document.getElementById('bookingLng');
-        if (latField) latField.value = lat;
-        if (lngField) lngField.value = lng;
-    }
-
-    /**
-     * Override the global getCurrentLocation() for this page
-     * so that it ALSO updates the hidden lat/lng fields.
-     */
-    window.getCurrentLocation = function() {
-        if (!navigator.geolocation) {
-            showToast('Geolocation not supported', 'error');
-            return;
-        }
-        navigator.geolocation.getCurrentPosition(
-            async (pos) => {
-                const { latitude, longitude } = pos.coords;
-                setBookingCoords(latitude, longitude);
-
-                try {
-                    const res  = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
-                    const data = await res.json();
-                    if (data.display_name) {
-                        document.getElementById('address').value = data.display_name;
-                        showToast('Location detected!', 'success');
-                    }
-                } catch(e) {
-                    document.getElementById('address').value = `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`;
-                    showToast('Location set (address lookup failed)', 'info');
-                }
-            },
-            () => { showToast('Unable to get location. Please enter manually.', 'error'); },
-            { enableHighAccuracy: true, timeout: 8000 }
-        );
-    <!-- Multi-Step Booking Modal -->
-    <div id="bookingModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
-        <div style="position: relative; max-width: 500px; margin: 50px auto; background: white; border-radius: var(--radius); padding: 2rem;">
-            
-            <!-- Modal Header -->
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                <h3 style="margin: 0; color: var(--dark);">Book Your Service</h3>
-                <button onclick="closeBookingModal()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--gray-600);">&times;</button>
-            </div>
-
-            <!-- Step 1: Time Slot Selection -->
-            <div id="step1" class="booking-step">
-                <h4 style="margin-bottom: 1rem; color: var(--primary);">Step 1: Select Time Slot</h4>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 1rem;">
-                    <label class="time-slot" style="padding: 1rem; border: 2px solid var(--gray-200); border-radius: var(--radius); text-align: center; cursor: pointer;">
-                        <input type="radio" name="modalBookingTime" value="09:00" style="display: none;">
-                        <i class="fas fa-sun"></i><br>9 AM - 12 PM
-                    </label>
-                    <label class="time-slot" style="padding: 1rem; border: 2px solid var(--gray-200); border-radius: var(--radius); text-align: center; cursor: pointer;">
-                        <input type="radio" name="modalBookingTime" value="14:00" style="display: none;">
-                        <i class="fas fa-sun" style="color: orange;"></i><br>12 PM - 3 PM
-                    </label>
-                    <label class="time-slot" style="padding: 1rem; border: 2px solid var(--gray-200); border-radius: var(--radius); text-align: center; cursor: pointer;">
-                        <input type="radio" name="modalBookingTime" value="17:00" style="display: none;">
-                        <i class="fas fa-cloud-sun"></i><br>3 PM - 6 PM
-                    </label>
-                    <label class="time-slot" style="padding: 1rem; border: 2px solid var(--primary); border-radius: var(--radius); text-align: center; cursor: pointer; background: var(--primary-light);">
-                        <input type="radio" name="modalBookingTime" value="12:00" checked style="display: none;">
-                        <i class="fas fa-clock"></i><br>Anytime
-                    </label>
-                </div>
-                <button onclick="nextStep(2)" class="btn btn-primary" style="width: 100%;">Next</button>
-            </div>
-
-            <!-- Step 2: Date & Location -->
-            <div id="step2" class="booking-step" style="display: none;">
-                <h4 style="margin-bottom: 1rem; color: var(--primary);">Step 2: Date & Location</h4>
-                <div class="form-group">
-                    <label class="form-label">Preferred Date</label>
-                    <input type="date" id="modalBookingDate" class="form-input" required min="2026-03-02">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Installation Address</label>
-                    <div style="position: relative;">
-                        <input type="text" id="modalAddress" class="form-input" placeholder="Enter your address" required>
-                        <button type="button" onclick="getCurrentLocationForModal()" style="position: absolute; right: 0.5rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--primary); cursor: pointer;">
-                            <i class="fas fa-location-arrow"></i>
-                        </button>
-                    </div>
-                </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
-                    <button onclick="previousStep(1)" class="btn btn-secondary" style="width: 100%;">Back</button>
-                    <button onclick="nextStep(3)" class="btn btn-primary" style="width: 100%;">Next</button>
-                </div>
-            </div>
-
-            <!-- Step 3: Confirm Booking -->
-            <div id="step3" class="booking-step" style="display: none;">
-                <h4 style="margin-bottom: 1rem; color: var(--primary);">Step 3: Confirm Booking</h4>
-                <div class="booking-summary" style="background: var(--gray-50); padding: 1rem; border-radius: var(--radius); margin-bottom: 1rem;">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                        <span>Service:</span>
-                        <span id="summaryService">-</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                        <span>Date:</span>
-                        <span id="summaryDate">-</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                        <span>Time:</span>
-                        <span id="summaryTime">-</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                        <span>Address:</span>
-                        <span id="summaryAddress">-</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 1.1rem; color: var(--primary); border-top: 1px solid var(--gray-200); padding-top: 0.5rem;">
-                        <span>Total:</span>
-                        <span id="summaryTotal">₹0</span>
-                    </div>
-                </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
-                    <button onclick="previousStep(2)" class="btn btn-secondary" style="width: 100%;">Back</button>
-                    <button onclick="confirmBooking()" class="btn btn-primary" style="width: 100%;">
-                        <i class="fas fa-check-circle"></i> Book Now
-                    </button>
-                </div>
-            </div>
-        </div>
+      </div>
+      <div class="price-right">
+        <div class="price-amount">${fmt(p.value)}</div>
+        ${p.featured?'<div class="price-popular">★ Most Popular</div>':''}
+      </div>
     </div>
+  `).join('');
 
-    <script>
-        // Multi-step booking modal functions
-        let currentStep = 1;
-        let bookingData = {};
+  // Package select
+  document.getElementById('packageSelect').innerHTML = s.pricing.map(p=>`
+    <option value="${p.value}">${p.size} — ${fmt(p.value)}</option>
+  `).join('');
 
-        function openBookingModal() {
-            const capacity = document.getElementById('capacity').value;
-            const serviceId = document.getElementById('serviceId').value;
-            const service = services[serviceId] || services.solar;
-            
-            bookingData = {
-                serviceId: serviceId,
-                service: service.title,
-                capacity: capacity,
-                basePrice: parseInt(capacity) || 0
-            };
-            
-            document.getElementById('bookingModal').style.display = 'block';
-            showStep(1);
-        }
+  // Default to featured/first package
+  const defaultPkg = s.pricing.find(p=>p.featured)||s.pricing[0];
+  document.getElementById('packageSelect').value = defaultPkg.value;
+  updatePrice(defaultPkg.value);
 
-        function closeBookingModal() {
-            document.getElementById('bookingModal').style.display = 'none';
-        }
+  // Reviews
+  document.getElementById('rv1text').textContent = s.rv1;
+  document.getElementById('rv2text').textContent = s.rv2;
 
-        function showStep(step) {
-            document.querySelectorAll('.booking-step').forEach(el => el.style.display = 'none');
-            document.getElementById('step' + step).style.display = 'block';
-            currentStep = step;
-        }
+  // Workers nearby
+  document.getElementById('workerCount').textContent = s.workers+' certified workers';
 
-        function nextStep(step) {
-            if (step === 2) {
-                // Validate step 1
-                const selectedTime = document.querySelector('input[name="modalBookingTime"]:checked');
-                if (!selectedTime) {
-                    showToast('Please select a time slot', 'error');
-                    return;
-                }
-                bookingData.time = selectedTime.value;
-                bookingData.timeLabel = selectedTime.parentElement.textContent.trim();
-            } else if (step === 3) {
-                // Validate step 2
-                const date = document.getElementById('modalBookingDate').value;
-                const address = document.getElementById('modalAddress').value;
-                
-                if (!date || !address) {
-                    showToast('Please fill in date and address', 'error');
-                    return;
-                }
-                bookingData.date = date;
-                bookingData.address = address;
-                
-                // Update summary
-                updateSummary();
-            }
-            showStep(step);
-        }
+  // Date default
+  const d = new Date();d.setDate(d.getDate()+3);
+  document.getElementById('dateInput').value = d.toISOString().split('T')[0];
+}
 
-        function previousStep(step) {
-            showStep(step);
-        }
+function updatePrice(val){
+  const v = parseInt(val)||0;
+  const charge = Math.round(v*0.1);
+  const gst = Math.round(v*0.18);
+  const total = v+charge+gst;
+  document.getElementById('basePrice').textContent = fmt(v);
+  document.getElementById('svcCharge').textContent = fmt(charge);
+  document.getElementById('gstAmt').textContent = fmt(gst);
+  document.getElementById('totalAmt').textContent = fmt(total);
+}
 
-        function updateSummary() {
-            document.getElementById('summaryService').textContent = bookingData.service;
-            document.getElementById('summaryDate').textContent = bookingData.date;
-            document.getElementById('summaryTime').textContent = bookingData.timeLabel;
-            document.getElementById('summaryAddress').textContent = bookingData.address;
-            
-            const serviceCharge = Math.round(bookingData.basePrice * 0.10);
-            const tax = Math.round(bookingData.basePrice * 0.18);
-            const total = bookingData.basePrice + serviceCharge + tax;
-            
-            document.getElementById('summaryTotal').textContent = '₹' + total.toLocaleString('en-IN');
-        }
+function selectPackage(val){
+  document.getElementById('packageSelect').value = val;
+  updatePrice(val);
+}
 
-        function getCurrentLocationForModal() {
-            if (!navigator.geolocation) {
-                showToast('Geolocation not supported', 'error');
-                return;
-            }
-            navigator.geolocation.getCurrentPosition(
-                async (pos) => {
-                    const { latitude, longitude } = pos.coords;
-                    document.getElementById('bookingLat').value = latitude;
-                    document.getElementById('bookingLng').value = longitude;
-                    
-                    try {
-                        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
-                        const data = await res.json();
-                        if (data.display_name) {
-                            document.getElementById('modalAddress').value = data.display_name;
-                            showToast('Location detected!', 'success');
-                        }
-                    } catch(e) {
-                        document.getElementById('modalAddress').value = `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`;
-                        showToast('Location set (address lookup failed)', 'info');
-                    }
-                },
-                () => { showToast('Unable to get location. Please enter manually.', 'error'); },
-                { enableHighAccuracy: true, timeout: 8000 }
-            );
-        }
+function selectTime(el){
+  document.querySelectorAll('.ts').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');
+}
 
-        function confirmBooking() {
-            const formData = new FormData();
-            formData.append('serviceId', bookingData.serviceId);
-            formData.append('bookingDate', bookingData.date);
-            formData.append('bookingTime', bookingData.time);
-            formData.append('address', bookingData.address);
-            formData.append('city', 'Bangalore');
-            formData.append('latitude', document.getElementById('bookingLat').value);
-            formData.append('longitude', document.getElementById('bookingLng').value);
-            
-            const data = Object.fromEntries(formData.entries());
-            
-            // Add user ID
-            let user = {};
-            try { user = JSON.parse(localStorage.getItem('user') || '{}'); } catch(e) {}
-            const userId = user._id || user.id || user.userId;
-            if (userId) data.userId = userId;
-            
-            // Submit booking
-            fetch('https://greenserve-platform.onrender.com/api/bookings', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response => response.json())
-            .then(result => {
-                if (result.success) {
-                    showToast('Booking created successfully!', 'success');
-                    closeBookingModal();
-                    // Optionally redirect to bookings page
-                    // window.location.href = 'bookings.html';
-                } else {
-                    showToast(result.message || 'Booking failed', 'error');
-                }
-            })
-            .catch(error => {
-                console.error('Booking error:', error);
-                showToast('Booking failed. Please try again.', 'error');
-            });
-        }
-    </script>
+// Service picker
+document.getElementById('picker').addEventListener('click',e=>{
+  const btn = e.target.closest('.svc-btn');
+  if(!btn)return;
+  document.querySelectorAll('.svc-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  currentSvc = btn.dataset.svc;
+  renderService(currentSvc);
+});
+
+// Package select change
+document.getElementById('packageSelect').addEventListener('change',function(){
+  updatePrice(this.value);
+});
+
+// Booking confirmation
+function confirmBooking(){
+  const selectedPackage = document.getElementById('packageSelect').value;
+  const address = document.getElementById('addressInput').value;
+  const date = document.getElementById('dateInput').value;
+  const time = document.querySelector('.ts.on')?.textContent?.trim() || 'Anytime';
+  
+  if(!address || !date){
+    alert('Please fill in all required fields');
+    return;
+  }
+  
+  // Create booking data
+  const bookingData = {
+    serviceId: currentSvc,
+    package: selectedPackage,
+    address: address,
+    date: date,
+    time: time,
+    timestamp: new Date().toISOString()
+  };
+  
+  // Store booking data
+  localStorage.setItem('lastBooking', JSON.stringify(bookingData));
+  
+  // Show success message
+  alert(`🎉 Booking Confirmed!\n\nService: ${SERVICES[currentSvc].title}\nPackage: ${selectedPackage}\nAddress: ${address}\nDate: ${date}\nTime: ${time}\n\nYour booking request has been received. Our team will contact you soon!`);
+  
+  // Redirect to bookings page
+  setTimeout(() => {
+    window.location.href = 'bookings.html';
+  }, 2000);
+}
+
+// Get service from URL
+const urlParams = new URLSearchParams(window.location.search);
+const serviceId = urlParams.get('id') || 'solar';
+
+// Initialize page
+renderService(serviceId);
+</script>
 </body>
 </html>
