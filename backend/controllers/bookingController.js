@@ -24,7 +24,9 @@ const createBooking = async (req, res) => {
     const { id: userId } = req.user;
     const { serviceId, bookingDate, bookingTime, address, city, latitude, longitude, notes } = req.body;
 
+    console.log('🔍 Full Booking Request Body:', req.body);
     console.log('🔍 Booking Request:', { serviceId, userId, bookingDate, bookingTime });
+    console.log('👤 User ID from token:', userId);
 
     // Get service details from hardcoded services
     const service = services[serviceId];
@@ -45,58 +47,86 @@ const createBooking = async (req, res) => {
     const taxAmount = basePrice * 0.18; // 18% GST
     const totalAmount = basePrice + serviceCharge + taxAmount;
 
+    console.log('💰 Pricing:', { basePrice, serviceCharge, taxAmount, totalAmount });
+
     // Generate booking ID
     const bookingId = generateBookingId();
+    console.log('🎫 Booking ID:', bookingId);
 
-    // Create booking
-    const [result] = await pool.execute(
-      `INSERT INTO bookings 
-       (booking_id, user_id, service_id, category_id, booking_date, booking_time, 
-        address, city, latitude, longitude, price, service_charge, tax_amount, total_amount, notes, status)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'requested')`,
-      [bookingId, userId, serviceId, service.category_id, bookingDate, bookingTime,
-       address, city, latitude, longitude, basePrice, serviceCharge, taxAmount, totalAmount, notes || null]
-    );
+    // Validate required fields
+    if (!bookingDate || !bookingTime || !address) {
+      console.log('❌ Missing required fields:', { bookingDate, bookingTime, address });
+      return res.status(400).json({
+        success: false,
+        message: 'Missing required fields: date, time, or address'
+      });
+    }
 
-    // Add to status history
-    await pool.execute(
-      'INSERT INTO booking_status_history (booking_id, status, notes, created_by) VALUES (?, ?, ?, ?)',
-      [result.insertId, 'requested', 'Booking created', userId]
-    );
+    try {
+      console.log('🗄️ Inserting booking into database...');
+      
+      // Create booking
+      const [result] = await pool.execute(
+        `INSERT INTO bookings 
+         (booking_id, user_id, service_id, category_id, booking_date, booking_time, 
+          address, city, latitude, longitude, price, service_charge, tax_amount, total_amount, notes, status)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'requested')`,
+        [bookingId, userId, serviceId, service.category_id, bookingDate, bookingTime,
+         address, city, latitude, longitude, basePrice, serviceCharge, taxAmount, totalAmount, notes || null]
+      );
 
-    // Find nearby workers
-    const [nearbyWorkers] = await pool.execute(
-      `SELECT w.id, w.first_name, w.last_name, w.rating, w.total_reviews,
-              (6371 * acos(cos(radians(?)) * cos(radians(w.latitude)) * 
-              cos(radians(w.longitude) - radians(?)) + sin(radians(?)) * 
-              sin(radians(w.latitude)))) AS distance
-       FROM workers w
-       JOIN worker_skills ws ON w.id = ws.worker_id
-       WHERE ws.category_id = ? AND w.is_online = TRUE AND w.is_active = TRUE AND w.is_verified = TRUE
-       HAVING distance < 50
-       ORDER BY distance
-       LIMIT 5`,
-      [latitude, longitude, latitude, service.category_id]
-    );
+      console.log('✅ Booking inserted successfully:', result.insertId);
 
-    // TODO: Send notifications to nearby workers
+      // Add to status history
+      await pool.execute(
+        'INSERT INTO booking_status_history (booking_id, status, notes, created_by) VALUES (?, ?, ?, ?)',
+        [result.insertId, 'requested', 'Booking created', userId]
+      );
 
-    res.status(201).json({
-      success: true,
-      message: 'Booking created successfully',
-      data: {
-        bookingId: result.insertId,
-        bookingRef: bookingId,
-        status: 'requested',
-        totalAmount,
-        nearbyWorkers: nearbyWorkers.length
-      }
-    });
+      console.log('✅ Status history added');
+
+      // Find nearby workers
+      const [nearbyWorkers] = await pool.execute(
+        `SELECT w.id, w.first_name, w.last_name, w.rating, w.total_reviews,
+                (6371 * acos(cos(radians(?)) * cos(radians(w.latitude)) * 
+                cos(radians(w.longitude) - radians(?)) + sin(radians(?)) * 
+                sin(radians(w.latitude)))) AS distance
+         FROM workers w
+         JOIN worker_skills ws ON w.id = ws.worker_id
+         WHERE ws.category_id = ? AND w.is_online = TRUE AND w.is_active = TRUE AND w.is_verified = TRUE
+         HAVING distance < 50
+         ORDER BY distance
+         LIMIT 5`,
+        [latitude, longitude, latitude, service.category_id]
+      );
+
+      console.log('👷 Nearby workers found:', nearbyWorkers.length);
+
+      // TODO: Send notifications to nearby workers
+
+      res.status(201).json({
+        success: true,
+        message: 'Booking created successfully',
+        data: {
+          bookingId: result.insertId,
+          bookingRef: bookingId,
+          status: 'requested',
+          totalAmount,
+          nearbyWorkers: nearbyWorkers.length
+        }
+      });
+    } catch (dbError) {
+      console.error('❌ Database error:', dbError);
+      return res.status(500).json({
+        success: false,
+        message: 'Database error: ' + dbError.message
+      });
+    }
   } catch (error) {
-    console.error('Create booking error:', error);
+    console.error('❌ Create booking error:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to create booking'
+      message: 'Failed to create booking: ' + error.message
     });
   }
 };
