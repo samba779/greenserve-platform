@@ -1,211 +1,775 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EcoWorkConnect - Integrated Digital Platform for Authentic Sustainability Service Management</title>
-    <link rel="stylesheet" href="css/styles.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EcoWorkConnect – Book Green Services</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+
+:root{
+  --navy:      #0a1628;
+  --navy2:     #0e2040;
+  --blue:      #1a56db;
+  --blue2:     #1e40af;
+  --sky:       #3b82f6;
+  --aqua:      #06b6d4;
+  --aqua-dim:  rgba(6,182,212,0.1);
+  --blue-dim:  rgba(26,86,219,0.08);
+  --blue-glow: rgba(26,86,219,0.2);
+  --white:     #ffffff;
+  --off:       #f8faff;
+  --off2:      #f1f5fd;
+  --border:    rgba(26,86,219,0.1);
+  --border2:   rgba(26,86,219,0.15);
+  --text:      #0a1628;
+  --text-mid:  #4b6280;
+  --text-soft: #94a3b8;
+  --gold:      #f59e0b;
+  --r:         18px;
+  --shadow:    0 4px 24px rgba(26,86,219,0.08);
+  --shadow-lg: 0 12px 48px rgba(26,86,219,0.14);
+}
+
+body{
+  font-family:'Plus Jakarta Sans',sans-serif;
+  background:var(--white);
+  color:var(--text);
+  overflow-x:hidden;
+}
+
+/* ── NAV ── */
+nav{
+  position:sticky;top:0;z-index:200;
+  background:rgba(255,255,255,0.92);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  padding:0 4rem;
+  height:68px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+
+.logo{
+  display:flex;align-items:center;gap:.65rem;
+  text-decoration:none;
+}
+.logo-mark{
+  width:36px;height:36px;
+  background:linear-gradient(135deg,var(--blue),var(--aqua));
+  border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;
+  box-shadow:0 4px 12px var(--blue-glow);
+}
+.logo-text{
+  font-family:'Playfair Display',serif;
+  font-size:1.25rem;font-weight:700;
+  color:var(--navy);
+}
+.logo-text span{color:var(--blue);}
+
+.nav-links{display:flex;gap:2.5rem;list-style:none;}
+.nav-links a{
+  font-size:.875rem;font-weight:600;
+  color:var(--text-mid);text-decoration:none;
+  transition:color .2s;
+}
+.nav-links a:hover{color:var(--blue);}
+
+.nav-right{display:flex;gap:.75rem;align-items:center;}
+
+.btn-ghost{
+  padding:.55rem 1.25rem;
+  border:1.5px solid var(--border2);
+  border-radius:100px;background:transparent;
+  color:var(--text-mid);
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:.85rem;font-weight:600;cursor:pointer;
+  transition:all .2s;
+}
+.btn-ghost:hover{border-color:var(--blue);color:var(--blue);}
+
+.btn-blue{
+  padding:.6rem 1.5rem;
+  border-radius:100px;
+  background:linear-gradient(135deg,var(--blue),var(--blue2));
+  color:white;border:none;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:.85rem;font-weight:700;cursor:pointer;
+  box-shadow:0 4px 16px var(--blue-glow);
+  transition:all .2s;
+}
+.btn-blue:hover{transform:translateY(-1px);box-shadow:0 8px 24px var(--blue-glow);}
+
+/* ── HERO ── */
+.hero{
+  background:linear-gradient(160deg,var(--navy) 0%,var(--navy2) 50%,#0c2d5a 100%);
+  padding:5rem 4rem 6rem;
+  position:relative;overflow:hidden;
+}
+
+/* Mesh glow */
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 60% 70% at 80% 50%,rgba(6,182,212,0.12) 0%,transparent 60%),
+    radial-gradient(ellipse 40% 50% at 10% 80%,rgba(26,86,219,0.15) 0%,transparent 55%),
+    radial-gradient(ellipse 50% 40% at 50% 0%,rgba(59,130,246,0.08) 0%,transparent 50%);
+}
+
+/* Dot grid */
+.hero::after{
+  content:'';position:absolute;inset:0;
+  background-image:radial-gradient(circle,rgba(255,255,255,0.06) 1px,transparent 1px);
+  background-size:32px 32px;
+}
+
+.hero-inner{
+  position:relative;z-index:1;
+  max-width:1200px;margin:0 auto;
+  display:grid;grid-template-columns:1fr 420px;
+  gap:4rem;align-items:center;
+}
+
+.hero-tag{
+  display:inline-flex;align-items:center;gap:.5rem;
+  background:rgba(6,182,212,0.15);
+  border:1px solid rgba(6,182,212,0.3);
+  border-radius:100px;
+  padding:.35rem 1rem;
+  font-size:.75rem;font-weight:700;
+  color:#67e8f9;text-transform:uppercase;letter-spacing:1.2px;
+  margin-bottom:1.5rem;
+}
+
+.pip{
+  width:7px;height:7px;border-radius:50%;
+  background:#34d399;
+  animation:pip 1.8s infinite;
+  box-shadow:0 0 0 0 rgba(52,211,153,.5);
+}
+@keyframes pip{
+  0%{box-shadow:0 0 0 0 rgba(52,211,153,.5);}
+  70%{box-shadow:0 0 0 8px rgba(52,211,153,0);}
+  100%{box-shadow:0 0 0 0 rgba(52,211,153,0);}
+}
+
+.hero-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(2.8rem,5vw,4.2rem);
+  font-weight:800;line-height:1.08;
+  color:white;margin-bottom:1.25rem;
+}
+.hero-title em{
+  font-style:italic;
+  background:linear-gradient(90deg,#67e8f9,#38bdf8);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+
+.hero-sub{
+  font-size:1.05rem;color:rgba(255,255,255,0.65);
+  line-height:1.7;max-width:520px;margin-bottom:2.5rem;
+}
+
+.hero-btns{display:flex;gap:1rem;flex-wrap:wrap;}
+
+.btn-hero-primary{
+  padding:1rem 2.2rem;border-radius:100px;
+  background:linear-gradient(135deg,var(--aqua),var(--sky));
+  color:white;border:none;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:1rem;font-weight:700;cursor:pointer;
+  box-shadow:0 8px 32px rgba(6,182,212,0.4);
+  transition:all .25s;display:flex;align-items:center;gap:.5rem;
+}
+.btn-hero-primary:hover{transform:translateY(-3px);box-shadow:0 14px 40px rgba(6,182,212,0.5);}
+
+.btn-hero-ghost{
+  padding:1rem 2rem;border-radius:100px;
+  background:rgba(255,255,255,0.08);
+  border:1.5px solid rgba(255,255,255,0.2);
+  color:white;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:1rem;font-weight:600;cursor:pointer;
+  transition:all .25s;
+}
+.btn-hero-ghost:hover{background:rgba(255,255,255,0.14);border-color:rgba(255,255,255,0.35);}
+
+/* WORKER CARD */
+.worker-float{
+  background:rgba(255,255,255,0.07);
+  backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:24px;
+  overflow:hidden;
+  box-shadow:0 32px 80px rgba(0,0,0,0.4);
+  animation:floatCard 6s ease-in-out infinite;
+}
+@keyframes floatCard{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-8px)}
+}
+
+.wf-head{
+  background:linear-gradient(135deg,rgba(6,182,212,0.2),rgba(26,86,219,0.2));
+  padding:1.1rem 1.25rem;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+  display:flex;align-items:center;gap:.75rem;
+}
+.wf-icon{
+  width:40px;height:40px;border-radius:10px;
+  background:linear-gradient(135deg,var(--aqua),var(--sky));
+  display:flex;align-items:center;justify-content:center;font-size:1.1rem;
+}
+.wf-title{font-weight:700;font-size:.95rem;color:white;}
+.wf-sub{font-size:.72rem;color:rgba(255,255,255,.5);}
+
+.wf-body{padding:1rem;}
+.wf-row{
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:12px;padding:.7rem .9rem;margin-bottom:.5rem;
+}
+.wf-row:last-child{margin-bottom:0;}
+.wf-left{display:flex;align-items:center;gap:.6rem;}
+.wf-av{
+  width:30px;height:30px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.68rem;font-weight:700;color:white;
+}
+.wf-name{font-size:.82rem;font-weight:700;color:white;}
+.wf-skill{font-size:.7rem;color:rgba(255,255,255,.45);}
+.wf-dist{
+  font-size:.78rem;font-weight:700;
+  color:#67e8f9;
+}
+.wf-footer{
+  padding:.9rem 1.25rem;
+  border-top:1px solid rgba(255,255,255,0.08);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.wf-footer-txt{font-size:.75rem;color:rgba(255,255,255,.45);}
+.wf-book{
+  padding:.4rem 1rem;border-radius:100px;
+  background:linear-gradient(135deg,var(--aqua),var(--sky));
+  color:white;border:none;
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:.75rem;font-weight:700;cursor:pointer;
+}
+
+/* ── WAVE DIVIDER ── */
+.wave{
+  display:block;width:100%;height:60px;
+  background:var(--white);
+  clip-path:ellipse(55% 100% at 50% 100%);
+  margin-top:-2px;
+}
+
+/* ── SECTIONS ── */
+.section{padding:5rem 4rem;}
+.section-inner{max-width:1200px;margin:0 auto;}
+
+.sec-tag{
+  display:inline-flex;align-items:center;gap:.5rem;
+  font-size:.72rem;font-weight:700;color:var(--blue);
+  text-transform:uppercase;letter-spacing:1.2px;
+  margin-bottom:.75rem;
+}
+.sec-tag::before{content:'';width:20px;height:2px;background:var(--blue);}
+
+.sec-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(1.8rem,3.5vw,2.8rem);
+  font-weight:700;line-height:1.15;
+  color:var(--navy);margin-bottom:.75rem;
+}
+.sec-title em{color:var(--blue);font-style:italic;}
+
+.sec-sub{
+  font-size:.95rem;color:var(--text-mid);
+  line-height:1.65;max-width:520px;
+}
+
+/* ── NESTED CARD ── */
+.nested{
+  background:var(--off);
+  border:1px solid var(--border);
+  border-radius:28px;
+  padding:3rem;
+  box-shadow:var(--shadow);
+}
+
+.nested-inner{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:2rem;
+  margin-top:2rem;
+  box-shadow:var(--shadow);
+}
+
+.nested-deep{
+  background:var(--off2);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:1.25rem;
+  margin-top:1.25rem;
+}
+
+/* ── SERVICES GRID ── */
+.svcs{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;
+}
+
+.svc{
+  background:white;
+  border:1.5px solid var(--border);
+  border-radius:var(--r);
+  padding:1.5rem;
+  text-decoration:none;
+  display:block;
+  transition:all .25s;
+  position:relative;overflow:hidden;
+}
+
+.svc::before{
+  content:'';position:absolute;
+  bottom:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--blue),var(--aqua));
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .3s ease;
+}
+
+.svc:hover{
+  border-color:var(--blue);
+  transform:translateY(-4px);
+  box-shadow:0 16px 40px rgba(26,86,219,0.12);
+}
+.svc:hover::before{transform:scaleX(1);}
+
+.svc-icon{
+  width:50px;height:50px;
+  background:var(--blue-dim);
+  border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.4rem;margin-bottom:1rem;
+  transition:transform .25s;
+}
+.svc:hover .svc-icon{transform:scale(1.1);}
+
+.svc-name{font-weight:700;font-size:.95rem;color:var(--navy);margin-bottom:.3rem;}
+.svc-desc{font-size:.78rem;color:var(--text-mid);line-height:1.5;margin-bottom:.9rem;}
+.svc-price{font-size:.8rem;font-weight:700;color:var(--blue);}
+.svc-arr{position:absolute;top:1.25rem;right:1.25rem;color:var(--text-soft);font-size:.85rem;transition:all .2s;}
+.svc:hover .svc-arr{color:var(--blue);transform:translate(2px,-2px);}
+
+/* ── HOW ── */
+.how{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-top:2rem;}
+
+.how-card{
+  background:white;border:1.5px solid var(--border);
+  border-radius:var(--r);padding:2rem 1.5rem;
+  position:relative;transition:all .25s;
+}
+.how-card:hover{border-color:var(--blue);box-shadow:var(--shadow-lg);}
+
+.how-num{
+  font-family:'Playfair Display',serif;
+  font-size:4rem;font-style:italic;font-weight:700;
+  color:rgba(26,86,219,0.07);
+  position:absolute;top:.75rem;right:1.25rem;
+  line-height:1;
+}
+.how-icon{
+  width:52px;height:52px;
+  background:linear-gradient(135deg,var(--blue-dim),rgba(6,182,212,0.1));
+  border:1px solid var(--border2);
+  border-radius:16px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.4rem;margin-bottom:1.25rem;
+}
+.how-title{font-weight:700;font-size:1rem;color:var(--navy);margin-bottom:.5rem;}
+.how-desc{font-size:.83rem;color:var(--text-mid);line-height:1.6;}
+
+.how-card:not(:last-child)::after{
+  content:'→';
+  position:absolute;right:-1rem;top:50%;
+  transform:translateY(-50%);
+  color:var(--blue);font-size:1.1rem;z-index:2;
+}
+
+/* ── WHY ── */
+.why-layout{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:2rem;align-items:start;}
+
+.why-points{display:flex;flex-direction:column;gap:.9rem;}
+
+.why-card{
+  background:white;border:1.5px solid var(--border);
+  border-radius:14px;padding:1.25rem;
+  display:flex;align-items:flex-start;gap:1rem;
+  transition:all .2s;
+}
+.why-card:hover{border-color:var(--blue);box-shadow:var(--shadow);}
+
+.why-ico{
+  width:42px;height:42px;min-width:42px;
+  background:var(--blue-dim);border-radius:12px;
+  display:flex;align-items:center;justify-content:center;font-size:1.1rem;
+}
+.why-title{font-weight:700;font-size:.9rem;color:var(--navy);margin-bottom:.25rem;}
+.why-desc{font-size:.8rem;color:var(--text-mid);line-height:1.55;}
+
+/* STATS BOX */
+.stats-box{
+  background:linear-gradient(160deg,var(--navy),var(--navy2));
+  border-radius:24px;padding:2.5rem;
+  position:relative;overflow:hidden;
+}
+.stats-box::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 70% 60% at 80% 20%,rgba(6,182,212,0.12),transparent 60%);
+}
+.stats-box-title{
+  font-family:'Playfair Display',serif;
+  font-size:1.5rem;font-style:italic;
+  color:white;margin-bottom:1.5rem;position:relative;
+}
+
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:1rem;position:relative;}
+
+.sb{
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:14px;padding:1.25rem;text-align:center;
+}
+.sb-num{
+  font-family:'Playfair Display',serif;
+  font-size:2rem;font-style:italic;font-weight:700;
+  background:linear-gradient(135deg,#67e8f9,#38bdf8);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;line-height:1;
+}
+.sb-label{font-size:.72rem;color:rgba(255,255,255,.45);margin-top:.3rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px;}
+
+.city-tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:1rem;position:relative;}
+.city-tag{
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:100px;
+  padding:.25rem .75rem;font-size:.72rem;
+  color:rgba(255,255,255,.55);font-weight:500;
+}
+
+/* ── REVIEWS ── */
+.reviews-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-top:2rem;}
+
+.review{
+  background:white;border:1.5px solid var(--border);
+  border-radius:var(--r);padding:1.5rem;
+  transition:all .25s;
+}
+.review:hover{border-color:var(--blue);box-shadow:var(--shadow);}
+.review:nth-child(2){margin-top:2rem;}
+
+.rv-stars{color:var(--gold);font-size:.82rem;margin-bottom:.75rem;}
+
+.rv-quote{
+  font-family:'Playfair Display',serif;
+  font-style:italic;font-size:.95rem;
+  color:var(--text-mid);line-height:1.6;margin-bottom:1.25rem;
+}
+
+.rv-author{display:flex;align-items:center;gap:.65rem;}
+.rv-av{
+  width:36px;height:36px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.72rem;font-weight:700;color:white;
+}
+.rv-name{font-weight:700;font-size:.875rem;color:var(--navy);}
+.rv-loc{font-size:.72rem;color:var(--text-soft);}
+
+/* ── CTA ── */
+.cta-band{
+  background:linear-gradient(160deg,var(--navy),var(--navy2),#0c3060);
+  border-radius:28px;padding:4.5rem;
+  text-align:center;position:relative;overflow:hidden;
+}
+.cta-band::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 60% 80% at 50% 0%,rgba(6,182,212,0.1),transparent 60%);
+}
+.cta-band::after{
+  content:'';position:absolute;inset:0;
+  background-image:radial-gradient(circle,rgba(255,255,255,0.04) 1px,transparent 1px);
+  background-size:28px 28px;
+}
+.cta-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(2rem,4vw,3.2rem);
+  font-weight:700;color:white;
+  line-height:1.1;margin-bottom:1rem;position:relative;
+}
+.cta-title em{font-style:italic;background:linear-gradient(90deg,#67e8f9,#38bdf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.cta-sub{font-size:.95rem;color:rgba(255,255,255,.6);margin-bottom:2.5rem;position:relative;}
+.cta-btns{display:flex;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap;position:relative;}
+
+/* ── FOOTER ── */
+footer{
+  background:var(--navy);
+  border-top:1px solid rgba(255,255,255,0.06);
+  padding:4rem;
+}
+.footer-inner{
+  max-width:1200px;margin:0 auto;
+  display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;
+}
+.footer-logo .logo-text{color:white;}
+.footer-desc{font-size:.83rem;color:rgba(255,255,255,.4);line-height:1.7;margin-top:.75rem;max-width:240px;}
+
+.footer-socials{display:flex;gap:.5rem;margin-top:1.25rem;}
+.social{
+  width:34px;height:34px;border-radius:50%;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.1);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.82rem;cursor:pointer;transition:all .2s;text-decoration:none;
+}
+.social:hover{background:var(--blue);border-color:var(--blue);}
+
+.footer-col h4{font-size:.75rem;font-weight:700;color:white;text-transform:uppercase;letter-spacing:.8px;margin-bottom:1rem;}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:.55rem;}
+.footer-col a{font-size:.83rem;color:rgba(255,255,255,.4);text-decoration:none;transition:color .2s;}
+.footer-col a:hover{color:rgba(255,255,255,.85);}
+
+.footer-bottom{
+  max-width:1200px;margin:2rem auto 0;
+  padding-top:1.5rem;border-top:1px solid rgba(255,255,255,.06);
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:.75rem;color:rgba(255,255,255,.3);
+}
+.footer-bottom a{color:rgba(255,255,255,.3);text-decoration:none;}
+.footer-bottom a:hover{color:rgba(255,255,255,.6);}
+
+/* ── REVEAL ── */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease;}
+.reveal.on{opacity:1;transform:translateY(0);}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.hero-content > *{animation:fadeUp .6s ease both;}
+.hero-content > *:nth-child(2){animation-delay:.1s;}
+.hero-content > *:nth-child(3){animation-delay:.2s;}
+.hero-content > *:nth-child(4){animation-delay:.3s;}
+</style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="index.html" class="nav-logo">
-                <i class="fas fa-leaf"></i>
-                <span>EcoWorkConnect</span>
-            </a>
-            <ul class="nav-menu">
-                <li><a href="index.html" class="nav-link active">Home</a></li>
-                <li><a href="services.html" class="nav-link">Services</a></li>
-            </ul>
-            <button class="mobile-menu-toggle" id="mobileMenuToggle">
-                <i class="fas fa-bars"></i>
-            </button>
-        </div>
-    </nav>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content">
-            <h1>Book Professional Green Services <span class="highlight">On-Demand</span></h1>
-            <p>Connect with verified professionals in solar, energy audit, gardening, waste management, and more eco-friendly solutions for your home and business.</p>
-            <div class="hero-cta">
-                <button class="btn btn-primary btn-lg" id="getStartedBtn">
-                    <i class="fas fa-rocket"></i> Get Started
-                </button>
-                <p class="hero-subtitle">
-                    <a href="login-choice.html" class="btn btn-outline">Login</a> or 
-                    <a href="services.html" class="btn btn-outline">Browse Services</a>
-                </p>
-            </div>
-            <div class="auth-options" id="authOptions" style="display: none;">
-                <a href="login-choice.html" class="btn btn-outline btn-lg">
-                    <i class="fas fa-sign-in-alt"></i> Login
-                </a>
-                <a href="register.html" class="btn btn-primary btn-lg">
-                    <i class="fas fa-user-plus"></i> Sign Up
-                </a>
-            </div>
-        </div>
-        <div class="hero-image">
-            <div class="hero-illustration">
-                <i class="fas fa-solar-panel"></i>
-                <i class="fas fa-seedling"></i>
-                <i class="fas fa-recycle"></i>
-                <i class="fas fa-charging-station"></i>
-            </div>
-        </div>
-    </section>
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">
+    <div class="logo-mark">🌿</div>
+    <span class="logo-text">Eco<span>Work</span>Connect</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#why">Why Us</a></li>
+    <li><a href="#reviews">Reviews</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="btn-ghost" onclick="location.href='login.html'">Login</button>
+    <button class="btn-blue" onclick="location.href='login.html'">Get Started →</button>
+  </div>
+</nav>
 
-    <!-- How It Works -->
-    <section class="how-it-works">
-        <div class="container">
-            <div class="section-header">
-                <h2>How It Works</h2>
-                <p>Book a service in 4 simple steps</p>
-            </div>
-            <div class="steps-grid">
-                <div class="step-card">
-                    <div class="step-number">1</div>
-                    <div class="step-icon">
-                        <i class="fas fa-search"></i>
-                    </div>
-                    <h3>Choose Service</h3>
-                    <p>Select from our wide range of green and utility services</p>
-                </div>
-                <div class="step-card">
-                    <div class="step-number">2</div>
-                    <div class="step-icon">
-                        <i class="fas fa-map-marker-alt"></i>
-                    </div>
-                    <h3>Set Location</h3>
-                    <p>Enter your address or use GPS to pinpoint your location</p>
-                </div>
-                <div class="step-card">
-                    <div class="step-number">3</div>
-                    <div class="step-icon">
-                        <i class="fas fa-calendar-check"></i>
-                    </div>
-                    <h3>Book & Schedule</h3>
-                    <p>Select date and time that works best for you</p>
-                </div>
-                <div class="step-card">
-                    <div class="step-number">4</div>
-                    <div class="step-icon">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
-                    <h3>Get It Done</h3>
-                    <p>Professional arrives and completes the service</p>
-                </div>
-            </div>
-        </div>
-    </section>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-tag"><div class="pip"></div> Workers available near you right now</div>
+      <h1 class="hero-title">Green services,<br><em>delivered</em> to your<br>doorstep.</h1>
+      <p class="hero-sub">Solar, gardening, EV charging, waste management and more — booked in 60 seconds, completed by verified eco-professionals near you.</p>
+      <div class="hero-btns">
+        <button class="btn-hero-primary" onclick="location.href='booking-all-services.html'">Book a Service ↗</button>
+        <button class="btn-hero-ghost" onclick="location.href='worker-login.html'">Join as Worker</button>
+      </div>
+    </div>
 
-    <!-- Features -->
-    <section class="features-section">
-        <div class="container">
-            <div class="features-content">
-                <div class="features-text">
-                    <h2>Why Choose GreenServe?</h2>
-                    <div class="feature-list">
-                        <div class="feature-item">
-                            <i class="fas fa-shield-alt"></i>
-                            <div>
-                                <h4>Verified Professionals</h4>
-                                <p>All service workers are background-checked and verified</p>
-                            </div>
-                        </div>
-                        <div class="feature-item">
-                            <i class="fas fa-clock"></i>
-                            <div>
-                                <h4>Real-time Tracking</h4>
-                                <p>Track your service worker's location in real-time</p>
-                            </div>
-                        </div>
-                        <div class="feature-item">
-                            <i class="fas fa-star"></i>
-                            <div>
-                                <h4>Quality Guaranteed</h4>
-                                <p>Rate and review services to maintain quality standards</p>
-                            </div>
-                        </div>
-                        <div class="feature-item">
-                            <i class="fas fa-users"></i>
-                            <div>
-                                <h4>Verified Workers</h4>
-                                <p>Find trusted and background-checked service professionals</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="features-image">
-                    <div class="feature-showcase">
-                        <div class="phone-mockup">
-                            <div class="phone-screen">
-                                <div class="mockup-content">
-                                    <div class="mockup-header">
-                                        <i class="fas fa-arrow-left"></i>
-                                        <span>Track Worker</span>
-                                        <i class="fas fa-phone"></i>
-                                    </div>
-                                    <div class="mockup-map">
-                                        <i class="fas fa-map-marked-alt"></i>
-                                    </div>
-                                    <div class="mockup-worker">
-                                        <div class="worker-avatar">
-                                            <i class="fas fa-user"></i>
-                                        </div>
-                                        <div class="worker-info">
-                                            <span class="worker-name">Rahul K.</span>
-                                            <span class="worker-status">
-                                                <i class="fas fa-circle"></i> On the way
-                                            </span>
-                                        </div>
-                                        <span class="eta">5 min</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <!-- Floating Worker Card -->
+    <div class="worker-float">
+      <div class="wf-head">
+        <div class="wf-icon">📍</div>
+        <div><div class="wf-title">Workers Near You</div><div class="wf-sub">Vijayawada, Andhra Pradesh</div></div>
+      </div>
+      <div class="wf-body">
+        <div class="wf-row">
+          <div class="wf-left">
+            <div class="wf-av" style="background:linear-gradient(135deg,#0ea5e9,#06b6d4)">RK</div>
+            <div><div class="wf-name">Ravi Kumar</div><div class="wf-skill">Solar · EV Certified</div></div>
+          </div>
+          <div class="wf-dist">1.2 km</div>
         </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-brand">
-                    <a href="index.html" class="footer-logo">
-                        <i class="fas fa-leaf"></i>
-                        <span>EcoWorkConnect</span>
-                    </a>
-                    <p>Connecting you with professional green and utility service providers for a sustainable future.</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin"></i></a>
-                    </div>
-                </div>
-                <div class="footer-links">
-                    <h4>Services</h4>
-                    <ul>
-                        <li><a href="#">How It Works</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
-                        <li><a href="#">Terms of Service</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2026 EcoWorkConnect. All rights reserved.</p>
-            </div>
+        <div class="wf-row">
+          <div class="wf-left">
+            <div class="wf-av" style="background:linear-gradient(135deg,#1d4ed8,#3b82f6)">SN</div>
+            <div><div class="wf-name">Suresh Naidu</div><div class="wf-skill">Gardening · Waste</div></div>
+          </div>
+          <div class="wf-dist">2.4 km</div>
         </div>
-    </footer>
+        <div class="wf-row">
+          <div class="wf-left">
+            <div class="wf-av" style="background:linear-gradient(135deg,#0369a1,#0ea5e9)">AR</div>
+            <div><div class="wf-name">Arjun Reddy</div><div class="wf-skill">Maintenance · Biogas</div></div>
+          </div>
+          <div class="wf-dist">3.8 km</div>
+        </div>
+      </div>
+      <div class="wf-footer">
+        <div class="wf-footer-txt">4 more workers online</div>
+        <button class="wf-book">Book Now</button>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <script src="js/app.js"></script>
+<!-- SERVICES -->
+<section class="section" id="services">
+  <div class="section-inner">
+    <div class="nested reveal">
+      <div class="sec-tag">Our Services</div>
+      <h2 class="sec-title">Everything green,<br><em>all in one place</em></h2>
+      <p class="sec-sub">8 eco-certified services across Andhra Pradesh. Book any service in under 60 seconds.</p>
+
+      <div class="nested-inner">
+        <div class="svcs">
+          <a href="booking-all-services.html?id=solar" class="svc"><span class="svc-arr">↗</span><div class="svc-icon">☀️</div><div class="svc-name">Solar Panels</div><div class="svc-desc">Installation & maintenance with 25-year warranty.</div><div class="svc-price">From ₹1,50,000</div></a>
+          <a href="booking-all-services.html?id=energy" class="svc"><span class="svc-arr">↗</span><div class="svc-icon">⚡</div><div class="svc-name">Energy Audit</div><div class="svc-desc">Professional efficiency assessments to cut bills.</div><div class="svc-price">From ₹5,000</div></a>
+          <a href="booking-all-services.html?id=biogas" class="svc"><span class="svc-arr">↗</span><div class="svc-icon">🔥</div><div class="svc-name">Bio-Gas</div><div class="svc-desc">Biogas plant installation and clean energy setup.</div><div class="svc-price">From ₹45,000</div></a>
+          <a href="booking-all-services.html?id=gardening" class="svc"><span class="svc-arr">↗</span><div class="svc-icon">🌱</div><div class="svc-name">Gardening</div><div class="svc-desc">Professional landscaping with eco-friendly care.</div><div class="svc-price">From ₹2,000</div></a>
+          <a href="booking-all-services.html?id=waste" class="svc"><span class="svc-arr">↗</span><div class="svc-icon">♻️</div><div class="svc-name">Waste Management</div><div class="svc-desc">Segregation, recycling and responsible disposal.</div><div class="svc-price">From ₹1,500</div></a>
+          <a href="booking-all-services.html?id=water" class="svc"><span class="svc-arr">↗</span><div class="svc-icon">💧</div><div class="svc-name">Water Conservation</div><div class="svc-desc">Rainwater harvesting and recycling systems.</div><div class="svc-price">From ₹25,000</div></a>
+          <a href="booking-all-services.html?id=ev" class="svc"><span class="svc-arr">↗</span><div class="svc-icon">🔌</div><div class="svc-name">EV Charging</div><div class="svc-desc">Smart EV station installation with app control.</div><div class="svc-price">From ₹35,000</div></a>
+          <a href="booking-all-services.html?id=maintenance" class="svc"><span class="svc-arr">↗</span><div class="svc-icon">🔧</div><div class="svc-name">Green Maintenance</div><div class="svc-desc">Eco-friendly repairs using sustainable products.</div><div class="svc-price">From ₹1,500</div></a>
+        </div>
+        <div class="nested-deep" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+          <div>
+            <div style="font-weight:700;color:var(--navy);font-size:.95rem;margin-bottom:.2rem;">Need something custom?</div>
+            <div style="font-size:.82rem;color:var(--text-mid);">Request a bespoke green service and we'll match you instantly.</div>
+          </div>
+          <button class="btn-blue">Request Custom →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section" id="how" style="padding-top:0;background:var(--off);">
+  <div class="section-inner">
+    <div class="nested reveal" style="background:white;">
+      <div class="sec-tag">How It Works</div>
+      <h2 class="sec-title">Booked in <em>60 seconds,</em><br>done by tomorrow</h2>
+      <div class="nested-inner" style="background:var(--off);">
+        <div class="how">
+          <div class="how-card"><div class="how-num">01</div><div class="how-icon">📍</div><div class="how-title">Share Your Location</div><div class="how-desc">Allow location or enter your address. We instantly find certified workers within 5 km of you.</div></div>
+          <div class="how-card"><div class="how-num">02</div><div class="how-icon">📅</div><div class="how-title">Pick & Book</div><div class="how-desc">Choose your service, package, date and time. The nearest available worker gets notified instantly.</div></div>
+          <div class="how-card"><div class="how-num">03</div><div class="how-icon">✅</div><div class="how-title">Pay After Done</div><div class="how-desc">Track your worker live. Pay only after the job is completed to your satisfaction. Free cancellation.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY US -->
+<section class="section" id="why" style="padding-top:0;">
+  <div class="section-inner">
+    <div class="nested reveal">
+      <div class="sec-tag">Why EcoWorkConnect</div>
+      <h2 class="sec-title">Built different,<br><em>built for you</em></h2>
+      <div class="nested-inner">
+        <div class="why-layout">
+          <div class="why-points">
+            <div class="why-card"><div class="why-ico">🛡️</div><div><div class="why-title">Verified & Insured Workers</div><div class="why-desc">Every worker is background-checked, skill-certified and insured. Your home is always safe.</div></div></div>
+            <div class="why-card"><div class="why-ico">📍</div><div><div class="why-title">Hyper-Local Matching</div><div class="why-desc">Workers within 2–5 km notified instantly. Faster response, lower carbon footprint.</div></div></div>
+            <div class="why-card"><div class="why-ico">💳</div><div><div class="why-title">Pay After Service</div><div class="why-desc">No upfront payment. You only pay when the job is done to your satisfaction.</div></div></div>
+            <div class="why-card"><div class="why-ico">🌿</div><div><div class="why-title">100% Eco-Certified</div><div class="why-desc">All materials and practices meet strict eco-standards. Zero harmful chemicals.</div></div></div>
+          </div>
+          <div class="stats-box">
+            <div class="stats-box-title">Our impact<br><em>in numbers</em></div>
+            <div class="sg">
+              <div class="sb"><div class="sb-num">98%</div><div class="sb-label">Satisfaction Rate</div></div>
+              <div class="sb"><div class="sb-num">2.4t</div><div class="sb-label">CO₂ Saved/Month</div></div>
+              <div class="sb"><div class="sb-num">60s</div><div class="sb-label">Avg. Booking Time</div></div>
+              <div class="sb"><div class="sb-num">4.8★</div><div class="sb-label">Avg. Rating</div></div>
+            </div>
+            <div class="city-tags">
+              <span class="city-tag">Vijayawada</span><span class="city-tag">Hyderabad</span><span class="city-tag">Guntur</span><span class="city-tag">Visakhapatnam</span><span class="city-tag">Tirupati</span><span class="city-tag">+12 more</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="section" id="reviews" style="padding-top:0;background:var(--off);">
+  <div class="section-inner">
+    <div class="nested reveal" style="background:white;">
+      <div class="sec-tag">Customer Reviews</div>
+      <h2 class="sec-title">Loved by <em>thousands</em></h2>
+      <div class="nested-inner" style="background:var(--off);">
+        <div class="reviews-grid">
+          <div class="review"><div class="rv-stars">★★★★★</div><div class="rv-quote">"Solar installation done in 2 days. Electricity bills dropped by 70% the very next month. Incredible!"</div><div class="rv-author"><div class="rv-av" style="background:linear-gradient(135deg,#1d4ed8,#3b82f6)">RK</div><div><div class="rv-name">Rajesh Kumar</div><div class="rv-loc">Vijayawada · Solar</div></div></div></div>
+          <div class="review"><div class="rv-stars">★★★★★</div><div class="rv-quote">"Our garden has never looked better. The monthly plan is fantastic value and the team is super professional."</div><div class="rv-author"><div class="rv-av" style="background:linear-gradient(135deg,#0369a1,#0ea5e9)">PS</div><div><div class="rv-name">Priya Sharma</div><div class="rv-loc">Guntur · Gardening</div></div></div></div>
+          <div class="review"><div class="rv-stars">★★★★★</div><div class="rv-quote">"EV charger installed perfectly. Smart app integration works flawlessly. Faster than any public station!"</div><div class="rv-author"><div class="rv-av" style="background:linear-gradient(135deg,#0c4a6e,#0369a1)">AM</div><div><div class="rv-name">Arjun Mehta</div><div class="rv-loc">Hyderabad · EV Charging</div></div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section" style="padding-top:0;">
+  <div class="section-inner">
+    <div class="cta-band reveal">
+      <h2 class="cta-title">Ready to go <em>green?</em></h2>
+      <p class="cta-sub">Workers near you are standing by. Book your first service today.</p>
+      <div class="cta-btns">
+        <button class="btn-hero-primary" onclick="location.href='booking-all-services.html'">Book Your First Service →</button>
+        <button class="btn-hero-ghost" onclick="location.href='worker-login.html'">Register as a Worker</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-col footer-logo">
+      <a href="#" class="logo"><div class="logo-mark">🌿</div><span class="logo-text">Eco<span>Work</span>Connect</span></a>
+      <p class="footer-desc">Connecting you with certified green service professionals for a sustainable future.</p>
+      <div class="footer-socials">
+        <a href="#" class="social">𝕏</a><a href="#" class="social">in</a><a href="#" class="social">f</a><a href="#" class="social">📸</a>
+      </div>
+    </div>
+    <div class="footer-col"><h4>Services</h4><ul><li><a href="#">Solar Panels</a></li><li><a href="#">Energy Audit</a></li><li><a href="#">Gardening</a></li><li><a href="#">Waste Management</a></li><li><a href="#">Water Conservation</a></li><li><a href="#">EV Charging</a></li></ul></div>
+    <div class="footer-col"><h4>Company</h4><ul><li><a href="#">About Us</a></li><li><a href="#">Careers</a></li><li><a href="#">Blog</a></li><li><a href="#">Contact</a></li></ul></div>
+    <div class="footer-col"><h4>Workers</h4><ul><li><a href="worker-login.html">Register as Worker</a></li><li><a href="worker-login.html">Worker Portal</a></li><li><a href="#">Certification</a></li><li><a href="#">Support</a></li></ul></div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 EcoWorkConnect. All rights reserved.</span>
+    <div style="display:flex;gap:1.5rem;"><a href="#">Privacy Policy</a><a href="#">Terms of Service</a></div>
+  </div>
+</footer>
+
+<script>
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('on');});
+},{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
 </body>
 </html>
