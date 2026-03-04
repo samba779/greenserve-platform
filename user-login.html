@@ -18,66 +18,24 @@
   --shadow:0 4px 24px rgba(26,86,219,0.08);
   --shadow-lg:0 12px 48px rgba(26,86,219,0.14);
 }
-body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--white);color:var(--text);min-height:100vh;display:flex;overflow:hidden;}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--off);color:var(--text);min-height:100vh;margin:0;padding:0;}
 
-/* ── LEFT PANEL ── */
-.left{
-  width:44%;position:relative;
-  background:linear-gradient(160deg,var(--navy) 0%,var(--navy2) 55%,#0c2d5a 100%);
-  display:flex;flex-direction:column;justify-content:space-between;
-  padding:2.5rem;overflow:hidden;
-}
-.left::before{
-  content:'';position:absolute;inset:0;
-  background:
-    radial-gradient(ellipse 60% 60% at 80% 20%,rgba(6,182,212,0.15),transparent 60%),
-    radial-gradient(ellipse 50% 50% at 10% 80%,rgba(26,86,219,0.2),transparent 55%);
-}
-.left::after{
-  content:'';position:absolute;inset:0;
-  background-image:radial-gradient(circle,rgba(255,255,255,0.05) 1px,transparent 1px);
-  background-size:30px 30px;
-}
+/* ── MAIN WRAPPER ── */
+.wrap{max-width:480px;margin:0 auto;padding:2rem 1.5rem;min-height:100vh;display:flex;flex-direction:column;justify-content:center;}
 
-.left-top{position:relative;z-index:1;}
-.left-bot{position:relative;z-index:1;}
+/* ── HEADER ── */
+.hdr{text-align:center;margin-bottom:2rem;}
+.logo{display:inline-flex;align-items:center;gap:.6rem;text-decoration:none;margin-bottom:1.5rem;}
+.logo-mark{width:44px;height:44px;background:linear-gradient(135deg,var(--aqua),var(--sky));border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;box-shadow:0 4px 18px rgba(6,182,212,0.35);}
+.logo-text{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--navy);}
 
-.logo{display:inline-flex;align-items:center;gap:.6rem;text-decoration:none;margin-bottom:3rem;}
-.logo-mark{width:34px;height:34px;background:linear-gradient(135deg,var(--aqua),var(--sky));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;box-shadow:0 4px 14px rgba(6,182,212,0.4);}
-.logo-text{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:white;}
-
-.l-eyebrow{
-  display:inline-flex;align-items:center;gap:.5rem;
-  background:rgba(6,182,212,0.15);border:1px solid rgba(6,182,212,0.3);
-  border-radius:100px;padding:.3rem .9rem;
-  font-size:.72rem;font-weight:700;color:#67e8f9;
-  text-transform:uppercase;letter-spacing:1.2px;margin-bottom:1.25rem;
-}
-.pip{width:7px;height:7px;border-radius:50%;background:#34d399;animation:pip 1.8s infinite;box-shadow:0 0 0 0 rgba(52,211,153,.5);}
+.l-eyebrow{display:inline-flex;align-items:center;gap:.5rem;background:rgba(26,86,219,0.08);border:1px solid var(--border);border-radius:100px;padding:.4rem 1rem;font-size:.75rem;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:1px;margin-bottom:1rem;}
+.pip{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pip 1.8s infinite;box-shadow:0 0 0 0 rgba(52,211,153,.5);}
 @keyframes pip{0%{box-shadow:0 0 0 0 rgba(52,211,153,.5);}70%{box-shadow:0 0 0 8px transparent;}100%{box-shadow:0 0 0 0 transparent;}}
 
-.l-title{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,3vw,2.8rem);font-weight:700;line-height:1.1;color:white;margin-bottom:.9rem;}
-.l-title em{font-style:italic;background:linear-gradient(90deg,#67e8f9,#38bdf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.l-sub{font-size:.875rem;color:rgba(255,255,255,.6);line-height:1.65;max-width:320px;margin-bottom:2rem;}
-
-.feats{display:flex;flex-direction:column;gap:.55rem;}
-.feat{display:flex;align-items:center;gap:.7rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:100px;padding:.55rem 1rem;width:fit-content;animation:slideIn .5s ease both;}
-.feat:nth-child(2){animation-delay:.08s;}.feat:nth-child(3){animation-delay:.16s;}.feat:nth-child(4){animation-delay:.24s;}
-@keyframes slideIn{from{opacity:0;transform:translateX(-16px)}to{opacity:1;transform:translateX(0)}}
-.feat-dot{width:6px;height:6px;border-radius:50%;background:var(--aqua);}
-.feat-txt{font-size:.8rem;font-weight:600;color:rgba(255,255,255,.7);}
-
-/* Review card */
-.review-card{background:rgba(255,255,255,0.07);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.12);border-radius:18px;padding:1.25rem;}
-.rc-stars{color:var(--gold);font-size:.8rem;margin-bottom:.6rem;}
-.rc-q{font-family:'Playfair Display',serif;font-style:italic;font-size:.9rem;color:rgba(255,255,255,.7);line-height:1.55;margin-bottom:.9rem;}
-.rc-auth{display:flex;align-items:center;gap:.6rem;}
-.rc-av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--aqua),var(--sky));display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:var(--navy);}
-.rc-name{font-size:.82rem;font-weight:700;color:white;}
-.rc-loc{font-size:.7rem;color:rgba(255,255,255,.4);}
-
-/* ── RIGHT PANEL ── */
-.right{flex:1;display:flex;align-items:center;justify-content:center;padding:2.5rem;overflow-y:auto;background:var(--off);}
+.l-title{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;line-height:1.15;color:var(--navy);margin-bottom:.5rem;}
+.l-title em{font-style:italic;background:linear-gradient(90deg,var(--blue),var(--sky));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.l-sub{font-size:.9rem;color:var(--text-mid);line-height:1.6;max-width:360px;margin:0 auto;}
 
 .box{width:100%;max-width:440px;animation:fadeUp .5s ease both;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
@@ -144,46 +102,26 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--white);color:va
 </head>
 <body>
 
-<!-- LEFT -->
-<div class="left">
-  <div class="left-top">
+<div class="wrap">
+  <!-- Header -->
+  <div class="hdr">
     <a href="index.html" class="logo">
       <div class="logo-mark">🌿</div>
       <span class="logo-text">EcoWorkConnect</span>
     </a>
     <div class="l-eyebrow"><div class="pip"></div> User Portal</div>
-    <h2 class="l-title">Your green<br>home starts<br><em>here.</em></h2>
-    <p class="l-sub">Book solar, gardening, EV charging and 5 more eco-services with verified professionals near you.</p>
-    <div class="feats">
-      <div class="feat"><div class="feat-dot"></div><span class="feat-txt">📍 Workers within 2–5 km</span></div>
-      <div class="feat"><div class="feat-dot"></div><span class="feat-txt">✅ Pay only after service</span></div>
-      <div class="feat"><div class="feat-dot"></div><span class="feat-txt">🛡️ Verified professionals</span></div>
-      <div class="feat"><div class="feat-dot"></div><span class="feat-txt">🌿 100% eco-certified</span></div>
-    </div>
+    <h2 class="l-title">Your green home starts <em>here.</em></h2>
+    <p class="l-sub">Book solar, gardening, EV charging and more eco-services with verified professionals.</p>
   </div>
-  <div class="left-bot">
-    <div class="review-card">
-      <div class="rc-stars">★★★★★</div>
-      <div class="rc-q">"Solar done in 2 days. Bills dropped 70% next month. Absolutely incredible service!"</div>
-      <div class="rc-auth">
-        <div class="rc-av">RK</div>
-        <div><div class="rc-name">Rajesh Kumar</div><div class="rc-loc">Vijayawada · Solar Installation</div></div>
-      </div>
-    </div>
+
+  <!-- Toggle -->
+  <div class="toggle" id="tog">
+    <button class="t-btn on" onclick="sw('login')">🔑 Sign In</button>
+    <button class="t-btn" onclick="sw('reg')">✨ Register</button>
   </div>
-</div>
 
-<!-- RIGHT -->
-<div class="right">
-  <div class="box">
-
-    <div class="toggle" id="tog">
-      <button class="t-btn on" onclick="sw('login')">🔑 Sign In</button>
-      <button class="t-btn" onclick="sw('reg')">✨ Register</button>
-    </div>
-
-    <!-- LOGIN -->
-    <div class="view on" id="v-login">
+  <!-- LOGIN -->
+  <div class="view on" id="v-login">
       <div class="bh">
         <div class="b-badge">👤 User Login</div>
         <div class="b-title">Welcome back!</div>
@@ -256,13 +194,13 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--white);color:va
       <div class="fc">
         <div class="fg">
           <label class="fl">6-Digit Code</label>
-          <div class="otp-row">
-            <input class="oi" type="text" maxlength="1" id="o1">
-            <input class="oi" type="text" maxlength="1" id="o2">
-            <input class="oi" type="text" maxlength="1" id="o3">
-            <input class="oi" type="text" maxlength="1" id="o4">
-            <input class="oi" type="text" maxlength="1" id="o5">
-            <input class="oi" type="text" maxlength="1" id="o6">
+          <div class="otp-inputs">
+            <input class="otp-input" type="text" maxlength="1" id="o1">
+            <input class="otp-input" type="text" maxlength="1" id="o2">
+            <input class="otp-input" type="text" maxlength="1" id="o3">
+            <input class="otp-input" type="text" maxlength="1" id="o4">
+            <input class="otp-input" type="text" maxlength="1" id="o5">
+            <input class="otp-input" type="text" maxlength="1" id="o6">
           </div>
         </div>
         <button class="btn-sub" onclick="doOTP()">Verify & Continue →</button>
@@ -307,7 +245,7 @@ function sw(tab){
 
 function tp(id,btn){const i=document.getElementById(id);i.type=i.type==='password'?'text':'password';btn.textContent=i.type==='password'?'👁':'🙈';}
 
-document.querySelectorAll('.oi').forEach((inp,i,arr)=>{
+document.querySelectorAll('.otp-input').forEach((inp,i,arr)=>{
   inp.addEventListener('input',e=>{if(e.target.value&&i<arr.length-1)arr[i+1].focus();});
   inp.addEventListener('keydown',e=>{if(e.key==='Backspace'&&!e.target.value&&i>0)arr[i-1].focus();});
 });
