@@ -25,10 +25,21 @@ const createBooking = async (req, res) => {
     const { id: userId } = req.user;
     const { serviceId, bookingDate, bookingTime, address, city, latitude, longitude, notes } = req.body;
 
-    console.log('🔍 Full Booking Request Body:', req.body);
+    console.log('🔍 Full Booking Request Body:', JSON.stringify(req.body, null, 2));
     console.log('🔍 Booking Request:', { serviceId, userId, bookingDate, bookingTime });
     console.log('👤 User ID from token:', userId);
     console.log('🔍 Service ID type:', typeof serviceId, 'value:', serviceId);
+    console.log('🔍 Service ID length:', serviceId ? serviceId.length : 'undefined');
+    console.log('🔍 All request keys:', Object.keys(req.body));
+
+    // Check if serviceId is present
+    if (!serviceId) {
+      console.log('❌ Service ID is missing from request');
+      return res.status(400).json({
+        success: false,
+        message: 'Service ID is required'
+      });
+    }
 
     // Convert serviceId to string if it's a number
     const serviceIdStr = String(serviceId);
