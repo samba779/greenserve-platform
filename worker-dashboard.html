@@ -1,237 +1,826 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Worker Dashboard - EcoWorkConnect</title>
-    <link rel="stylesheet" href="css/styles.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EcoWorkConnect — Worker Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#060a0f;--ink2:#0b1018;--ink3:#0f1620;
+  --panel:#0d1822;--card:#111a26;--card2:#152030;--lift:#192840;
+  --teal:#06b6d4;--teal2:#0891b2;--teal3:#0e7490;
+  --teal-glow:rgba(6,182,212,0.18);--teal-dim:rgba(6,182,212,0.08);
+  --blue:#3b82f6;--blue-dim:rgba(59,130,246,0.08);
+  --green:#10b981;--green-dim:rgba(16,185,129,0.1);
+  --gold:#f59e0b;--gold-dim:rgba(245,158,11,0.1);
+  --red:#f43f5e;--red-dim:rgba(244,63,94,0.08);
+  --orange:#f97316;--orange-dim:rgba(249,115,22,0.08);
+  --border:rgba(255,255,255,0.055);--border2:rgba(255,255,255,0.1);
+  --text:#dde6f0;--text-mid:#6d8aa0;--text-soft:#2d4560;
+  --sw:256px;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--ink);color:var(--text);min-height:100vh;display:flex;overflow-x:hidden;}
+
+/* SIDEBAR */
+.sidebar{width:var(--sw);min-width:var(--sw);background:var(--ink2);border-right:1px solid var(--border);position:fixed;top:0;left:0;bottom:0;display:flex;flex-direction:column;z-index:200;overflow-y:auto;}
+.sb-brand{padding:1.5rem 1.5rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.75rem;text-decoration:none;}
+.sb-mark{width:34px;height:34px;background:linear-gradient(135deg,var(--teal3),var(--teal));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:.95rem;box-shadow:0 4px 16px var(--teal-glow);flex-shrink:0;}
+.sb-name{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:600;color:var(--text);letter-spacing:.02em;}
+.sb-name span{color:var(--teal);}
+
+/* Availability */
+.avail-block{margin:1.25rem 1rem .5rem;background:var(--card);border:1px solid var(--border2);border-radius:14px;padding:.85rem 1rem;}
+.avail-row{display:flex;align-items:center;justify-content:space-between;}
+.avail-label{font-size:.7rem;font-weight:600;color:var(--text-soft);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:.45rem;}
+.avail-status{display:flex;align-items:center;gap:.45rem;font-size:.85rem;font-weight:700;}
+.avail-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.avail-on .avail-dot{background:var(--green);box-shadow:0 0 0 3px var(--green-dim);animation:lp 2s infinite;}
+.avail-off .avail-dot{background:var(--text-soft);}
+.avail-on{color:var(--green);}
+.avail-off{color:var(--text-soft);}
+@keyframes lp{0%{box-shadow:0 0 0 0 rgba(16,185,129,.4);}70%{box-shadow:0 0 0 7px transparent;}100%{box-shadow:0 0 0 0 transparent;}}
+.sw{position:relative;width:40px;height:22px;flex-shrink:0;cursor:pointer;}
+.sw input{opacity:0;width:0;height:0;}
+.sw-t{position:absolute;inset:0;border-radius:100px;background:var(--border2);transition:background .3s;}
+.sw input:checked+.sw-t{background:var(--green);}
+.sw-k{position:absolute;top:2px;left:2px;width:18px;height:18px;background:white;border-radius:50%;transition:transform .3s;pointer-events:none;box-shadow:0 1px 4px rgba(0,0,0,.3);}
+.sw input:checked~.sw-k{transform:translateX(18px);}
+
+/* User mini card */
+.sb-user{margin:.5rem 1rem 0;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:.85rem 1rem;display:flex;align-items:center;gap:.75rem;}
+.sb-av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--teal3),var(--teal));display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;color:white;flex-shrink:0;box-shadow:0 3px 10px var(--teal-glow);}
+.sb-uname{font-size:.83rem;font-weight:600;color:var(--text);}
+.sb-urole{font-size:.68rem;color:var(--text-soft);margin-top:.1rem;}
+.sb-cert{margin-left:auto;background:var(--green-dim);border:1px solid rgba(16,185,129,.2);color:var(--green);font-size:.6rem;font-weight:700;padding:.18rem .48rem;border-radius:100px;}
+
+.sb-sec{padding:.9rem 1.5rem .3rem;font-size:.63rem;font-weight:600;color:var(--text-soft);text-transform:uppercase;letter-spacing:1.4px;}
+.sb-nav{list-style:none;padding:.25rem .75rem;}
+.sb-nav li{margin-bottom:.1rem;}
+.sbl{display:flex;align-items:center;gap:.75rem;padding:.62rem .75rem;border-radius:10px;font-size:.855rem;font-weight:500;color:var(--text-mid);cursor:pointer;border:none;background:none;width:100%;text-align:left;transition:all .2s;position:relative;}
+.sbl .ico{font-size:.92rem;width:18px;text-align:center;opacity:.65;transition:opacity .2s;}
+.sbl:hover{background:rgba(255,255,255,.04);color:var(--text);}
+.sbl:hover .ico{opacity:1;}
+.sbl.on{background:var(--teal-dim);color:var(--teal);border:1px solid rgba(6,182,212,.12);}
+.sbl.on .ico{opacity:1;}
+.sbl.on::before{content:'';position:absolute;left:0;top:20%;bottom:20%;width:2.5px;border-radius:0 2px 2px 0;background:var(--teal);}
+.sbl-badge{margin-left:auto;background:var(--red);color:white;font-size:.62rem;font-weight:700;padding:.15rem .45rem;border-radius:100px;min-width:18px;text-align:center;}
+.sb-bottom{margin-top:auto;padding:1rem .75rem;border-top:1px solid var(--border);}
+.sb-logout{width:100%;padding:.65rem;background:transparent;border:1px solid var(--border);border-radius:10px;color:var(--text-soft);font-family:'DM Sans',sans-serif;font-size:.83rem;font-weight:500;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:.5rem;}
+.sb-logout:hover{border-color:rgba(244,63,94,.3);color:var(--red);background:var(--red-dim);}
+
+/* MAIN */
+.main{margin-left:var(--sw);flex:1;display:flex;flex-direction:column;min-height:100vh;}
+
+/* TOPBAR */
+.topbar{height:64px;background:rgba(11,16,24,0.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 2.5rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.tb-pg{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;font-style:italic;color:var(--text);}
+.tb-right{display:flex;align-items:center;gap:.75rem;}
+.online-pill{display:flex;align-items:center;gap:.45rem;padding:.4rem .9rem;border-radius:100px;background:var(--green-dim);border:1px solid rgba(16,185,129,.18);font-size:.78rem;font-weight:700;color:var(--green);transition:all .2s;}
+.online-pill.off{background:rgba(100,100,100,.07);border-color:var(--border);color:var(--text-soft);}
+.op-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:lp 2s infinite;flex-shrink:0;}
+.online-pill.off .op-dot{background:var(--text-soft);animation:none;}
+.tb-ibtn{width:36px;height:36px;border-radius:50%;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.9rem;transition:all .2s;position:relative;}
+.tb-ibtn:hover{border-color:var(--border2);background:var(--lift);}
+.npip{position:absolute;top:5px;right:5px;width:7px;height:7px;background:var(--red);border-radius:50%;border:1.5px solid var(--ink2);}
+.tb-div{width:1px;height:20px;background:var(--border);}
+.tb-user{display:flex;align-items:center;gap:.6rem;cursor:pointer;}
+.tb-av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--teal3),var(--teal));display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;color:white;}
+.tb-uname{font-size:.83rem;font-weight:600;color:var(--text);}
+
+/* CONTENT */
+.content{padding:2rem 2.5rem;flex:1;}
+.pg{display:none;animation:fadeIn .3s ease;}
+.pg.on{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* PAGE HEADER */
+.ph{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;}
+.ph h2{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:700;font-style:italic;color:white;margin-bottom:.2rem;}
+.ph p{font-size:.83rem;color:var(--text-mid);}
+
+/* HERO */
+.hero{background:var(--card);border:1px solid var(--border2);border-radius:22px;padding:2rem 2.5rem;position:relative;overflow:hidden;margin-bottom:1.5rem;}
+.hero::before{content:'';position:absolute;top:0;right:0;width:420px;height:100%;background:radial-gradient(ellipse 80% 100% at 100% 50%,rgba(6,182,212,0.1),transparent 70%);pointer-events:none;}
+.hero::after{content:'';position:absolute;inset:0;background-image:radial-gradient(circle,rgba(255,255,255,.022) 1px,transparent 1px);background-size:28px 28px;pointer-events:none;}
+.hero-in{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:2rem;flex-wrap:wrap;}
+.hero-eyebrow{font-size:.78rem;font-weight:600;color:var(--teal);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:.5rem;display:flex;align-items:center;gap:.5rem;}
+.hero h1{font-family:'Cormorant Garamond',serif;font-size:2.1rem;font-weight:700;font-style:italic;color:white;line-height:1.15;margin-bottom:.5rem;}
+.hero h1 em{color:var(--teal);}
+.hero p{font-size:.875rem;color:var(--text-mid);}
+.hero-stats{display:flex;gap:.75rem;flex-wrap:wrap;}
+.hstat{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:.85rem 1.1rem;text-align:center;min-width:80px;}
+.hstat-num{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-style:italic;font-weight:700;color:var(--teal);line-height:1;}
+.hstat-lbl{font-size:.65rem;color:rgba(255,255,255,.4);margin-top:.2rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px;}
+
+/* KPI */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem;}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:1.25rem 1.5rem;transition:all .25s;position:relative;overflow:hidden;}
+.kpi::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:18px 18px 0 0;opacity:0;transition:opacity .25s;}
+.kpi:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:0 12px 40px rgba(0,0,0,.35);}
+.kpi:hover::after{opacity:1;}
+.kpi.kt::after{background:linear-gradient(90deg,var(--teal3),var(--teal));}
+.kpi.kg::after{background:linear-gradient(90deg,var(--green),#34d399);}
+.kpi.kgo::after{background:linear-gradient(90deg,var(--gold),#fbbf24);}
+.kpi.kr::after{background:linear-gradient(90deg,var(--red),#fb7185);}
+.kpi-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;}
+.kpi-ico{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:1rem;}
+.kpi-tr{font-size:.72rem;font-weight:700;padding:.2rem .55rem;border-radius:100px;}
+.tr-up{background:var(--green-dim);color:var(--green);}
+.tr-tl{background:var(--teal-dim);color:var(--teal);}
+.tr-go{background:var(--gold-dim);color:var(--gold);}
+.kpi-num{font-family:'Cormorant Garamond',serif;font-size:2.1rem;font-weight:700;font-style:italic;color:white;line-height:1;margin-bottom:.25rem;}
+.kpi-lbl{font-size:.75rem;color:var(--text-soft);font-weight:500;}
+
+/* GRIDS */
+.g2{display:grid;grid-template-columns:1.4fr 1fr;gap:1.25rem;margin-bottom:1.25rem;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.25rem;}
+.gf{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem;}
+
+/* CARD */
+.card{background:var(--card);border:1px solid var(--border);border-radius:18px;overflow:hidden;transition:border-color .2s;}
+.card:hover{border-color:var(--border2);}
+.ch{padding:1.1rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.ct{font-size:.875rem;font-weight:600;color:var(--text);}
+.ca{font-size:.78rem;font-weight:600;color:var(--teal);cursor:pointer;background:none;border:none;transition:color .2s;}
+.ca:hover{color:var(--teal2);}
+.cb{padding:1.25rem 1.5rem;}
+
+/* JOB REQUEST */
+.jr{padding:1rem 1.5rem;border-bottom:1px solid var(--border);transition:background .2s;}
+.jr:last-child{border-bottom:none;}
+.jr:hover{background:rgba(6,182,212,.03);}
+.jr-top{display:flex;align-items:flex-start;gap:.9rem;margin-bottom:.85rem;}
+.jr-ico{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;border:1px solid var(--border);}
+.jr-info{flex:1;min-width:0;}
+.jr-name{font-size:.9rem;font-weight:600;color:var(--text);}
+.jr-meta{font-size:.72rem;color:var(--text-soft);margin-top:.2rem;}
+.jr-right{text-align:right;flex-shrink:0;}
+.jr-price{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-style:italic;font-weight:700;color:var(--teal);}
+.jr-dist{display:inline-flex;font-size:.7rem;font-weight:700;padding:.18rem .5rem;border-radius:100px;background:var(--teal-dim);border:1px solid rgba(6,182,212,.15);color:var(--teal);margin-top:.2rem;}
+.jr-btns{display:flex;gap:.5rem;}
+.btn-accept{padding:.52rem 1.2rem;border-radius:100px;background:var(--green);color:white;border:none;font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 3px 12px rgba(16,185,129,.3);}
+.btn-accept:hover{background:#059669;transform:translateY(-1px);}
+.btn-accept:disabled{opacity:.5;cursor:default;transform:none;}
+.btn-decline{padding:.52rem 1.1rem;border-radius:100px;background:var(--red-dim);border:1px solid rgba(244,63,94,.15);color:#fca5a5;font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:700;cursor:pointer;transition:all .2s;}
+.btn-decline:hover{background:var(--red);color:white;}
+
+/* PILLS */
+.pill{display:inline-flex;align-items:center;gap:.25rem;font-size:.68rem;font-weight:700;padding:.2rem .6rem;border-radius:100px;}
+.pill::before{content:'';width:5px;height:5px;border-radius:50%;}
+.p-tl{background:var(--teal-dim);color:#67e8f9;border:1px solid rgba(6,182,212,.15);}
+.p-tl::before{background:var(--teal);}
+.p-gr{background:var(--green-dim);color:#6ee7b7;border:1px solid rgba(16,185,129,.15);}
+.p-gr::before{background:var(--green);}
+.p-go{background:var(--gold-dim);color:#fcd34d;border:1px solid rgba(245,158,11,.15);}
+.p-go::before{background:var(--gold);}
+.p-rd{background:var(--red-dim);color:#fca5a5;border:1px solid rgba(244,63,94,.15);}
+.p-rd::before{background:var(--red);}
+
+/* EARNINGS CHART */
+.chart{height:140px;background:linear-gradient(180deg,var(--teal-dim) 0%,rgba(6,182,212,.01) 100%);border-radius:12px;border:1px solid var(--border);display:flex;align-items:flex-end;justify-content:space-around;padding:1rem .75rem .5rem;margin-bottom:1rem;}
+.bw{display:flex;flex-direction:column;align-items:center;gap:.3rem;flex:1;}
+.bar{width:28px;border-radius:5px 5px 0 0;background:linear-gradient(180deg,var(--teal),var(--teal3));transition:height .6s ease,background .2s;min-height:6px;cursor:pointer;}
+.bar:hover{background:linear-gradient(180deg,#22d3ee,var(--teal));}
+.blbl{font-size:.64rem;color:var(--text-soft);font-weight:600;}
+
+/* EARNINGS ROW */
+.er{display:flex;align-items:center;justify-content:space-between;padding:.65rem 0;border-bottom:1px solid var(--border);}
+.er:last-child{border-bottom:none;}
+.er-l{font-size:.83rem;color:var(--text-mid);}
+.er-v{font-size:.9rem;font-weight:700;color:var(--text);}
+.er-v.pos{color:var(--green);}
+
+/* JOB HISTORY TABLE */
+.jht{width:100%;border-collapse:collapse;}
+.jht thead th{padding:.65rem 1.25rem;font-size:.7rem;font-weight:600;color:var(--text-soft);text-transform:uppercase;letter-spacing:.8px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap;}
+.jht tbody tr{border-bottom:1px solid var(--border);transition:background .2s;}
+.jht tbody tr:last-child{border-bottom:none;}
+.jht tbody tr:hover{background:rgba(255,255,255,.018);}
+.jht td{padding:.85rem 1.25rem;font-size:.845rem;color:var(--text-mid);vertical-align:middle;}
+.td-svc{display:flex;align-items:center;gap:.75rem;}
+.td-ico{width:34px;height:34px;border-radius:9px;background:var(--card2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0;}
+.td-nm{font-size:.855rem;font-weight:600;color:var(--text);}
+.td-id{font-size:.68rem;color:var(--text-soft);margin-top:.1rem;}
+.td-earn{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-style:italic;font-weight:700;color:var(--green);}
+
+/* PROFILE */
+.prof-wrap{display:grid;grid-template-columns:280px 1fr;gap:1.25rem;}
+.prof-card{background:var(--card);border:1px solid var(--border);border-radius:18px;overflow:hidden;}
+.prof-cover{height:85px;background:linear-gradient(135deg,#042f3e,#064e63);position:relative;}
+.prof-cover::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 100% at 50% 100%,rgba(6,182,212,0.14),transparent 60%);}
+.prof-av-w{padding:0 1.5rem;margin-top:-26px;position:relative;z-index:1;}
+.prof-av{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--teal3),var(--teal));display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:700;color:white;border:3px solid var(--card);box-shadow:0 5px 18px var(--teal-glow);}
+.prof-info{padding:.7rem 1.5rem 1.25rem;}
+.prof-name{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:600;color:white;margin-bottom:.15rem;}
+.prof-role{font-size:.78rem;color:var(--text-soft);}
+.prof-badges{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.65rem;}
+.pb{font-size:.67rem;font-weight:700;padding:.18rem .55rem;border-radius:100px;}
+.pb-g{background:var(--green-dim);color:#6ee7b7;border:1px solid rgba(16,185,129,.15);}
+.pb-t{background:var(--teal-dim);color:#67e8f9;border:1px solid rgba(6,182,212,.15);}
+.prof-stats{padding:1rem 1.5rem;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:.55rem;}
+.ps-r{display:flex;justify-content:space-between;align-items:center;}
+.ps-l{font-size:.78rem;color:var(--text-soft);}
+.ps-v{font-size:.83rem;font-weight:600;color:var(--text);}
+
+/* SKILLS */
+.skill-chip{display:inline-flex;align-items:center;gap:.35rem;background:var(--teal-dim);border:1px solid rgba(6,182,212,.18);border-radius:100px;padding:.28rem .72rem;font-size:.74rem;font-weight:700;color:var(--teal);margin:.2rem;}
+
+/* FORM */
+.fsec{margin-bottom:1.5rem;}
+.fsec-t{font-size:.72rem;font-weight:600;color:var(--text-soft);text-transform:uppercase;letter-spacing:1px;margin-bottom:.85rem;display:flex;align-items:center;gap:.5rem;}
+.fsec-t::after{content:'';flex:1;height:1px;background:var(--border);}
+.fg2{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;}
+.fg{display:flex;flex-direction:column;gap:.4rem;}
+.fl{font-size:.72rem;font-weight:600;color:var(--text-soft);text-transform:uppercase;letter-spacing:.6px;}
+.fi{padding:.72rem 1rem;background:var(--card2);border:1px solid var(--border);border-radius:11px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.875rem;outline:none;transition:all .2s;appearance:none;width:100%;}
+.fi:focus{border-color:rgba(6,182,212,.4);box-shadow:0 0 0 3px rgba(6,182,212,.07);}
+.fi::placeholder{color:var(--text-soft);}
+
+/* BUTTONS */
+.btn-p{padding:.72rem 1.5rem;border-radius:100px;background:linear-gradient(135deg,var(--teal3),var(--teal2));color:white;border:none;font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;box-shadow:0 4px 20px var(--teal-glow);transition:all .25s;}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 8px 28px var(--teal-glow);}
+.btn-g{padding:.72rem 1.4rem;border-radius:100px;background:transparent;color:var(--text-mid);border:1px solid var(--border2);font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;transition:all .2s;}
+.btn-g:hover{border-color:var(--teal);color:var(--teal);}
+
+/* SETTINGS */
+.set-wrap{display:grid;grid-template-columns:220px 1fr;gap:1.25rem;}
+.set-nav{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:.5rem;height:fit-content;}
+.sni{display:flex;align-items:center;gap:.65rem;padding:.65rem .85rem;border-radius:10px;font-size:.84rem;font-weight:500;color:var(--text-mid);cursor:pointer;transition:all .2s;}
+.sni:hover{background:rgba(255,255,255,.04);color:var(--text);}
+.sni.on{background:var(--teal-dim);color:var(--teal);}
+.tog-r{display:flex;align-items:center;justify-content:space-between;padding:1rem 0;border-bottom:1px solid var(--border);}
+.tog-r:last-child{border-bottom:none;}
+.tr-t{font-size:.875rem;font-weight:600;color:var(--text);margin-bottom:.2rem;}
+.tr-s{font-size:.78rem;color:var(--text-soft);}
+.lgout{width:100%;padding:.8rem;background:var(--red-dim);border:1px solid rgba(244,63,94,.15);border-radius:11px;color:#fca5a5;font-family:'DM Sans',sans-serif;font-size:.875rem;font-weight:600;cursor:pointer;transition:all .2s;text-align:left;display:flex;align-items:center;gap:.6rem;}
+.lgout:hover{background:var(--red);color:white;border-color:var(--red);}
+
+/* PAYOUT BANNER */
+.payout-banner{background:linear-gradient(135deg,var(--card2),var(--lift));border:1px solid rgba(6,182,212,.15);border-radius:16px;padding:1.25rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:1.25rem;}
+.pb-left .pb-label{font-size:.72rem;font-weight:600;color:var(--text-soft);text-transform:uppercase;letter-spacing:.8px;margin-bottom:.4rem;}
+.pb-left .pb-amount{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-style:italic;font-weight:700;color:var(--teal);}
+.pb-left .pb-sub{font-size:.75rem;color:var(--text-soft);margin-top:.15rem;}
+.pb-right{display:flex;flex-direction:column;align-items:flex-end;gap:.5rem;}
+
+/* FILTER TABS */
+.ftabs{display:flex;gap:.35rem;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:.3rem;}
+.ft{padding:.45rem 1rem;border-radius:9px;border:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:600;color:var(--text-soft);cursor:pointer;transition:all .2s;}
+.ft.on{background:var(--lift);color:var(--text);border:1px solid var(--border2);}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:5px;}
+
+/* TOAST */
+.tc{position:fixed;bottom:2rem;right:2rem;z-index:9999;display:flex;flex-direction:column;gap:.5rem;}
+.toast{background:var(--card2);border:1px solid var(--border2);color:var(--text);padding:.85rem 1.25rem;border-radius:14px;font-size:.85rem;font-weight:600;box-shadow:0 12px 40px rgba(0,0,0,.45);display:flex;align-items:center;gap:.65rem;animation:tIn .3s ease;max-width:320px;}
+@keyframes tIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+.toast.ok::before{content:'✓';width:22px;height:22px;min-width:22px;border-radius:50%;background:var(--green);color:white;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;}
+.toast.info::before{content:'↗';width:22px;height:22px;min-width:22px;border-radius:50%;background:var(--teal);color:white;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;}
+</style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="index.html" class="nav-logo">
-                <i class="fas fa-leaf"></i>
-                <span>EcoWorkConnect</span>
-            </a>
-            <div class="nav-menu">
-                <a href="worker-dashboard.html" class="nav-link active">Dashboard</a>
-                <a href="worker-bookings.html" class="nav-link">My Bookings</a>
-                <a href="worker-profile.html" class="nav-link">Profile</a>
-            </div>
-            <div class="nav-auth">
-                <a href="#" class="btn btn-outline">Logout</a>
-            </div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <a href="index.html" class="sb-brand">
+    <div class="sb-mark">⚒</div>
+    <span class="sb-name">Eco<span>Work</span></span>
+  </a>
+
+  <!-- Availability Toggle -->
+  <div class="avail-block">
+    <div class="avail-label">Availability Status</div>
+    <div class="avail-row">
+      <div class="avail-status avail-on" id="availStatus">
+        <div class="avail-dot"></div>
+        <span id="availText">Online · Accepting Jobs</span>
+      </div>
+      <label class="sw">
+        <input type="checkbox" id="availCheck" checked onchange="toggleAvail()">
+        <span class="sw-t"></span>
+        <span class="sw-k"></span>
+      </label>
+    </div>
+  </div>
+
+  <!-- Worker Info -->
+  <div class="sb-user">
+    <div class="sb-av" id="sbAv">WK</div>
+    <div>
+      <div class="sb-uname" id="sbName">Loading...</div>
+      <div class="sb-urole" id="sbSkill">Certified Professional</div>
+    </div>
+    <div class="sb-cert">✓ Cert</div>
+  </div>
+
+  <div class="sb-sec">Portal</div>
+  <ul class="sb-nav">
+    <li><button class="sbl on" onclick="nav('overview',this)"><span class="ico">⬡</span> Overview</button></li>
+    <li><button class="sbl" onclick="nav('jobs',this)"><span class="ico">◫</span> Job Requests <span class="sbl-badge" id="jobBadge">3</span></button></li>
+    <li><button class="sbl" onclick="nav('history',this)"><span class="ico">◎</span> Job History</button></li>
+    <li><button class="sbl" onclick="nav('earnings',this)"><span class="ico">◈</span> Earnings</button></li>
+  </ul>
+
+  <div class="sb-sec">Account</div>
+  <ul class="sb-nav">
+    <li><button class="sbl" onclick="nav('profile',this)"><span class="ico">◯</span> My Profile</button></li>
+    <li><button class="sbl" onclick="nav('settings',this)"><span class="ico">◌</span> Settings</button></li>
+  </ul>
+
+  <div class="sb-bottom">
+    <button class="sb-logout" onclick="logout()">⏻ &nbsp;Sign Out</button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="tb-pg" id="tbPg">Overview</div>
+    <div class="tb-right">
+      <div class="online-pill" id="onlinePill"><div class="op-dot"></div> Online · Available</div>
+      <div class="tb-ibtn">🔔<div class="npip"></div></div>
+      <div class="tb-div"></div>
+      <div class="tb-user">
+        <div class="tb-av" id="tbAv">WK</div>
+        <div class="tb-uname" id="tbUn">Loading...</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- OVERVIEW -->
+    <div class="pg on" id="pg-overview">
+      <div class="hero">
+        <div class="hero-in">
+          <div>
+            <div class="hero-eyebrow"><div class="avail-dot" style="background:var(--green);animation:lp 2s infinite"></div> 3 new job requests waiting</div>
+            <h1 id="hg">Good morning, <em>Worker.</em></h1>
+            <p>You've earned ₹42,000 this month · 127 jobs completed · ⭐ 4.9 rating</p>
+          </div>
+          <div class="hero-stats">
+            <div class="hstat"><div class="hstat-num">4.9</div><div class="hstat-lbl">Rating</div></div>
+            <div class="hstat"><div class="hstat-num">127</div><div class="hstat-lbl">Jobs Done</div></div>
+            <div class="hstat"><div class="hstat-num">3</div><div class="hstat-lbl">New Reqs</div></div>
+          </div>
         </div>
-    </nav>
+      </div>
 
-    <!-- Worker Dashboard -->
-    <div class="dashboard-container">
-        <div class="dashboard-header">
-            <div class="worker-info">
-                <div class="worker-avatar">
-                    <img src="https://picsum.photos/seed/worker1/100/100.jpg" alt="Worker Avatar" id="workerAvatar">
-                    <div class="avatar-upload">
-                        <label for="avatarInput">
-                            <i class="fas fa-camera"></i>
-                        </label>
-                        <input type="file" id="avatarInput" accept="image/*" style="display: none;">
-                    </div>
+      <div class="kpis">
+        <div class="kpi kg"><div class="kpi-top"><div class="kpi-ico" style="background:var(--green-dim)">💰</div><div class="kpi-tr tr-up">↑ 18%</div></div><div class="kpi-num" style="font-size:1.6rem">₹42k</div><div class="kpi-lbl">This Month</div></div>
+        <div class="kpi kt"><div class="kpi-top"><div class="kpi-ico" style="background:var(--teal-dim)">📋</div><div class="kpi-tr tr-tl">All time</div></div><div class="kpi-num">127</div><div class="kpi-lbl">Jobs Completed</div></div>
+        <div class="kpi kgo"><div class="kpi-top"><div class="kpi-ico" style="background:var(--gold-dim)">⭐</div><div class="kpi-tr tr-go">Top 5%</div></div><div class="kpi-num">4.9</div><div class="kpi-lbl">Avg. Rating</div></div>
+        <div class="kpi kr"><div class="kpi-top"><div class="kpi-ico" style="background:var(--red-dim)">📥</div><div class="kpi-tr" style="background:var(--red-dim);color:#fca5a5">New</div></div><div class="kpi-num">3</div><div class="kpi-lbl">Pending Requests</div></div>
+      </div>
+
+      <div class="g2">
+        <!-- Job Requests -->
+        <div class="card">
+          <div class="ch"><div class="ct">◫ &nbsp;New Job Requests</div><button class="ca" onclick="nav('jobs',null)">View all →</button></div>
+          <div id="overviewJobs">
+            <div class="jr" data-id="j1">
+              <div class="jr-top">
+                <div class="jr-ico" style="background:rgba(234,179,8,.08)">☀️</div>
+                <div class="jr-info">
+                  <div class="jr-name">Solar Panel Installation – 5 kW</div>
+                  <div class="jr-meta">Samba Rao · Veterinary Colony · Mar 6 · 9:00 AM</div>
                 </div>
-                <div class="worker-details">
-                    <h2 id="workerName">John Doe</h2>
-                    <p class="worker-role" id="workerRole">Solar Panel Installer</p>
-                    <div class="worker-rating">
-                        <div class="stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                        </div>
-                        <span class="rating-text">4.5 (127 reviews)</span>
-                    </div>
-                </div>
+                <div class="jr-right"><div class="jr-price">₹2,88,000</div><div class="jr-dist">1.8 km</div></div>
+              </div>
+              <div class="jr-btns">
+                <button class="btn-accept" onclick="acceptJob(this,'j1')">✓ Accept</button>
+                <button class="btn-decline" onclick="declineJob(this)">✕ Decline</button>
+              </div>
             </div>
-            <div class="availability-toggle">
-                <h3>Availability Status</h3>
-                <div class="toggle-container">
-                    <label class="status-toggle">
-                        <input type="checkbox" id="statusToggle" checked>
-                        <span class="toggle-slider"></span>
-                    </label>
-                    <div class="status-text">
-                        <span id="statusText" class="status-online">Online</span>
-                        <span id="statusTime">Available for work</span>
-                    </div>
+            <div class="jr" data-id="j2">
+              <div class="jr-top">
+                <div class="jr-ico" style="background:var(--teal-dim)">🔌</div>
+                <div class="jr-info">
+                  <div class="jr-name">EV Charging Station – Fast 22kW</div>
+                  <div class="jr-meta">Priya Mehta · Benz Circle · Mar 7 · 10:00 AM</div>
                 </div>
+                <div class="jr-right"><div class="jr-price">₹75,000</div><div class="jr-dist">2.5 km</div></div>
+              </div>
+              <div class="jr-btns">
+                <button class="btn-accept" onclick="acceptJob(this,'j2')">✓ Accept</button>
+                <button class="btn-decline" onclick="declineJob(this)">✕ Decline</button>
+              </div>
             </div>
+            <div class="jr" data-id="j3">
+              <div class="jr-top">
+                <div class="jr-ico" style="background:rgba(107,114,128,.1)">🔧</div>
+                <div class="jr-info">
+                  <div class="jr-name">Green Maintenance – Monthly AMC</div>
+                  <div class="jr-meta">Raju Reddy · Governorpet · Mar 8 · 11:00 AM</div>
+                </div>
+                <div class="jr-right"><div class="jr-price">₹5,000</div><div class="jr-dist">3.2 km</div></div>
+              </div>
+              <div class="jr-btns">
+                <button class="btn-accept" onclick="acceptJob(this,'j3')">✓ Accept</button>
+                <button class="btn-decline" onclick="declineJob(this)">✕ Decline</button>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div class="dashboard-content">
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-briefcase"></i>
-                    </div>
-                    <div class="stat-info">
-                        <h3 id="totalBookings">24</h3>
-                        <p>Total Bookings</p>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
-                    <div class="stat-info">
-                        <h3 id="completedBookings">18</h3>
-                        <p>Completed</p>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-rupee-sign"></i>
-                    </div>
-                    <div class="stat-info">
-                        <h3 id="totalEarnings">₹45,280</h3>
-                        <p>Total Earnings</p>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <div class="stat-info">
-                        <h3 id="avgRating">4.5</h3>
-                        <p>Average Rating</p>
-                    </div>
-                </div>
+        <!-- Earnings Summary -->
+        <div class="card">
+          <div class="ch"><div class="ct">◈ &nbsp;Earnings This Week</div><button class="ca" onclick="nav('earnings',null)">Details →</button></div>
+          <div class="cb">
+            <div class="chart">
+              <div class="bw"><div class="bar" style="height:52px" title="₹8,500"></div><div class="blbl">Mon</div></div>
+              <div class="bw"><div class="bar" style="height:88px" title="₹13,500"></div><div class="blbl">Tue</div></div>
+              <div class="bw"><div class="bar" style="height:40px" title="₹6,200"></div><div class="blbl">Wed</div></div>
+              <div class="bw"><div class="bar" style="height:75px" title="₹11,500"></div><div class="blbl">Thu</div></div>
+              <div class="bw"><div class="bar" style="height:48px" title="₹7,200"></div><div class="blbl">Fri</div></div>
+              <div class="bw"><div class="bar" style="height:28px" title="₹4,000"></div><div class="blbl">Sat</div></div>
+              <div class="bw"><div class="bar" style="height:10px" title="₹1,200"></div><div class="blbl">Sun</div></div>
             </div>
-
-            <div class="dashboard-sections">
-                <div class="section-card">
-                    <h3>Recent Bookings</h3>
-                    <div class="booking-list">
-                        <div class="booking-item">
-                            <div class="booking-info">
-                                <h4>Solar Panel Installation</h4>
-                                <p><i class="fas fa-map-marker-alt"></i> Koramangala, Bangalore</p>
-                                <p><i class="fas fa-calendar"></i> Today, 2:00 PM</p>
-                            </div>
-                            <div class="booking-status">
-                                <span class="status-badge status-confirmed">Confirmed</span>
-                                <span class="booking-amount">₹2,500</span>
-                            </div>
-                        </div>
-                        <div class="booking-item">
-                            <div class="booking-info">
-                                <h4>Energy Audit</h4>
-                                <p><i class="fas fa-map-marker-alt"></i> Indiranagar, Bangalore</p>
-                                <p><i class="fas fa-calendar"></i> Yesterday, 10:00 AM</p>
-                            </div>
-                            <div class="booking-status">
-                                <span class="status-badge status-completed">Completed</span>
-                                <span class="booking-amount">₹1,800</span>
-                            </div>
-                        </div>
-                        <div class="booking-item">
-                            <div class="booking-info">
-                                <h4>Waste Management</h4>
-                                <p><i class="fas fa-map-marker-alt"></i> Jayanagar, Bangalore</p>
-                                <p><i class="fas fa-calendar"></i> Tomorrow, 9:00 AM</p>
-                            </div>
-                            <div class="booking-status">
-                                <span class="status-badge status-pending">Pending</span>
-                                <span class="booking-amount">₹1,200</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="section-card">
-                    <h3>Quick Actions</h3>
-                    <div class="action-buttons">
-                        <button class="btn btn-primary">
-                            <i class="fas fa-plus"></i> New Service
-                        </button>
-                        <button class="btn btn-outline">
-                            <i class="fas fa-edit"></i> Edit Profile
-                        </button>
-                        <button class="btn btn-outline">
-                            <i class="fas fa-chart-line"></i> View Analytics
-                        </button>
-                    </div>
-                </div>
-            </div>
+            <div class="er"><span class="er-l">This Week</span><span class="er-v pos">₹52,100</span></div>
+            <div class="er"><span class="er-l">This Month</span><span class="er-v pos">₹42,000</span></div>
+            <div class="er"><span class="er-l">Pending Payout</span><span class="er-v">₹18,500</span></div>
+            <div class="er"><span class="er-l">All Time Earned</span><span class="er-v">₹3,84,000</span></div>
+          </div>
         </div>
+      </div>
+
+      <!-- Recent History -->
+      <div class="card">
+        <div class="ch"><div class="ct">◎ &nbsp;Recent Completions</div><button class="ca" onclick="nav('history',null)">Full history →</button></div>
+        <table class="jht">
+          <thead><tr><th>Service</th><th>Customer</th><th>Date</th><th>Earned</th><th>Rating</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td><div class="td-svc"><div class="td-ico">☀️</div><div><div class="td-nm">Solar Installation – 5 kW</div><div class="td-id">#ECO-2601</div></div></div></td><td>Rajesh Kumar</td><td>Feb 20</td><td class="td-earn">₹2,88,000</td><td>⭐⭐⭐⭐⭐</td><td><div class="pill p-gr">Completed</div></td></tr>
+            <tr><td><div class="td-svc"><div class="td-ico">🔌</div><div><div class="td-nm">EV Charging – 22kW</div><div class="td-id">#ECO-2598</div></div></div></td><td>Arjun Mehta</td><td>Feb 15</td><td class="td-earn">₹75,000</td><td>⭐⭐⭐⭐⭐</td><td><div class="pill p-gr">Completed</div></td></tr>
+            <tr><td><div class="td-svc"><div class="td-ico">🔧</div><div><div class="td-nm">Green Maintenance</div><div class="td-id">#ECO-2581</div></div></div></td><td>Mohan Rao</td><td>Feb 5</td><td class="td-earn">₹1,500</td><td>⭐⭐⭐⭐</td><td><div class="pill p-gr">Completed</div></td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
-    <script src="js/app.js"></script>
-    <script>
-        // Initialize worker dashboard
-        document.addEventListener('DOMContentLoaded', function() {
-            initWorkerStatus();
-            initAvatarUpload();
-            loadWorkerData();
-        });
+    <!-- JOB REQUESTS -->
+    <div class="pg" id="pg-jobs">
+      <div class="ph">
+        <div><h2>Job Requests</h2><p>New job opportunities matching your skills near you</p></div>
+        <div class="ftabs">
+          <button class="ft on" onclick="filt(this,'new')">New <span style="opacity:.5">3</span></button>
+          <button class="ft" onclick="filt(this,'accepted')">Accepted <span style="opacity:.5">1</span></button>
+          <button class="ft" onclick="filt(this,'all')">All</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="jr" data-s="new">
+          <div class="jr-top">
+            <div class="jr-ico" style="background:rgba(234,179,8,.08)">☀️</div>
+            <div class="jr-info"><div class="jr-name">Solar Panel Installation – 5 kW</div><div class="jr-meta">Samba Rao · Veterinary Colony, Vijayawada · Mar 6, 2026 at 9:00 AM · Booking #ECO-2601</div></div>
+            <div class="jr-right"><div class="jr-price">₹2,88,000</div><div class="jr-dist">1.8 km</div></div>
+          </div>
+          <div class="jr-btns"><button class="btn-accept" onclick="acceptJob(this,'j1')">✓ Accept Job</button><button class="btn-decline" onclick="declineJob(this)">✕ Decline</button></div>
+        </div>
+        <div class="jr" data-s="new">
+          <div class="jr-top">
+            <div class="jr-ico" style="background:var(--teal-dim)">🔌</div>
+            <div class="jr-info"><div class="jr-name">EV Charging Station – Fast 22kW</div><div class="jr-meta">Priya Mehta · Benz Circle, Vijayawada · Mar 7, 2026 at 10:00 AM · Booking #ECO-2598</div></div>
+            <div class="jr-right"><div class="jr-price">₹75,000</div><div class="jr-dist">2.5 km</div></div>
+          </div>
+          <div class="jr-btns"><button class="btn-accept" onclick="acceptJob(this,'j2')">✓ Accept Job</button><button class="btn-decline" onclick="declineJob(this)">✕ Decline</button></div>
+        </div>
+        <div class="jr" data-s="new">
+          <div class="jr-top">
+            <div class="jr-ico" style="background:rgba(107,114,128,.1)">🔧</div>
+            <div class="jr-info"><div class="jr-name">Green Maintenance – Monthly AMC</div><div class="jr-meta">Raju Reddy · Governorpet, Vijayawada · Mar 8, 2026 at 11:00 AM · Booking #ECO-2595</div></div>
+            <div class="jr-right"><div class="jr-price">₹5,000</div><div class="jr-dist">3.2 km</div></div>
+          </div>
+          <div class="jr-btns"><button class="btn-accept" onclick="acceptJob(this,'j3')">✓ Accept Job</button><button class="btn-decline" onclick="declineJob(this)">✕ Decline</button></div>
+        </div>
+        <div class="jr" data-s="accepted" style="background:rgba(16,185,129,.03);border-left:3px solid var(--green)">
+          <div class="jr-top">
+            <div class="jr-ico" style="background:var(--green-dim)">☀️</div>
+            <div class="jr-info"><div class="jr-name">Solar Panel Installation – 3 kW &nbsp;<span class="pill p-gr">Accepted</span></div><div class="jr-meta">Lakshmi Devi · MG Road, Vijayawada · Mar 5, 2026 at 9:00 AM · Booking #ECO-2590</div></div>
+            <div class="jr-right"><div class="jr-price">₹1,50,000</div><div class="jr-dist">1.1 km</div></div>
+          </div>
+          <div class="jr-btns"><button class="btn-accept" disabled>✓ Accepted</button></div>
+        </div>
+      </div>
+    </div>
 
-        // Load worker data from localStorage
-        function loadWorkerData() {
-            const user = JSON.parse(localStorage.getItem('user') || '{}');
-            if (user.first_name) {
-                document.getElementById('workerName').textContent = `${user.first_name} ${user.last_name || ''}`;
-            }
-            if (user.skills && user.skills.length > 0) {
-                document.getElementById('workerRole').textContent = user.skills.join(', ');
-            }
-        }
+    <!-- JOB HISTORY -->
+    <div class="pg" id="pg-history">
+      <div class="ph">
+        <div><h2>Job History</h2><p>All 127 completed jobs across your career</p></div>
+        <div class="ftabs">
+          <button class="ft on">All (127)</button>
+          <button class="ft">This Month (9)</button>
+          <button class="ft">Solar</button>
+          <button class="ft">EV</button>
+        </div>
+      </div>
+      <div class="card">
+        <table class="jht">
+          <thead><tr><th>Service</th><th>Customer</th><th>Location</th><th>Date</th><th>Earned</th><th>Rating</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td><div class="td-svc"><div class="td-ico">☀️</div><div><div class="td-nm">Solar Panel Installation – 5 kW</div><div class="td-id">#ECO-2601</div></div></div></td><td>Rajesh Kumar</td><td>Vijayawada</td><td>Feb 20, 2026</td><td class="td-earn">₹2,88,000</td><td style="color:var(--gold)">⭐ 5.0</td><td><div class="pill p-gr">Completed</div></td></tr>
+            <tr><td><div class="td-svc"><div class="td-ico">🔌</div><div><div class="td-nm">EV Charging – Fast 22kW</div><div class="td-id">#ECO-2598</div></div></div></td><td>Arjun Mehta</td><td>Hyderabad</td><td>Feb 15, 2026</td><td class="td-earn">₹75,000</td><td style="color:var(--gold)">⭐ 5.0</td><td><div class="pill p-gr">Completed</div></td></tr>
+            <tr><td><div class="td-svc"><div class="td-ico">☀️</div><div><div class="td-nm">Solar Panel Installation – 3 kW</div><div class="td-id">#ECO-2581</div></div></div></td><td>Lakshmi Devi</td><td>Vijayawada</td><td>Feb 10, 2026</td><td class="td-earn">₹1,50,000</td><td style="color:var(--gold)">⭐ 5.0</td><td><div class="pill p-gr">Completed</div></td></tr>
+            <tr><td><div class="td-svc"><div class="td-ico">🔧</div><div><div class="td-nm">Green Maintenance – Visit</div><div class="td-id">#ECO-2570</div></div></div></td><td>Mohan Rao</td><td>Vijayawada</td><td>Feb 5, 2026</td><td class="td-earn">₹1,500</td><td style="color:var(--gold)">⭐ 4.0</td><td><div class="pill p-gr">Completed</div></td></tr>
+            <tr><td><div class="td-svc"><div class="td-ico">🔌</div><div><div class="td-nm">EV Charging – Home 7kW</div><div class="td-id">#ECO-2555</div></div></div></td><td>Sunita Reddy</td><td>Guntur</td><td>Jan 28, 2026</td><td class="td-earn">₹35,000</td><td style="color:var(--gold)">⭐ 5.0</td><td><div class="pill p-gr">Completed</div></td></tr>
+            <tr><td><div class="td-svc"><div class="td-ico">☀️</div><div><div class="td-nm">Solar Energy Audit</div><div class="td-id">#ECO-2540</div></div></div></td><td>Venkat Sharma</td><td>Vijayawada</td><td>Jan 20, 2026</td><td class="td-earn">₹8,000</td><td style="color:var(--gold)">⭐ 5.0</td><td><div class="pill p-gr">Completed</div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-        // Avatar upload functionality
-        function initAvatarUpload() {
-            const avatarInput = document.getElementById('avatarInput');
-            const workerAvatar = document.getElementById('workerAvatar');
-            
-            avatarInput.addEventListener('change', function(e) {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        workerAvatar.src = e.target.result;
-                        // Save to backend
-                        saveAvatarToBackend(e.target.result);
-                    };
-                    reader.readAsDataURL(file);
-                }
-            });
-        }
+    <!-- EARNINGS -->
+    <div class="pg" id="pg-earnings">
+      <div class="ph"><div><h2>Earnings &amp; Payouts</h2><p>Your complete financial overview</p></div></div>
 
-        // Save avatar to backend
-        function saveAvatarToBackend(avatarData) {
-            const user = JSON.parse(localStorage.getItem('user') || '{}');
-            const token = localStorage.getItem('token');
-            
-            fetch('https://greenserve-platform.onrender.com/api/auth/profile', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    profile_picture: avatarData
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    showToast('Avatar updated successfully', 'success');
-                }
-            })
-            .catch(error => {
-                showToast('Failed to update avatar', 'error');
-            });
-        }
-    </script>
+      <!-- Payout Banner -->
+      <div class="payout-banner">
+        <div class="pb-left">
+          <div class="pb-label">Next Payout</div>
+          <div class="pb-amount">₹18,500</div>
+          <div class="pb-sub">Scheduled for Apr 1, 2026 · Auto bank transfer</div>
+        </div>
+        <div class="pb-right">
+          <div class="pill p-tl">📅 26 days away</div>
+          <div style="font-size:.75rem;color:var(--text-soft);text-align:right">HDFC Bank ****4521</div>
+        </div>
+      </div>
+
+      <div class="kpis" style="margin-bottom:1.5rem;">
+        <div class="kpi kg"><div class="kpi-top"><div class="kpi-ico" style="background:var(--green-dim)">💰</div><div class="kpi-tr tr-up">↑ 18%</div></div><div class="kpi-num" style="font-size:1.6rem">₹42k</div><div class="kpi-lbl">This Month</div></div>
+        <div class="kpi kt"><div class="kpi-top"><div class="kpi-ico" style="background:var(--teal-dim)">📅</div><div class="kpi-tr tr-tl">Week</div></div><div class="kpi-num" style="font-size:1.6rem">₹52k</div><div class="kpi-lbl">This Week</div></div>
+        <div class="kpi kgo"><div class="kpi-top"><div class="kpi-ico" style="background:var(--gold-dim)">⏳</div><div class="kpi-tr tr-go">Pending</div></div><div class="kpi-num" style="font-size:1.6rem">₹18k</div><div class="kpi-lbl">Awaiting Payout</div></div>
+        <div class="kpi kt"><div class="kpi-top"><div class="kpi-ico" style="background:var(--teal-dim)">🏦</div></div><div class="kpi-num" style="font-size:1.5rem">₹3.8L</div><div class="kpi-lbl">All Time Earned</div></div>
+      </div>
+
+      <div class="gf">
+        <!-- Monthly Chart -->
+        <div class="card">
+          <div class="ch"><div class="ct">Monthly Breakdown</div></div>
+          <div class="cb">
+            <div class="chart" style="height:160px;">
+              <div class="bw"><div class="bar" style="height:46px"></div><div class="blbl">Oct</div></div>
+              <div class="bw"><div class="bar" style="height:60px"></div><div class="blbl">Nov</div></div>
+              <div class="bw"><div class="bar" style="height:42px"></div><div class="blbl">Dec</div></div>
+              <div class="bw"><div class="bar" style="height:78px"></div><div class="blbl">Jan</div></div>
+              <div class="bw"><div class="bar" style="height:70px"></div><div class="blbl">Feb</div></div>
+              <div class="bw"><div class="bar" style="height:95px"></div><div class="blbl">Mar</div></div>
+            </div>
+            <div class="er"><span class="er-l">March 2026</span><span class="er-v pos">₹42,000</span></div>
+            <div class="er"><span class="er-l">February 2026</span><span class="er-v pos">₹68,500</span></div>
+            <div class="er"><span class="er-l">January 2026</span><span class="er-v pos">₹58,000</span></div>
+            <div class="er"><span class="er-l">December 2025</span><span class="er-v pos">₹44,500</span></div>
+            <div class="er"><span class="er-l">November 2025</span><span class="er-v pos">₹62,000</span></div>
+          </div>
+        </div>
+
+        <!-- Payout History -->
+        <div class="card">
+          <div class="ch"><div class="ct">Payout History</div></div>
+          <div class="cb">
+            <div style="margin-bottom:1.25rem;background:var(--card2);border:1px solid rgba(6,182,212,.15);border-radius:14px;padding:1rem 1.25rem;">
+              <div style="font-size:.72rem;font-weight:600;color:var(--text-soft);text-transform:uppercase;letter-spacing:.8px;margin-bottom:.4rem;">Linked Account</div>
+              <div style="font-size:.875rem;font-weight:600;color:var(--text);display:flex;align-items:center;gap:.6rem;">🏦 HDFC Bank <span style="color:var(--text-soft)">****4521</span></div>
+            </div>
+            <div class="er"><span class="er-l">Mar 1, 2026 · Bank Transfer</span><span class="er-v pos">+₹68,500</span></div>
+            <div class="er"><span class="er-l">Feb 1, 2026 · Bank Transfer</span><span class="er-v pos">+₹58,000</span></div>
+            <div class="er"><span class="er-l">Jan 1, 2026 · Bank Transfer</span><span class="er-v pos">+₹44,500</span></div>
+            <div class="er"><span class="er-l">Dec 1, 2025 · Bank Transfer</span><span class="er-v pos">+₹62,000</span></div>
+            <div class="er"><span class="er-l">Nov 1, 2025 · Bank Transfer</span><span class="er-v pos">+₹55,000</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROFILE -->
+    <div class="pg" id="pg-profile">
+      <div class="ph"><div><h2>My Profile</h2><p>Manage your professional details and skills</p></div><button class="btn-p" onclick="saveP()">Save Changes</button></div>
+      <div class="prof-wrap">
+        <div class="prof-card">
+          <div class="prof-cover"></div>
+          <div class="prof-av-w"><div class="prof-av" id="pAv">WK</div></div>
+          <div class="prof-info">
+            <div class="prof-name" id="pNm">Loading...</div>
+            <div class="prof-role" id="pRole">Professional Worker</div>
+            <div class="prof-badges"><span class="pb pb-g">✓ Certified</span><span class="pb pb-t">Worker</span></div>
+            <div style="margin-top:.85rem;">
+              <div style="font-size:.68rem;font-weight:600;color:var(--text-soft);text-transform:uppercase;letter-spacing:.8px;margin-bottom:.5rem;">Skills</div>
+              <div id="skillsList"><span class="skill-chip">Loading...</span></div>
+            </div>
+          </div>
+          <div class="prof-stats">
+            <div class="ps-r"><span class="ps-l">Jobs Completed</span><span class="ps-v" id="statJobs">--</span></div>
+            <div class="ps-r"><span class="ps-l">Avg. Rating</span><span class="ps-v" id="statRating">⭐ --</span></div>
+            <div class="ps-r"><span class="ps-l">Total Earned</span><span class="ps-v" id="statEarned">₹--</span></div>
+            <div class="ps-r"><span class="ps-l">Member Since</span><span class="ps-v" id="statMember">--</span></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="cb">
+            <div class="fsec">
+              <div class="fsec-t">Personal Information</div>
+              <div class="fg2">
+                <div class="fg"><label class="fl">First Name</label><input class="fi" type="text" id="editFirstName" placeholder="First Name"></div>
+                <div class="fg"><label class="fl">Last Name</label><input class="fi" type="text" id="editLastName" placeholder="Last Name"></div>
+                <div class="fg"><label class="fl">Mobile Number</label><input class="fi" type="tel" id="editMobile" placeholder="+91 "></div>
+                <div class="fg"><label class="fl">Email Address</label><input class="fi" type="email" id="editEmail" placeholder="Email"></div>
+                <div class="fg"><label class="fl">City</label><input class="fi" type="text" id="editCity" placeholder="City"></div>
+                <div class="fg"><label class="fl">Experience (years)</label><input class="fi" type="number" id="editExperience" value="0" min="0"></div>
+              </div>
+            </div>
+            <div class="fsec">
+              <div class="fsec-t">Bank Details</div>
+              <div class="fg2">
+                <div class="fg"><label class="fl">Account Number</label><input class="fi" type="text" id="editAccount" placeholder="Bank account number"></div>
+                <div class="fg"><label class="fl">Bank Name</label><input class="fi" type="text" id="editBank" placeholder="Bank name"></div>
+                <div class="fg" style="grid-column:span 2"><label class="fl">IFSC Code</label><input class="fi" type="text" id="editIFSC" placeholder="IFSC Code"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="pg" id="pg-settings">
+      <div class="ph"><div><h2>Settings</h2><p>Manage preferences, notifications and account security</p></div></div>
+      <div class="set-wrap">
+        <div class="set-nav">
+          <div class="sni on">🔔 Notifications</div>
+          <div class="sni">🔑 Security</div>
+          <div class="sni">💳 Payouts</div>
+        </div>
+        <div>
+          <div class="card" style="margin-bottom:1rem;">
+            <div class="ch"><div class="ct">Notifications</div></div>
+            <div class="cb">
+              <div class="tog-r"><div><div class="tr-t">New Job Alerts</div><div class="tr-s">Get notified when new jobs match your skills and location</div></div><label class="sw"><input type="checkbox" checked><span class="sw-t"></span><span class="sw-k"></span></label></div>
+              <div class="tog-r"><div><div class="tr-t">Job Accepted Confirmation</div><div class="tr-s">Receive confirmation when you successfully accept a job</div></div><label class="sw"><input type="checkbox" checked><span class="sw-t"></span><span class="sw-k"></span></label></div>
+              <div class="tog-r"><div><div class="tr-t">Payout Notifications</div><div class="tr-s">Know when your payout has been processed to your bank</div></div><label class="sw"><input type="checkbox" checked><span class="sw-t"></span><span class="sw-k"></span></label></div>
+              <div class="tog-r"><div><div class="tr-t">Customer Reviews</div><div class="tr-s">Notification when a customer leaves you a review</div></div><label class="sw"><input type="checkbox" checked><span class="sw-t"></span><span class="sw-k"></span></label></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="ch"><div class="ct">Security</div></div>
+            <div class="cb" style="display:flex;flex-direction:column;gap:.6rem;">
+              <button style="display:flex;align-items:center;gap:.75rem;padding:.85rem 1rem;background:var(--card2);border:1px solid var(--border);border-radius:11px;color:var(--text-mid);font-family:'DM Sans',sans-serif;font-size:.875rem;font-weight:500;cursor:pointer;transition:all .2s;width:100%;" onmouseover="this.style.borderColor='var(--border2)'" onmouseout="this.style.borderColor='var(--border)'">🔑 &nbsp;Change Password</button>
+              <button class="lgout" onclick="logout()">⏻ &nbsp;Sign Out</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="tc" id="tc"></div>
+
+<script>
+const API_URL = 'https://greenserve-platform.onrender.com/api';
+const pages={overview:'Overview',jobs:'Job Requests',history:'Job History',earnings:'Earnings',profile:'My Profile',settings:'Settings'};
+let available=true;
+let pendingCount=3;
+
+// Check auth
+function checkAuth() {
+  const token = localStorage.getItem('token') || localStorage.getItem('workerToken');
+  const user = localStorage.getItem('user') || localStorage.getItem('worker');
+  
+  if (!token || !user) {
+    window.location.href = 'worker-login.html';
+    return null;
+  }
+  
+  return JSON.parse(user);
+}
+
+// Load worker data
+function loadWorkerData() {
+  const worker = checkAuth();
+  if (!worker) return;
+  
+  const firstName = worker.first_name || worker.firstName || 'Worker';
+  const lastName = worker.last_name || worker.lastName || '';
+  const fullName = firstName + ' ' + lastName;
+  const initials = (firstName[0] + (lastName[0] || '')).toUpperCase();
+  
+  // Update all UI elements
+  document.getElementById('sbAv').textContent = initials;
+  document.getElementById('tbAv').textContent = initials;
+  document.getElementById('pAv').textContent = initials;
+  
+  document.getElementById('sbName').textContent = fullName;
+  document.getElementById('tbUn').textContent = fullName;
+  document.getElementById('pNm').textContent = fullName;
+  
+  // Greeting
+  const hour = new Date().getHours();
+  let greeting = 'Good morning';
+  if (hour >= 12) greeting = 'Good afternoon';
+  if (hour >= 17) greeting = 'Good evening';
+  document.getElementById('hg').innerHTML = `${greeting}, <em>${firstName}.</em>`;
+  
+  // Profile form
+  document.getElementById('editFirstName').value = firstName;
+  document.getElementById('editLastName').value = lastName;
+  document.getElementById('editMobile').value = worker.mobile || '';
+  document.getElementById('editEmail').value = worker.email || '';
+  document.getElementById('editCity').value = worker.city || '';
+  document.getElementById('editExperience').value = worker.years_of_experience || worker.experience || 0;
+  
+  // Skills
+  const skills = worker.skills || ['Professional Service'];
+  document.getElementById('sbSkill').textContent = skills.slice(0,2).join(' · ') + ' Certified';
+  document.getElementById('pRole').textContent = skills.join(' · ') + ' Specialist';
+  document.getElementById('skillsList').innerHTML = skills.map(s => `<span class="skill-chip">${s}</span>`).join('');
+  
+  // Member since
+  if (worker.createdAt) {
+    const date = new Date(worker.createdAt);
+    document.getElementById('statMember').textContent = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+  }
+}
+
+function nav(page,btn){
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
+  document.getElementById('pg-'+page).classList.add('on');
+  document.getElementById('tbPg').textContent=pages[page]||page;
+  if(btn){document.querySelectorAll('.sbl').forEach(b=>b.classList.remove('on'));btn.classList.add('on');}
+}
+
+function toggleAvail(){
+  available=document.getElementById('availCheck').checked;
+  const st=document.getElementById('availStatus');
+  const txt=document.getElementById('availText');
+  const pill=document.getElementById('onlinePill');
+  if(available){
+    st.className='avail-status avail-on';txt.textContent='Online · Accepting Jobs';
+    st.querySelector('.avail-dot').style.background='var(--green)';
+    pill.className='online-pill';
+    pill.innerHTML='<div class="op-dot"></div> Online · Available';
+    toast('You are now online and accepting jobs','ok');
+  } else {
+    st.className='avail-status avail-off';txt.textContent='Offline · Not Available';
+    st.querySelector('.avail-dot').style.background='var(--text-soft)';
+    pill.className='online-pill off';
+    pill.innerHTML='<div class="op-dot"></div> Offline';
+    toast('You are now offline');
+  }
+}
+
+function acceptJob(btn,id){
+  const jr=btn.closest('.jr');
+  jr.style.background='rgba(16,185,129,.04)';
+  jr.style.borderLeft='3px solid var(--green)';
+  btn.textContent='✓ Accepted';btn.disabled=true;
+  const dec=btn.nextElementSibling;
+  if(dec)dec.style.display='none';
+  pendingCount=Math.max(0,pendingCount-1);
+  document.getElementById('jobBadge').textContent=pendingCount;
+  if(pendingCount===0)document.getElementById('jobBadge').style.display='none';
+  toast('Job accepted! Customer has been notified.','ok');
+}
+
+function declineJob(btn){
+  const jr=btn.closest('.jr');
+  jr.style.opacity='.35';jr.style.pointerEvents='none';
+  pendingCount=Math.max(0,pendingCount-1);
+  document.getElementById('jobBadge').textContent=pendingCount;
+  if(pendingCount===0)document.getElementById('jobBadge').style.display='none';
+  toast('Job declined.');
+}
+
+function filt(btn,s){
+  document.querySelectorAll('.ft').forEach(b=>b.classList.remove('on'));btn.classList.add('on');
+  const items=btn.closest('.pg').querySelectorAll('.jr[data-s]');
+  items.forEach(item=>{item.style.display=(s==='all'||item.dataset.s===s)?'':'none';});
+}
+
+function saveP(){toast('Profile saved successfully','ok');}
+
+function logout(){
+  localStorage.removeItem('token');
+  localStorage.removeItem('workerToken');
+  localStorage.removeItem('user');
+  localStorage.removeItem('worker');
+  window.location.href='worker-login.html';
+}
+
+function toast(msg,type='info'){
+  const c=document.getElementById('tc');
+  const t=document.createElement('div');
+  t.className=`toast ${type}`;t.textContent=msg;
+  c.appendChild(t);setTimeout(()=>t.remove(),3500);
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', loadWorkerData);
+</script>
 </body>
 </html>
