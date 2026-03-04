@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Bookings - EcoWorkConnect</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+:root{
+  --navy:#0a1628;--navy2:#0e2040;--blue:#1a56db;--blue2:#1e40af;
+  --sky:#3b82f6;--aqua:#06b6d4;--aqua-dim:rgba(6,182,212,0.1);
+  --blue-dim:rgba(26,86,219,0.08);--blue-glow:rgba(26,86,219,0.18);
+  --white:#ffffff;--off:#f8faff;--off2:#f1f5fd;
+  --border:rgba(26,86,219,0.12);--border-f:rgba(26,86,219,0.4);
+  --text:#0a1628;--text-mid:#4b6280;--text-soft:#94a3b8;
+  --gold:#f59e0b;--green:#10b981;--red:#ef4444;
+  --shadow:0 4px 24px rgba(26,86,219,0.08);
+  --shadow-lg:0 12px 48px rgba(26,86,219,0.14);
+}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--off);color:var(--text);min-height:100vh;margin:0;padding:0;}
+
+/* ── NAV ── */
+nav{position:sticky;top:0;z-index:200;background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 4rem;height:68px;display:flex;align-items:center;justify-content:space-between;}
+.logo{display:flex;align-items:center;gap:.65rem;text-decoration:none;}
+.logo-mark{width:36px;height:36px;background:linear-gradient(135deg,var(--blue),var(--aqua));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;box-shadow:0 4px 12px var(--blue-glow);}
+.logo-text{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;color:var(--navy);}
+.logo-text span{color:var(--blue);}
+.nav-links{display:flex;gap:2.5rem;list-style:none;}
+.nav-links a{font-size:.875rem;font-weight:600;color:var(--text-mid);text-decoration:none;transition:color .2s;}
+.nav-links a:hover{color:var(--blue);}
+.nav-right{display:flex;gap:.75rem;align-items:center;}
+.btn-ghost{padding:.55rem 1.25rem;border:1.5px solid var(--border2);border-radius:100px;background:transparent;color:var(--text-mid);font-family:'Plus Jakarta Sans',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;transition:all .2s;}
+.btn-ghost:hover{border-color:var(--blue);color:var(--blue);}
+.btn-blue{padding:.6rem 1.5rem;border-radius:100px;background:linear-gradient(135deg,var(--blue),var(--blue2));color:white;border:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:.85rem;font-weight:700;cursor:pointer;box-shadow:0 4px 16px var(--blue-glow);transition:all .2s;}
+.btn-blue:hover{transform:translateY(-1px);box-shadow:0 8px 24px var(--blue-glow);}
+
+/* ── HERO ── */
+.hero{background:linear-gradient(160deg,var(--navy) 0%,var(--navy2) 50%,#0c2d5a 100%);padding:3rem 4rem;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 70% at 80% 50%,rgba(6,182,212,0.12) 0%,transparent 60%),radial-gradient(ellipse 40% 50% at 10% 80%,rgba(26,86,219,0.15) 0%,transparent 55%);}
+.hero-inner{position:relative;z-index:1;max-width:1200px;margin:0 auto;}
+.hero-title{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;color:white;margin-bottom:.5rem;}
+.hero-sub{font-size:1rem;color:rgba(255,255,255,0.7);}
+
+/* ── MAIN CONTENT ── */
+.main{max-width:1200px;margin:0 auto;padding:2rem 4rem;}
+
+/* ── TABS ── */
+.tabs{display:flex;gap:2rem;border-bottom:2px solid var(--border);margin-bottom:2rem;}
+.tab{padding:1rem 0;font-size:.9rem;font-weight:600;color:var(--text-mid);cursor:pointer;transition:all .2s;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab:hover{color:var(--blue);}
+.tab.on{color:var(--blue);border-bottom-color:var(--blue);}
+
+/* ── BOOKINGS GRID ── */
+.bookings-grid{display:grid;gap:1.5rem;}
+.booking-card{background:white;border:1.5px solid var(--border);border-radius:20px;padding:1.75rem;transition:all .3s;}
+.booking-card:hover{box-shadow:var(--shadow-lg);border-color:var(--border-f);}
+.booking-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1rem;}
+.booking-id{font-size:.85rem;font-weight:600;color:var(--text-soft);}
+.booking-status{display:inline-flex;align-items:center;gap:.4rem;padding:.4rem .8rem;border-radius:100px;font-size:.75rem;font-weight:700;text-transform:uppercase;}
+.status-pending{background:#fef3c7;color:#d97706;}
+.status-progress{background:#dbeafe;color:#1d4ed8;}
+.status-completed{background:#d1fae5;color:#059669;}
+.status-cancelled{background:#fee2e2;color:#dc2626;}
+
+.booking-body{display:flex;gap:1.5rem;margin-bottom:1.5rem;}
+.booking-icon{width:64px;height:64px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:2rem;flex-shrink:0;}
+.booking-icon.solar{background:linear-gradient(135deg,#fef3c7,#fde68a);}
+.booking-icon.ev{background:linear-gradient(135deg,#dbeafe,#bfdbfe);}
+.booking-icon.garden{background:linear-gradient(135deg,#d1fae5,#a7f3d0);}
+.booking-icon.water{background:linear-gradient(135deg,#dbeafe,#93c5fd);}
+.booking-icon.energy{background:linear-gradient(135deg,#e9d5ff,#c4b5fd);}
+.booking-icon.maintenance{background:linear-gradient(135deg,#e2e8f0,#cbd5e1);}
+
+.booking-info{flex:1;}
+.booking-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:var(--navy);margin-bottom:.3rem;}
+.booking-date{font-size:.85rem;color:var(--text-mid);margin-bottom:.5rem;display:flex;align-items:center;gap:.5rem;}
+.booking-location{font-size:.85rem;color:var(--text-mid);display:flex;align-items:center;gap:.5rem;}
+.booking-price{font-size:1.25rem;font-weight:700;color:var(--blue);text-align:right;}
+.booking-price span{display:block;font-size:.75rem;color:var(--text-soft);font-weight:500;}
+
+.booking-actions{display:flex;gap:1rem;justify-content:flex-end;}
+.btn-track{padding:.6rem 1.25rem;border-radius:100px;background:var(--blue);color:white;border:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:.4rem;}
+.btn-track:hover{background:var(--blue2);}
+.btn-pay{padding:.6rem 1.25rem;border-radius:100px;background:var(--green);color:white;border:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:.4rem;}
+.btn-pay:hover{background:#059669;}
+.btn-review{padding:.6rem 1.25rem;border-radius:100px;background:var(--gold);color:white;border:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:.4rem;}
+.btn-review:hover{background:#d97706;}
+.btn-cancel-booking{padding:.6rem 1.25rem;border-radius:100px;background:transparent;color:var(--text-mid);border:1.5px solid var(--border);font-family:'Plus Jakarta Sans',sans-serif;font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;}
+.btn-cancel-booking:hover{border-color:var(--red);color:var(--red);}
+
+/* ── EMPTY STATE ── */
+.empty-state{text-align:center;padding:4rem 2rem;}
+.empty-icon{font-size:4rem;margin-bottom:1rem;}
+.empty-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--navy);margin-bottom:.5rem;}
+.empty-text{font-size:.9rem;color:var(--text-mid);margin-bottom:1.5rem;}
+
+/* Toast */
+.toast{position:fixed;top:1.25rem;right:1.25rem;background:white;border:1px solid var(--border);border-radius:12px;padding:1rem 1.25rem;box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:.75rem;font-size:.9rem;font-weight:500;color:var(--text);opacity:0;transform:translateY(-10px);transition:all .3s ease;z-index:1000;}
+.toast.on{opacity:1;transform:translateY(0);}
+.toast i{color:var(--blue);font-size:1.1rem;}
+
+@media (max-width:768px){
+  nav{padding:0 1.5rem;}
+  .hero{padding:2rem 1.5rem;}
+  .main{padding:1.5rem;}
+  .booking-body{flex-direction:column;}
+  .booking-actions{flex-wrap:wrap;justify-content:flex-start;}
+}
+</style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav>
+  <a href="index.html" class="logo">
+    <div class="logo-mark">⚡</div>
+    <span class="logo-text">Eco<span>Work</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="service-detail.html">Services</a>
+    <a href="worker-portal.html">Worker Portal</a>
+  </div>
+  <div class="nav-right">
+    <a href="user-dashboard.html" class="btn-blue">My Account</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-inner">
+    <h1 class="hero-title">My Bookings</h1>
+    <p class="hero-sub">View and manage all your service bookings</p>
+  </div>
+</section>
+
+<!-- Main Content -->
+<main class="main">
+  
+  <!-- Tabs -->
+  <div class="tabs">
+    <div class="tab on" onclick="filterBookings('all')">All Bookings</div>
+    <div class="tab" onclick="filterBookings('ongoing')">Ongoing</div>
+    <div class="tab" onclick="filterBookings('completed')">Completed</div>
+    <div class="tab" onclick="filterBookings('cancelled')">Cancelled</div>
+  </div>
+
+  <!-- Bookings Grid -->
+  <div class="bookings-grid" id="bookingsContainer">
+    <!-- Bookings will be loaded here -->
+  </div>
+
+</main>
+
+<!-- Toast -->
+<div class="toast" id="toast"><i class="fas fa-info-circle"></i><span id="toastMsg">Message</span></div>
+
+<script>
+const API = 'https://greenserve-platform.onrender.com/api';
+let allBookings = [];
+
+// Load bookings on page load
+document.addEventListener('DOMContentLoaded', function() {
+  loadBookings();
+});
+
+function toast(msg, ok) {
+  const t = document.getElementById('toast'), m = document.getElementById('toastMsg');
+  m.textContent = msg;
+  t.querySelector('i').className = ok ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
+  t.classList.add('on');
+  setTimeout(() => t.classList.remove('on'), 3500);
+}
+
+async function loadBookings() {
+  const token = localStorage.getItem('token');
+  const container = document.getElementById('bookingsContainer');
+  
+  // Show loading
+  container.innerHTML = '<div style="text-align:center;padding:3rem;"><i class="fas fa-spinner fa-spin" style="font-size:2rem;color:var(--blue);"></i><p style="margin-top:1rem;color:var(--text-mid);">Loading your bookings...</p></div>';
+  
+  try {
+    let bookings;
+    
+    if (token) {
+      const response = await fetch(`${API}/bookings/my-bookings`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        bookings = data.data || [];
+      } else {
+        bookings = getMockBookings();
+      }
+    } else {
+      // Use localStorage bookings for demo
+      const localBookings = localStorage.getItem('myBookings');
+      bookings = localBookings ? JSON.parse(localBookings) : getMockBookings();
+    }
+    
+    allBookings = bookings;
+    displayBookings(bookings);
+  } catch (error) {
+    console.error('Error loading bookings:', error);
+    allBookings = getMockBookings();
+    displayBookings(allBookings);
+  }
+}
+
+function getMockBookings() {
+  return [
+    {
+      id: 'ECO-001',
+      service: 'Solar Panel Installation',
+      serviceType: 'solar',
+      date: '2026-03-05',
+      time: '10:00 AM',
+      location: '123 Green Street, Koramangala',
+      price: 288000,
+      status: 'in_progress',
+      worker: 'Ravi Kumar'
+    },
+    {
+      id: 'ECO-002',
+      service: 'Gardening - Monthly Plan',
+      serviceType: 'garden',
+      date: '2026-02-28',
+      time: '2:00 PM',
+      location: '456 Garden Lane, Indiranagar',
+      price: 4000,
+      status: 'completed',
+      worker: 'Suresh Naidu'
+    },
+    {
+      id: 'ECO-003',
+      service: 'EV Charging Setup',
+      serviceType: 'ev',
+      date: '2026-03-10',
+      time: '11:00 AM',
+      location: '789 Tech Park, Whitefield',
+      price: 35000,
+      status: 'pending',
+      worker: 'Not assigned'
+    }
+  ];
+}
+
+function displayBookings(bookings) {
+  const container = document.getElementById('bookingsContainer');
+  
+  if (bookings.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">📋</div>
+        <h3 class="empty-title">No bookings found</h3>
+        <p class="empty-text">You haven't made any bookings yet. Start by exploring our services!</p>
+        <a href="service-detail.html" class="btn-blue" style="text-decoration:none;display:inline-block;">Book a Service</a>
+      </div>
+    `;
+    return;
+  }
+  
+  container.innerHTML = bookings.map(booking => createBookingCard(booking)).join('');
+}
+
+function createBookingCard(booking) {
+  const statusClass = {
+    'pending': 'status-pending',
+    'in_progress': 'status-progress',
+    'completed': 'status-completed',
+    'cancelled': 'status-cancelled'
+  }[booking.status] || 'status-pending';
+  
+  const statusText = {
+    'pending': 'Pending',
+    'in_progress': 'In Progress',
+    'completed': 'Completed',
+    'cancelled': 'Cancelled'
+  }[booking.status] || 'Pending';
+  
+  // Determine action buttons based on status
+  let actionButtons = '';
+  if (booking.status === 'in_progress') {
+    actionButtons = `
+      <button class="btn-track" onclick="trackBooking('${booking.id}')">
+        <i class="fas fa-map-marker-alt"></i> Track Worker
+      </button>
+      <button class="btn-pay" onclick="payBooking('${booking.id}')">
+        <i class="fas fa-credit-card"></i> Pay Now
+      </button>
+    `;
+  } else if (booking.status === 'completed') {
+    actionButtons = `
+      <button class="btn-review" onclick="reviewBooking('${booking.id}')">
+        <i class="fas fa-star"></i> Rate Service
+      </button>
+    `;
+  } else if (booking.status === 'pending') {
+    actionButtons = `
+      <button class="btn-track" onclick="trackBooking('${booking.id}')">
+        <i class="fas fa-eye"></i> View Details
+      </button>
+      <button class="btn-cancel-booking" onclick="cancelBooking('${booking.id}')">
+        <i class="fas fa-times"></i> Cancel
+      </button>
+    `;
+  }
+  
+  return `
+    <div class="booking-card" data-status="${booking.status}">
+      <div class="booking-header">
+        <div>
+          <div class="booking-id">Booking #${booking.id}</div>
+        </div>
+        <div class="booking-status ${statusClass}">
+          <i class="fas fa-circle" style="font-size:6px;"></i> ${statusText}
+        </div>
+      </div>
+      
+      <div class="booking-body">
+        <div class="booking-icon ${booking.serviceType}">
+          ${getServiceIcon(booking.serviceType)}
+        </div>
+        <div class="booking-info">
+          <h3 class="booking-title">${booking.service}</h3>
+          <div class="booking-date">
+            <i class="fas fa-calendar"></i> ${formatDate(booking.date)} • ${booking.time}
+          </div>
+          <div class="booking-location">
+            <i class="fas fa-map-marker-alt"></i> ${booking.location}
+          </div>
+          ${booking.worker ? `<div style="margin-top:.5rem;font-size:.85rem;color:var(--text-mid);"><i class="fas fa-user"></i> Worker: ${booking.worker}</div>` : ''}
+        </div>
+        <div class="booking-price">
+          ₹${booking.price.toLocaleString()}
+          <span>Total Amount</span>
+        </div>
+      </div>
+      
+      <div class="booking-actions">
+        ${actionButtons}
+      </div>
+    </div>
+  `;
+}
+
+function getServiceIcon(type) {
+  const icons = {
+    'solar': '☀️',
+    'ev': '🔌',
+    'garden': '🌱',
+    'water': '💧',
+    'energy': '⚡',
+    'maintenance': '🔧'
+  };
+  return icons[type] || '📦';
+}
+
+function formatDate(dateStr) {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+function filterBookings(filter) {
+  // Update tab styling
+  document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('on'));
+  event.target.classList.add('on');
+  
+  let filtered = allBookings;
+  if (filter === 'ongoing') {
+    filtered = allBookings.filter(b => b.status === 'pending' || b.status === 'in_progress');
+  } else if (filter === 'completed') {
+    filtered = allBookings.filter(b => b.status === 'completed');
+  } else if (filter === 'cancelled') {
+    filtered = allBookings.filter(b => b.status === 'cancelled');
+  }
+  
+  displayBookings(filtered);
+}
+
+function trackBooking(id) {
+  // Save booking to localStorage for tracking page
+  const booking = allBookings.find(b => b.id === id);
+  if (booking) {
+    localStorage.setItem('trackingBooking', JSON.stringify(booking));
+  }
+  window.location.href = 'tracking.html';
+}
+
+function payBooking(id) {
+  const booking = allBookings.find(b => b.id === id);
+  if (booking) {
+    localStorage.setItem('paymentBooking', JSON.stringify(booking));
+  }
+  window.location.href = 'payment.html';
+}
+
+function reviewBooking(id) {
+  const booking = allBookings.find(b => b.id === id);
+  if (booking) {
+    localStorage.setItem('reviewBooking', JSON.stringify(booking));
+  }
+  window.location.href = 'rating.html';
+}
+
+function cancelBooking(id) {
+  if (confirm('Are you sure you want to cancel this booking?')) {
+    toast('Booking cancelled successfully', true);
+    // Update booking status
+    const booking = allBookings.find(b => b.id === id);
+    if (booking) {
+      booking.status = 'cancelled';
+      displayBookings(allBookings);
+    }
+  }
+}
+</script>
+
+</body>
+</html>
