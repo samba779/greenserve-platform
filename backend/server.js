@@ -32,7 +32,8 @@ app.use(cors({
   origin: [
     process.env.FRONTEND_URL,
     'https://greenserve-platform.vercel.app',
-    'https://greenserve-platform-e9f85nq3s-samba779s-projects.vercel.app'
+    'https://greenserve-platform-e9f85nq3s-samba779s-projects.vercel.app',
+    'https://greenserve-platform-a4vf1o092-samba779s-projects.vercel.app'
   ].filter(Boolean),
   credentials: true
 }));
