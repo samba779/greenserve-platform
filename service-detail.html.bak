@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EcoWorkConnect – Book a Service</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+:root{
+  --navy:#0a1628;--navy2:#0e2040;--blue:#1a56db;--blue2:#1e40af;
+  --sky:#3b82f6;--aqua:#06b6d4;--aqua-dim:rgba(6,182,212,0.1);
+  --blue-dim:rgba(26,86,219,0.08);--blue-glow:rgba(26,86,219,0.18);
+  --white:#ffffff;--off:#f8faff;--off2:#f1f5fd;
+  --border:rgba(26,86,219,0.12);--border-f:rgba(26,86,219,0.4);
+  --text:#0a1628;--text-mid:#4b6280;--text-soft:#94a3b8;
+  --gold:#f59e0b;--r:14px;
+  --shadow:0 4px 24px rgba(26,86,219,0.08);
+  --shadow-lg:0 12px 48px rgba(26,86,219,0.14);
+}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--off);color:var(--text);min-height:100vh;margin:0;padding:0;}
+
+/* ── NAV ── */
+nav{position:sticky;top:0;z-index:200;background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 4rem;height:68px;display:flex;align-items:center;justify-content:space-between;}
+.logo{display:flex;align-items:center;gap:.65rem;text-decoration:none;}
+.logo-mark{width:36px;height:36px;background:linear-gradient(135deg,var(--blue),var(--aqua));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;box-shadow:0 4px 12px var(--blue-glow);}
+.logo-text{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;color:var(--navy);}
+.logo-text span{color:var(--blue);}
+.nav-links{display:flex;gap:2.5rem;list-style:none;}
+.nav-links a{font-size:.875rem;font-weight:600;color:var(--text-mid);text-decoration:none;transition:color .2s;}
+.nav-links a:hover{color:var(--blue);}
+.nav-right{display:flex;gap:.75rem;align-items:center;}
+.btn-ghost{padding:.55rem 1.25rem;border:1.5px solid var(--border2);border-radius:100px;background:transparent;color:var(--text-mid);font-family:'Plus Jakarta Sans',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;transition:all .2s;}
+.btn-ghost:hover{border-color:var(--blue);color:var(--blue);}
+.btn-blue{padding:.6rem 1.5rem;border-radius:100px;background:linear-gradient(135deg,var(--blue),var(--blue2));color:white;border:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:.85rem;font-weight:700;cursor:pointer;box-shadow:0 4px 16px var(--blue-glow);transition:all .2s;}
+.btn-blue:hover{transform:translateY(-1px);box-shadow:0 8px 24px var(--blue-glow);}
+
+/* ── HERO ── */
+.hero{background:linear-gradient(160deg,var(--navy) 0%,var(--navy2) 50%,#0c2d5a 100%);padding:4rem 4rem 5rem;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 70% at 80% 50%,rgba(6,182,212,0.12) 0%,transparent 60%),radial-gradient(ellipse 40% 50% at 10% 80%,rgba(26,86,219,0.15) 0%,transparent 55%);}
+.hero::after{content:'';position:absolute;inset:0;background-image:radial-gradient(circle,rgba(255,255,255,0.06) 1px,transparent 1px);background-size:32px 32px;}
+.hero-inner{position:relative;z-index:1;max-width:1200px;margin:0 auto;text-align:center;}
+.hero-tag{display:inline-flex;align-items:center;gap:.5rem;background:rgba(6,182,212,0.15);border:1px solid rgba(6,182,212,0.3);border-radius:100px;padding:.35rem 1rem;font-size:.75rem;font-weight:700;color:#67e8f9;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:1.5rem;}
+.hero-title{font-family:'Playfair Display',serif;font-size:clamp(2.5rem,4vw,3.5rem);font-weight:800;line-height:1.1;color:white;margin-bottom:1rem;}
+.hero-title em{font-style:italic;background:linear-gradient(90deg,#67e8f9,#38bdf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero-sub{font-size:1.05rem;color:rgba(255,255,255,0.65);line-height:1.7;max-width:600px;margin:0 auto 2rem;}
+
+/* ── MAIN CONTENT ── */
+.main{max-width:1200px;margin:0 auto;padding:3rem 4rem;}
+
+/* ── SERVICE GRID ── */
+.services-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin-bottom:3rem;}
+.service-card{background:white;border:1.5px solid var(--border);border-radius:20px;padding:1.75rem;transition:all .3s;cursor:pointer;}
+.service-card:hover{border-color:var(--border-f);transform:translateY(-4px);box-shadow:var(--shadow-lg);}
+.service-icon{width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:1.25rem;}
+.service-icon.solar{background:linear-gradient(135deg,#f59e0b,#f97316);}
+.service-icon.ev{background:linear-gradient(135deg,#06b6d4,#3b82f6);}
+.service-icon.garden{background:linear-gradient(135deg,#10b981,#059669);}
+.service-icon.water{background:linear-gradient(135deg,#3b82f6,#1d4ed8);}
+.service-icon.energy{background:linear-gradient(135deg,#8b5cf6,#7c3aed);}
+.service-icon.maintenance{background:linear-gradient(135deg,#64748b,#475569);}
+.service-title{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--navy);margin-bottom:.5rem;}
+.service-desc{font-size:.9rem;color:var(--text-mid);line-height:1.6;margin-bottom:1.25rem;}
+.service-price{font-size:1.1rem;font-weight:700;color:var(--blue);margin-bottom:1rem;}
+.service-btn{width:100%;padding:.75rem;border-radius:12px;background:var(--off);border:1.5px solid var(--border);color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;transition:all .2s;}
+.service-btn:hover{background:var(--blue);border-color:var(--blue);color:white;}
+
+/* ── BOOKING FORM ── */
+.booking-section{background:white;border:1.5px solid var(--border);border-radius:24px;padding:2.5rem;margin-top:2rem;box-shadow:var(--shadow);}
+.section-title{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;color:var(--navy);margin-bottom:.5rem;}
+.section-subtitle{font-size:.9rem;color:var(--text-mid);margin-bottom:2rem;}
+.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem;margin-bottom:1.5rem;}
+.form-group{display:flex;flex-direction:column;gap:.4rem;}
+.form-label{font-size:.75rem;font-weight:700;color:var(--text-soft);text-transform:uppercase;letter-spacing:.6px;}
+.form-input{width:100%;padding:.9rem 1rem;background:var(--off);border:1.5px solid var(--border);border-radius:12px;color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;font-size:.9rem;outline:none;transition:all .2s;}
+.form-input:focus{border-color:var(--border-f);background:white;box-shadow:0 0 0 3px rgba(26,86,219,0.07);}
+.form-input::placeholder{color:var(--text-soft);}
+select.form-input{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%234b6280'%3E%3Cpath d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 1rem center;padding-right:2.5rem;}
+.form-textarea{width:100%;padding:.9rem 1rem;background:var(--off);border:1.5px solid var(--border);border-radius:12px;color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;font-size:.9rem;outline:none;transition:all .2s;resize:vertical;min-height:100px;}
+.form-textarea:focus{border-color:var(--border-f);background:white;box-shadow:0 0 0 3px rgba(26,86,219,0.07);}
+.form-actions{display:flex;gap:1rem;justify-content:flex-end;margin-top:2rem;}
+.btn-cancel{padding:.9rem 2rem;border-radius:100px;background:transparent;color:var(--text-mid);border:1.5px solid var(--border);font-family:'Plus Jakarta Sans',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .2s;}
+.btn-cancel:hover{border-color:var(--text-soft);color:var(--text);}
+.btn-submit{padding:.9rem 2.5rem;border-radius:100px;background:linear-gradient(135deg,var(--blue),var(--blue2));color:white;border:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;box-shadow:0 4px 18px var(--blue-glow);transition:all .25s;display:flex;align-items:center;gap:.5rem;}
+.btn-submit:hover{transform:translateY(-2px);box-shadow:0 8px 28px var(--blue-glow);}
+
+/* Toast */
+.toast{position:fixed;top:1.25rem;right:1.25rem;background:white;border:1px solid var(--border);border-radius:12px;padding:1rem 1.25rem;box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:.75rem;font-size:.9rem;font-weight:500;color:var(--text);opacity:0;transform:translateY(-10px);transition:all .3s ease;z-index:1000;}
+.toast.on{opacity:1;transform:translateY(0);}
+.toast i{color:var(--blue);font-size:1.1rem;}
+
+@media (max-width:768px){
+  nav{padding:0 1.5rem;}
+  .hero{padding:3rem 1.5rem;}
+  .main{padding:2rem 1.5rem;}
+  .form-grid{grid-template-columns:1fr;}
+  .services-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav>
+  <a href="index.html" class="logo">
+    <div class="logo-mark">⚡</div>
+    <span class="logo-text">Eco<span>Work</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="services.html">Services</a>
+    <a href="worker-portal.html">Worker Portal</a>
+  </div>
+  <div class="nav-right">
+    <a href="user-dashboard.html" class="btn-blue">My Account</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag">📋 Book Your Service</div>
+    <h1 class="hero-title">Choose Your <em>Eco Service</em></h1>
+    <p class="hero-sub">Select from our range of professional eco-friendly services and book instantly</p>
+  </div>
+</section>
+
+<!-- Main Content -->
+<main class="main">
+  
+  <!-- Services Grid -->
+  <div class="services-grid">
+    <div class="service-card" onclick="selectService('solar', 'Solar Panel Installation', 25000)">
+      <div class="service-icon solar">☀️</div>
+      <h3 class="service-title">Solar Installation</h3>
+      <p class="service-desc">Professional solar panel installation for homes and businesses</p>
+      <div class="service-price">From ₹25,000</div>
+      <button class="service-btn">Select Service →</button>
+    </div>
+    
+    <div class="service-card" onclick="selectService('ev', 'EV Charging Station', 35000)">
+      <div class="service-icon ev">🔌</div>
+      <h3 class="service-title">EV Charging Setup</h3>
+      <p class="service-desc">Home and commercial EV charging station installation</p>
+      <div class="service-price">From ₹35,000</div>
+      <button class="service-btn">Select Service →</button>
+    </div>
+    
+    <div class="service-card" onclick="selectService('garden', 'Green Gardening', 1500)">
+      <div class="service-icon garden">🌱</div>
+      <h3 class="service-title">Green Gardening</h3>
+      <p class="service-desc">Sustainable garden design and maintenance services</p>
+      <div class="service-price">From ₹1,500</div>
+      <button class="service-btn">Select Service →</button>
+    </div>
+    
+    <div class="service-card" onclick="selectService('water', 'Rainwater Harvesting', 15000)">
+      <div class="service-icon water">💧</div>
+      <h3 class="service-title">Water Harvesting</h3>
+      <p class="service-desc">Rainwater harvesting system installation and setup</p>
+      <div class="service-price">From ₹15,000</div>
+      <button class="service-btn">Select Service →</button>
+    </div>
+    
+    <div class="service-card" onclick="selectService('energy', 'Home Energy Audit', 2500)">
+      <div class="service-icon energy">⚡</div>
+      <h3 class="service-title">Energy Audit</h3>
+      <p class="service-desc">Comprehensive energy efficiency assessment</p>
+      <div class="service-price">From ₹2,500</div>
+      <button class="service-btn">Select Service →</button>
+    </div>
+    
+    <div class="service-card" onclick="selectService('maintenance', 'Green Maintenance', 999)">
+      <div class="service-icon maintenance">🔧</div>
+      <h3 class="service-title">Green Maintenance</h3>
+      <p class="service-desc">Regular maintenance of eco-friendly installations</p>
+      <div class="service-price">From ₹999</div>
+      <button class="service-btn">Select Service →</button>
+    </div>
+  </div>
+
+  <!-- Booking Form -->
+  <div class="booking-section" id="bookingForm" style="display:none;">
+    <h2 class="section-title">Complete Your Booking</h2>
+    <p class="section-subtitle">Fill in the details to confirm your service</p>
+    
+    <form id="serviceBookingForm">
+      <input type="hidden" id="selectedServiceType" name="serviceType">
+      <input type="hidden" id="selectedServiceName" name="serviceName">
+      <input type="hidden" id="selectedPrice" name="price">
+      
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label" for="displayService">Selected Service</label>
+          <input type="text" id="displayService" class="form-input" readonly>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="displayPrice">Estimated Price</label>
+          <input type="text" id="displayPrice" class="form-input" readonly>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="bookingDate">Preferred Date *</label>
+          <input type="date" id="bookingDate" class="form-input" required min="">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="bookingTime">Preferred Time *</label>
+          <select id="bookingTime" class="form-input" required>
+            <option value="">Select time</option>
+            <option value="09:00">9:00 AM</option>
+            <option value="10:00">10:00 AM</option>
+            <option value="11:00">11:00 AM</option>
+            <option value="12:00">12:00 PM</option>
+            <option value="14:00">2:00 PM</option>
+            <option value="15:00">3:00 PM</option>
+            <option value="16:00">4:00 PM</option>
+            <option value="17:00">5:00 PM</option>
+          </select>
+        </div>
+        <div class="form-group" style="grid-column:1/-1;">
+          <label class="form-label" for="serviceAddress">Service Address *</label>
+          <input type="text" id="serviceAddress" class="form-input" placeholder="Enter your complete address" required>
+        </div>
+        <div class="form-group" style="grid-column:1/-1;">
+          <label class="form-label">Special Instructions</label>
+          <textarea id="specialInstructions" class="form-textarea" placeholder="Any specific requirements or notes..."></textarea>
+        </div>
+      </div>
+      
+      <div class="form-actions">
+        <button type="button" class="btn-cancel" onclick="cancelBooking()">Cancel</button>
+        <button type="submit" class="btn-submit">
+          <i class="fas fa-check-circle"></i> Confirm Booking
+        </button>
+      </div>
+    </form>
+  </div>
+</main>
+
+<!-- Toast -->
+<div class="toast" id="toast"><i class="fas fa-info-circle"></i><span id="toastMsg">Message</span></div>
+
+<script>
+const API = 'https://greenserve-platform.onrender.com/api';
+
+// Set minimum date to today
+document.getElementById('bookingDate').min = new Date().toISOString().split('T')[0];
+
+function selectService(type, name, price) {
+  document.getElementById('selectedServiceType').value = type;
+  document.getElementById('selectedServiceName').value = name;
+  document.getElementById('selectedPrice').value = price;
+  document.getElementById('displayService').value = name;
+  document.getElementById('displayPrice').value = '₹' + price.toLocaleString();
+  
+  const form = document.getElementById('bookingForm');
+  form.style.display = 'block';
+  form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  
+  toast('Please complete your booking details', true);
+}
+
+function cancelBooking() {
+  document.getElementById('bookingForm').style.display = 'none';
+  document.getElementById('serviceBookingForm').reset();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function toast(msg, ok) {
+  const t = document.getElementById('toast'), m = document.getElementById('toastMsg');
+  m.textContent = msg;
+  t.querySelector('i').className = ok ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
+  t.classList.add('on');
+  setTimeout(() => t.classList.remove('on'), 3500);
+}
+
+// Form submission
+document.getElementById('serviceBookingForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  
+  const token = localStorage.getItem('token');
+  if (!token) {
+    toast('Please login first', false);
+    setTimeout(() => window.location.href = 'user-login.html', 1500);
+    return;
+  }
+  
+  const data = {
+    serviceType: document.getElementById('selectedServiceType').value,
+    serviceName: document.getElementById('selectedServiceName').value,
+    price: parseInt(document.getElementById('selectedPrice').value),
+    date: document.getElementById('bookingDate').value,
+    time: document.getElementById('bookingTime').value,
+    address: document.getElementById('serviceAddress').value,
+    instructions: document.getElementById('specialInstructions').value
+  };
+  
+  toast('Processing your booking...', true);
+  
+  try {
+    const response = await fetch(`${API}/bookings/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(data)
+    });
+    
+    const result = await response.json();
+    
+    if (result.success) {
+      toast('Booking confirmed! Redirecting...', true);
+      localStorage.setItem('lastBooking', JSON.stringify(result.data));
+      setTimeout(() => window.location.href = 'tracking.html', 1500);
+    } else {
+      toast(result.message || 'Booking failed', false);
+    }
+  } catch (error) {
+    console.error('Booking error:', error);
+    toast('Network error. Please try again.', false);
+  }
+});
+</script>
+
+</body>
+</html>
