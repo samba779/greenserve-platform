@@ -270,7 +270,7 @@ async function doReg(){
   document.getElementById('skillsError').style.display='none';
   if(!document.getElementById('tc').checked){toast('Please agree to terms');return;}
   try{
-    const r=await fetch(API+'/auth/worker/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({firstName,lastName,email,mobile,password,city,skills,userType:'worker'})});
+    const r=await fetch(API+'/auth/worker/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({firstName,lastName,email,mobile,password,city,skills})});
     const d=await r.json();
     if(d.success && d.data.token){
       localStorage.setItem('token',d.data.token);
