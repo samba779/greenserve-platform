@@ -193,25 +193,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--off);color:var(
         </div>
         <div id="skillsError" style="color:#ef4444;font-size:.75rem;margin-bottom:.5rem;display:none;">Please select at least one skill</div>
 
-        <div class="sec-title">Years of Experience (Optional)</div>
-        <div class="exp-wrap">
-          <label class="exp-opt" onclick="selectExp(this)">
-            <input type="radio" name="experience" value="0-1"> &lt; 1 Year
-          </label>
-          <label class="exp-opt" onclick="selectExp(this)">
-            <input type="radio" name="experience" value="1-3"> 1-3 Years
-          </label>
-          <label class="exp-opt on" onclick="selectExp(this)">
-            <input type="radio" name="experience" value="3-5" checked> 3-5 Years
-          </label>
-          <label class="exp-opt" onclick="selectExp(this)">
-            <input type="radio" name="experience" value="5-10"> 5-10 Years
-          </label>
-          <label class="exp-opt" onclick="selectExp(this)">
-            <input type="radio" name="experience" value="10+"> 10+ Years
-          </label>
-        </div>
-
         <div class="terms"><input type="checkbox" id="tc"><label for="tc">I agree to <a href="#">Terms</a> and <a href="#">Privacy Policy</a></label></div>
         <button class="btn-sub" type="button" onclick="doReg()">Create Account →</button>
       </div>
@@ -288,10 +269,8 @@ async function doReg(){
   if(skills.length===0){toast('Please select at least one skill');document.getElementById('skillsError').style.display='block';return;}
   document.getElementById('skillsError').style.display='none';
   if(!document.getElementById('tc').checked){toast('Please agree to terms');return;}
-  const experience=document.querySelector('input[name="experience"]:checked')?.value||'3-5';
-  const yearsOfExperience = experience === '0-1' ? 0 : experience === '1-3' ? 2 : experience === '3-5' ? 4 : experience === '5-10' ? 7 : 12;
   try{
-    const r=await fetch(API+'/auth/worker/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({firstName,lastName,email,mobile,password,city,skills,yearsOfExperience,userType:'worker'})});
+    const r=await fetch(API+'/auth/worker/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({firstName,lastName,email,mobile,password,city,skills,userType:'worker'})});
     const d=await r.json();
     if(d.success && d.data.token){
       localStorage.setItem('token',d.data.token);
