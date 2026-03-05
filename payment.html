@@ -207,7 +207,9 @@ function confirmBooking() {
   
   // Save to completed bookings
   const booking = JSON.parse(localStorage.getItem('paymentBooking') || '{}');
-  if (booking.id) {
+  const bookingId = booking.id || booking._id;
+  if (bookingId) {
+    booking.id = bookingId;
     booking.status = 'pending';
     let myBookings = JSON.parse(localStorage.getItem('myBookings') || '[]');
     myBookings.push(booking);
