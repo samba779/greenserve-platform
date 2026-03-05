@@ -1,409 +1,301 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EcoWorkConnect - Worker Login</title>
-    <link rel="stylesheet" href="css/styles.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EcoWorkConnect – Worker Login</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0a1628;--navy2:#0e2040;--blue:#1a56db;--blue2:#1e40af;
+  --sky:#3b82f6;--aqua:#06b6d4;--aqua-dim:rgba(6,182,212,0.1);
+  --blue-dim:rgba(26,86,219,0.08);--blue-glow:rgba(26,86,219,0.18);
+  --white:#ffffff;--off:#f8faff;--off2:#f1f5fd;
+  --border:rgba(26,86,219,0.12);--border-f:rgba(26,86,219,0.4);
+  --text:#0a1628;--text-mid:#4b6280;--text-soft:#94a3b8;
+  --gold:#f59e0b;--green:#10b981;--r:14px;
+  --shadow:0 4px 24px rgba(26,86,219,0.08);
+  --shadow-lg:0 12px 48px rgba(26,86,219,0.14);
+}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--off);color:var(--text);min-height:100vh;margin:0;padding:0;}
+.wrap{max-width:480px;margin:0 auto;padding:2rem 1.5rem;min-height:100vh;display:flex;flex-direction:column;justify-content:center;}
+.hdr{text-align:center;margin-bottom:2rem;}
+.logo{display:inline-flex;align-items:center;gap:.6rem;text-decoration:none;margin-bottom:1.5rem;}
+.logo-mark{width:44px;height:44px;background:linear-gradient(135deg,var(--aqua),var(--sky));border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;box-shadow:0 4px 18px rgba(6,182,212,0.35);}
+.logo-text{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--navy);}
+.l-eyebrow{display:inline-flex;align-items:center;gap:.5rem;background:rgba(26,86,219,0.08);border:1px solid var(--border);border-radius:100px;padding:.4rem 1rem;font-size:.75rem;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:1px;margin-bottom:1rem;}
+.pip{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pip 1.8s infinite;box-shadow:0 0 0 0 rgba(52,211,153,.5);}
+@keyframes pip{0%{box-shadow:0 0 0 0 rgba(52,211,153,.5);}70%{box-shadow:0 0 0 8px transparent;}100%{box-shadow:0 0 0 0 transparent;}}
+.l-title{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;line-height:1.15;color:var(--navy);margin-bottom:.5rem;}
+.l-title em{font-style:italic;background:linear-gradient(90deg,var(--blue),var(--sky));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.l-sub{font-size:.9rem;color:var(--text-mid);line-height:1.6;max-width:360px;margin:0 auto;}
+.toggle{display:grid;grid-template-columns:1fr 1fr;gap:.35rem;background:var(--off2);border:1px solid var(--border);border-radius:14px;padding:.3rem;margin-bottom:1.75rem;}
+.t-btn{padding:.6rem;border-radius:10px;border:none;background:transparent;color:var(--text-soft);font-family:'Plus Jakarta Sans',sans-serif;font-size:.83rem;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:.4rem;}
+.t-btn.on{background:white;color:var(--blue);box-shadow:0 2px 10px rgba(26,86,219,0.12);}
+.bh{margin-bottom:1.75rem;}
+.b-badge{display:inline-flex;align-items:center;gap:.4rem;background:var(--blue-dim);border:1px solid var(--border);border-radius:100px;padding:.3rem .85rem;font-size:.72rem;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:1px;margin-bottom:.85rem;}
+.b-title{font-family:'Playfair Display',serif;font-size:1.9rem;font-style:italic;color:var(--navy);line-height:1.15;margin-bottom:.35rem;}
+.b-sub{font-size:.85rem;color:var(--text-mid);}
+.b-sub a{color:var(--blue);font-weight:700;text-decoration:none;}
+.b-sub a:hover{text-decoration:underline;}
+.fc{background:white;border:1.5px solid var(--border);border-radius:20px;padding:1.75rem;margin-bottom:1rem;box-shadow:var(--shadow);}
+.fg{margin-bottom:1rem;}
+.fg:last-child{margin-bottom:0;}
+.fl{display:flex;align-items:center;justify-content:space-between;font-size:.72rem;font-weight:700;color:var(--text-soft);text-transform:uppercase;letter-spacing:.7px;margin-bottom:.4rem;}
+.fl a{color:var(--blue);font-weight:700;text-decoration:none;font-size:.72rem;}
+.fl a:hover{text-decoration:underline;}
+.iw{position:relative;}
+.fi{width:100%;padding:.78rem 1rem;background:var(--off);border:1.5px solid var(--border);border-radius:12px;color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;font-size:.875rem;outline:none;transition:all .2s;appearance:none;}
+.fi::placeholder{color:var(--text-soft);}
+.fi:focus{border-color:var(--border-f);background:white;box-shadow:0 0 0 3px rgba(26,86,219,0.07);}
+.fi-eye{position:absolute;right:.85rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text-soft);font-size:.95rem;transition:color .2s;}
+.fi-eye:hover{color:var(--blue);}
+.ph-row{display:flex;gap:.5rem;}
+.cc{width:72px;flex-shrink:0;padding:.78rem .6rem;background:var(--off);border:1.5px solid var(--border);border-radius:12px;color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;font-size:.875rem;font-weight:700;outline:none;appearance:none;text-align:center;cursor:pointer;}
+.divider{display:flex;align-items:center;gap:.75rem;margin:1.1rem 0;color:var(--text-soft);font-size:.75rem;font-weight:600;}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border);}
+.skills-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin:.75rem 0;}
+.skill-box{display:flex;align-items:center;gap:.4rem;padding:.6rem;background:var(--off);border:1.5px solid var(--border);border-radius:10px;cursor:pointer;transition:all .2s;font-size:.8rem;}
+.skill-box.on{background:rgba(26,86,219,0.08);border-color:var(--blue);}
+.skill-box input{display:none;}
+.exp-wrap{display:flex;gap:.4rem;flex-wrap:wrap;margin:.75rem 0;}
+.exp-opt{padding:.4rem .8rem;background:var(--off);border:1.5px solid var(--border);border-radius:100px;font-size:.75rem;cursor:pointer;transition:all .2s;}
+.exp-opt.on{background:rgba(26,86,219,0.08);border-color:var(--blue);color:var(--blue);}
+.exp-opt input{display:none;}
+.btn-google{width:100%;padding:.78rem;background:white;border:1.5px solid var(--border);border-radius:12px;color:var(--text-mid);font-family:'Plus Jakarta Sans',sans-serif;font-size:.875rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.6rem;transition:all .2s;box-shadow:var(--shadow);}
+.btn-google:hover{border-color:var(--blue);color:var(--text);}
+.g-ico{width:18px;height:18px;background:linear-gradient(135deg,#ea4335,#fbbc04,#34a853,#4285f4);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.65rem;color:white;font-weight:900;}
+.btn-sub{width:100%;padding:.88rem;background:linear-gradient(135deg,var(--blue),var(--blue2));color:white;border:none;border-radius:12px;font-family:'Plus Jakarta Sans',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer;box-shadow:0 4px 18px var(--blue-glow);transition:all .25s;letter-spacing:.2px;}
+.btn-sub:hover{transform:translateY(-2px);box-shadow:0 8px 28px var(--blue-glow);}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;}
+.terms{display:flex;align-items:flex-start;gap:.55rem;font-size:.75rem;color:var(--text-soft);line-height:1.5;margin-bottom:1rem;}
+.terms input[type=checkbox]{width:15px;height:15px;min-width:15px;margin-top:1px;accent-color:var(--blue);cursor:pointer;}
+.terms a{color:var(--blue);text-decoration:none;}
+.alt{text-align:center;font-size:.82rem;color:var(--text-soft);margin-top:.85rem;}
+.alt a{color:var(--blue);font-weight:700;text-decoration:none;}
+.sec-title{font-size:.8rem;font-weight:700;color:var(--text-soft);text-transform:uppercase;letter-spacing:1px;margin:1rem 0 .5rem;}
+.view{display:none;}.view.on{display:block;}
+</style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="index.html" class="nav-logo">
-                <i class="fas fa-leaf"></i>
-                <span>EcoWorkConnect</span>
-            </a>
-            <ul class="nav-menu">
-                <li><a href="index.html" class="nav-link">Home</a></li>
-                <li><a href="services.html" class="nav-link">Services</a></li>
-                <li><a href="worker-portal.html" class="nav-link">Worker Portal</a></li>
-            </ul>
-            <div class="nav-auth">
-                <a href="login-choice.html" class="btn btn-outline">Back to Login Choice</a>
-            </div>
-            <button class="mobile-menu-toggle" id="mobileMenuToggle">
-                <i class="fas fa-bars"></i>
-            </button>
+<div class="wrap">
+  <div class="hdr">
+    <a href="index.html" class="logo">
+      <div class="logo-mark">🛠️</div>
+      <span class="logo-text">EcoWorkConnect</span>
+    </a>
+    <div class="l-eyebrow"><div class="pip"></div> Worker Portal</div>
+    <h2 class="l-title">Earn with your <em>skills.</em></h2>
+    <p class="l-sub">Join our network of verified professionals. Get jobs, manage bookings, and grow your business.</p>
+  </div>
+
+  <div class="toggle" id="tog">
+    <button class="t-btn on" onclick="sw('login')">🔑 Sign In</button>
+    <button class="t-btn" onclick="sw('reg')">✨ Register</button>
+  </div>
+
+  <div class="view on" id="v-login">
+      <div class="bh">
+        <div class="b-badge">👷 Worker Login</div>
+        <div class="b-title">Welcome back!</div>
+        <div class="b-sub">New here? <a href="#" onclick="sw('reg');return false;">Create account</a></div>
+      </div>
+      <div class="fc">
+        <button class="btn-google" onclick="location.href='https://greenserve-platform.onrender.com/api/auth/google?type=worker'">
+          <div class="g-ico">G</div> Continue with Google
+        </button>
+        <div class="divider">or use mobile</div>
+        <div class="fg">
+          <label class="fl">Mobile Number</label>
+          <div class="ph-row">
+            <select class="cc"><option>+91</option><option>+1</option><option>+44</option></select>
+            <input class="fi" type="tel" id="lMob" placeholder="9876543210" maxlength="10">
+          </div>
         </div>
-    </nav>
-
-    <!-- Worker Login Section -->
-    <section class="auth-section">
-        <div class="container">
-            <!-- Login Form -->
-            <div class="auth-card" id="loginSection">
-                <div class="auth-header">
-                    <i class="fas fa-briefcase"></i>
-                    <h2>Worker Login</h2>
-                    <p>Access your professional dashboard and manage jobs</p>
-                </div>
-
-                <form id="loginForm" class="auth-form">
-                    <div class="form-group">
-                        <label class="form-label">Mobile Number</label>
-                        <input type="tel" id="mobile" class="form-input" placeholder="Enter your mobile number" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Password</label>
-                        <input type="password" id="password" class="form-input" placeholder="Enter your password" required>
-                    </div>
-
-                    <button type="button" class="btn btn-google btn-full" style="background:white;border:1px solid #ddd;color:#333;margin-bottom:1rem;" onclick="location.href='https://greenserve-platform.onrender.com/api/auth/google?type=worker'">
-                        <i class="fab fa-google" style="margin-right:0.5rem;"></i> Continue with Google
-                    </button>
-
-                    <button type="submit" class="btn btn-secondary btn-full" data-original-text="Sign In">
-                        <i class="fas fa-hard-hat"></i> Sign In as Worker
-                    </button>
-                </form>
-
-                <div class="auth-footer">
-                    <p>Don't have an account? <a href="#" onclick="showRegister(); return false;">Register as Worker</a></p>
-                    <p><a href="forgot-password.html">Forgot password?</a></p>
-                    <p><a href="user-login.html">Login as User</a></p>
-                </div>
-            </div>
-
-            <!-- 3-Stage Registration Form -->
-            <div class="auth-card" id="registerSection" style="display:none;max-width:700px;">
-                <div class="auth-header">
-                    <i class="fas fa-user-plus"></i>
-                    <h2>Join as Partner</h2>
-                    <p>Create your professional account (all steps optional)</p>
-                </div>
-
-                <!-- Progress Steps -->
-                <div class="progress-steps" style="display:flex;justify-content:center;gap:1rem;margin-bottom:2rem;">
-                    <div class="step active" id="step1-indicator">
-                        <div class="step-num">1</div>
-                        <span class="step-label">Personal</span>
-                    </div>
-                    <div class="step" id="step2-indicator">
-                        <div class="step-num">2</div>
-                        <span class="step-label">Skills</span>
-                    </div>
-                    <div class="step" id="step3-indicator">
-                        <div class="step-num">3</div>
-                        <span class="step-label">Documents</span>
-                    </div>
-                </div>
-
-                <form id="registerForm">
-                    <!-- Step 1: Personal Info -->
-                    <div class="form-step" id="step1">
-                        <h3 style="margin-bottom:1.5rem;color:var(--primary);"><i class="fas fa-user"></i> Personal Information</h3>
-                        <div class="form-row" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
-                            <div class="form-group">
-                                <label class="form-label">First Name *</label>
-                                <input type="text" id="regFirstName" class="form-input" required>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Last Name *</label>
-                                <input type="text" id="regLastName" class="form-input" required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Email</label>
-                            <input type="email" id="regEmail" class="form-input" placeholder="Optional">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Mobile Number *</label>
-                            <input type="tel" id="regMobile" class="form-input" maxlength="10" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">City *</label>
-                            <select id="regCity" class="form-input" required>
-                                <option value="">Select your city</option>
-                                <option value="bangalore">Bangalore</option>
-                                <option value="mumbai">Mumbai</option>
-                                <option value="delhi">Delhi</option>
-                                <option value="hyderabad">Hyderabad</option>
-                                <option value="chennai">Chennai</option>
-                                <option value="pune">Pune</option>
-                                <option value="vijayawada">Vijayawada</option>
-                                <option value="guntur">Guntur</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Create Password *</label>
-                            <input type="password" id="regPassword" class="form-input" minlength="8" required>
-                        </div>
-                        <div class="form-actions" style="display:flex;gap:1rem;justify-content:space-between;margin-top:1.5rem;">
-                            <button type="button" class="btn btn-outline" onclick="showLogin()">← Back to Login</button>
-                            <button type="button" class="btn btn-primary" onclick="nextStep(2)">Next: Skills →</button>
-                        </div>
-                    </div>
-
-                    <!-- Step 2: Skills & Experience -->
-                    <div class="form-step" id="step2" style="display:none;">
-                        <h3 style="margin-bottom:1.5rem;color:var(--primary);"><i class="fas fa-tools"></i> Select Your Skills <small style="font-size:0.7rem;color:var(--gray-500);">(Optional)</small></h3>
-                        <div class="skills-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:0.75rem;margin-bottom:1.5rem;">
-                            <label class="skill-box" style="display:flex;align-items:center;gap:0.5rem;padding:0.75rem;background:var(--gray-50);border:1px solid var(--gray-200);border-radius:8px;cursor:pointer;transition:all 0.2s;">
-                                <input type="checkbox" name="skills" value="Solar Installation" style="display:none;">
-                                <i class="fas fa-sun" style="color:var(--warning);width:20px;"></i>
-                                <span style="font-size:0.85rem;">Solar Installation</span>
-                            </label>
-                            <label class="skill-box" style="display:flex;align-items:center;gap:0.5rem;padding:0.75rem;background:var(--gray-50);border:1px solid var(--gray-200);border-radius:8px;cursor:pointer;transition:all 0.2s;">
-                                <input type="checkbox" name="skills" value="EV Charging" style="display:none;">
-                                <i class="fas fa-charging-station" style="color:var(--info);width:20px;"></i>
-                                <span style="font-size:0.85rem;">EV Charging Setup</span>
-                            </label>
-                            <label class="skill-box" style="display:flex;align-items:center;gap:0.5rem;padding:0.75rem;background:var(--gray-50);border:1px solid var(--gray-200);border-radius:8px;cursor:pointer;transition:all 0.2s;">
-                                <input type="checkbox" name="skills" value="Gardening" style="display:none;">
-                                <i class="fas fa-leaf" style="color:var(--success);width:20px;"></i>
-                                <span style="font-size:0.85rem;">Green Gardening</span>
-                            </label>
-                            <label class="skill-box" style="display:flex;align-items:center;gap:0.5rem;padding:0.75rem;background:var(--gray-50);border:1px solid var(--gray-200);border-radius:8px;cursor:pointer;transition:all 0.2s;">
-                                <input type="checkbox" name="skills" value="Water Harvesting" style="display:none;">
-                                <i class="fas fa-water" style="color:var(--info);width:20px;"></i>
-                                <span style="font-size:0.85rem;">Water Harvesting</span>
-                            </label>
-                            <label class="skill-box" style="display:flex;align-items:center;gap:0.5rem;padding:0.75rem;background:var(--gray-50);border:1px solid var(--gray-200);border-radius:8px;cursor:pointer;transition:all 0.2s;">
-                                <input type="checkbox" name="skills" value="Energy Audit" style="display:none;">
-                                <i class="fas fa-bolt" style="color:var(--warning);width:20px;"></i>
-                                <span style="font-size:0.85rem;">Energy Audit</span>
-                            </label>
-                            <label class="skill-box" style="display:flex;align-items:center;gap:0.5rem;padding:0.75rem;background:var(--gray-50);border:1px solid var(--gray-200);border-radius:8px;cursor:pointer;transition:all 0.2s;">
-                                <input type="checkbox" name="skills" value="Maintenance" style="display:none;">
-                                <i class="fas fa-wrench" style="color:var(--gray-500);width:20px;"></i>
-                                <span style="font-size:0.85rem;">Maintenance</span>
-                            </label>
-                        </div>
-
-                        <h4 style="margin:1.5rem 0 1rem;color:var(--primary);"><i class="fas fa-star"></i> Years of Experience <small style="font-size:0.7rem;color:var(--gray-500);">(Optional)</small></h4>
-                        <div class="exp-wrap" style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1.5rem;">
-                            <label class="exp-opt" onclick="selectExp(this)" style="padding:0.5rem 1rem;background:var(--gray-50);border:1px solid var(--gray-200);border-radius:100px;font-size:0.8rem;cursor:pointer;transition:all 0.2s;">
-                                <input type="radio" name="experience" value="0-1" style="display:none;">
-                                &lt; 1 Year
-                            </label>
-                            <label class="exp-opt" onclick="selectExp(this)" style="padding:0.5rem 1rem;background:var(--gray-50);border:1px solid var(--gray-200);border-radius:100px;font-size:0.8rem;cursor:pointer;transition:all 0.2s;">
-                                <input type="radio" name="experience" value="1-3" style="display:none;">
-                                1-3 Years
-                            </label>
-                            <label class="exp-opt on" onclick="selectExp(this)" style="padding:0.5rem 1rem;background:var(--primary-light);border:1px solid var(--primary);border-radius:100px;font-size:0.8rem;cursor:pointer;transition:all 0.2s;color:var(--primary);">
-                                <input type="radio" name="experience" value="3-5" checked style="display:none;">
-                                3-5 Years
-                            </label>
-                            <label class="exp-opt" onclick="selectExp(this)" style="padding:0.5rem 1rem;background:var(--gray-50);border:1px solid var(--gray-200);border-radius:100px;font-size:0.8rem;cursor:pointer;transition:all 0.2s;">
-                                <input type="radio" name="experience" value="5-10" style="display:none;">
-                                5-10 Years
-                            </label>
-                            <label class="exp-opt" onclick="selectExp(this)" style="padding:0.5rem 1rem;background:var(--gray-50);border:1px solid var(--gray-200);border-radius:100px;font-size:0.8rem;cursor:pointer;transition:all 0.2s;">
-                                <input type="radio" name="experience" value="10+" style="display:none;">
-                                10+ Years
-                            </label>
-                        </div>
-
-                        <div class="form-actions" style="display:flex;gap:1rem;justify-content:space-between;margin-top:1.5rem;">
-                            <button type="button" class="btn btn-outline" onclick="prevStep(1)">← Back</button>
-                            <div style="display:flex;gap:0.5rem;">
-                                <button type="button" class="btn btn-ghost" onclick="skipToSubmit()">Skip →</button>
-                                <button type="button" class="btn btn-primary" onclick="nextStep(3)">Next: Documents →</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Step 3: Documents (Optional) -->
-                    <div class="form-step" id="step3" style="display:none;">
-                        <h3 style="margin-bottom:1.5rem;color:var(--primary);"><i class="fas fa-file-upload"></i> Upload Documents <small style="font-size:0.7rem;color:var(--gray-500);">(Optional - Skip if not ready)</small></h3>
-                        
-                        <div class="form-group" style="margin-bottom:1rem;">
-                            <label class="form-label">Government ID Proof</label>
-                            <div class="upload-area" onclick="document.getElementById('idProof').click()" style="border:2px dashed var(--gray-300);border-radius:12px;padding:1.5rem;text-align:center;background:var(--gray-50);cursor:pointer;transition:all 0.2s;">
-                                <i class="fas fa-id-card" style="font-size:2rem;color:var(--primary);margin-bottom:0.5rem;"></i>
-                                <p style="font-size:0.85rem;color:var(--gray-600);">Click to upload ID (Aadhar, PAN, DL, Passport)</p>
-                                <input type="file" id="idProof" accept=".pdf,.jpg,.jpeg,.png" style="display:none;">
-                            </div>
-                        </div>
-
-                        <div class="form-group" style="margin-bottom:1rem;">
-                            <label class="form-label">Professional Certificates</label>
-                            <div class="upload-area" onclick="document.getElementById('certificates').click()" style="border:2px dashed var(--gray-300);border-radius:12px;padding:1.5rem;text-align:center;background:var(--gray-50);cursor:pointer;transition:all 0.2s;">
-                                <i class="fas fa-certificate" style="font-size:2rem;color:var(--primary);margin-bottom:0.5rem;"></i>
-                                <p style="font-size:0.85rem;color:var(--gray-600);">Click to upload certificates</p>
-                                <input type="file" id="certificates" accept=".pdf,.jpg,.jpeg,.png" multiple style="display:none;">
-                            </div>
-                        </div>
-
-                        <div class="form-group" style="margin-bottom:1.5rem;">
-                            <label class="form-check" style="display:flex;align-items:flex-start;gap:0.5rem;cursor:pointer;">
-                                <input type="checkbox" id="wTerms" style="margin-top:0.2rem;">
-                                <span style="font-size:0.8rem;color:var(--gray-600);">I agree to the Terms of Service and Partner Agreement</span>
-                            </label>
-                        </div>
-
-                        <div class="form-actions" style="display:flex;gap:1rem;justify-content:space-between;margin-top:1.5rem;">
-                            <button type="button" class="btn btn-outline" onclick="prevStep(2)">← Back</button>
-                            <div style="display:flex;gap:0.5rem;">
-                                <button type="button" class="btn btn-ghost" onclick="skipDocuments()">Skip Documents</button>
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-check-circle"></i> Complete Registration
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
+        <div class="fg">
+          <label class="fl">Password <a href="#" onclick="sw('forgot');return false;">Forgot?</a></label>
+          <div class="iw">
+            <input class="fi" type="password" id="lPwd" placeholder="Your password" style="padding-right:2.8rem">
+            <button class="fi-eye" onclick="tp('lPwd',this)" type="button">👁</button>
+          </div>
         </div>
-    </section>
+        <button class="btn-sub" type="button" onclick="doLogin()">Sign In →</button>
+      </div>
+      <div class="alt">Looking for services? <a href="user-login.html">User portal →</a></div>
+    </div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-brand">
-                    <a href="index.html" class="footer-logo">
-                        <i class="fas fa-leaf"></i>
-                        <span>GreenServe</span>
-                    </a>
-                    <p>Connecting you with professional green and utility service providers for a sustainable future.</p>
-                </div>
-                <div class="footer-links">
-                    <h4>Services</h4>
-                    <ul>
-                        <li><a href="services.html">All Services</a></li>
-                        <li><a href="service-detail.html?id=solar">Solar</a></li>
-                        <li><a href="service-detail.html?id=gardening">Gardening</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2026 EcoWorkConnect. All rights reserved.</p>
-            </div>
+    <div class="view" id="v-reg">
+      <div class="bh">
+        <div class="b-badge">✨ Join as Partner</div>
+        <div class="b-title">Become a Partner</div>
+        <div class="b-sub">Have an account? <a href="#" onclick="sw('login');return false;">Sign in</a></div>
+      </div>
+      <div class="fc">
+        <button class="btn-google" onclick="location.href='https://greenserve-platform.onrender.com/api/auth/google?type=worker'">
+          <div class="g-ico">G</div> Sign up with Google
+        </button>
+        <div class="divider">or register with mobile</div>
+        <div class="two">
+          <div class="fg"><label class="fl">First Name *</label><input class="fi" type="text" id="rFn" placeholder="Samba"></div>
+          <div class="fg"><label class="fl">Last Name *</label><input class="fi" type="text" id="rLn" placeholder="Rao"></div>
         </div>
-    </footer>
+        <div class="fg"><label class="fl">Email <span style="color:var(--text-soft);text-transform:none;letter-spacing:0;font-weight:400">(optional)</span></label><input class="fi" type="email" id="rEm" placeholder="samba@gmail.com"></div>
+        <div class="fg">
+          <label class="fl">Mobile Number *</label>
+          <div class="ph-row"><select class="cc"><option>+91</option></select><input class="fi" type="tel" id="rMob" placeholder="9876543210" maxlength="10"></div>
+        </div>
+        <div class="fg">
+          <label class="fl">Password *</label>
+          <div class="iw"><input class="fi" type="password" id="rPwd" placeholder="Min 8 characters" style="padding-right:2.8rem"><button class="fi-eye" onclick="tp('rPwd',this)" type="button">👁</button></div>
+        </div>
+        <div class="fg">
+          <label class="fl">City *</label>
+          <select class="fi" id="rCity" style="cursor:pointer;">
+            <option value="">Select your city</option>
+            <option value="bangalore">Bangalore</option>
+            <option value="mumbai">Mumbai</option>
+            <option value="delhi">Delhi</option>
+            <option value="hyderabad">Hyderabad</option>
+            <option value="chennai">Chennai</option>
+            <option value="pune">Pune</option>
+            <option value="vijayawada">Vijayawada</option>
+            <option value="guntur">Guntur</option>
+          </select>
+        </div>
 
-    <script src="js/app.js"></script>
-    <script>
-        // Toggle between login and registration
-        function showRegister() {
-            document.getElementById('loginSection').style.display = 'none';
-            document.getElementById('registerSection').style.display = 'block';
-        }
-        
-        function showLogin() {
-            document.getElementById('registerSection').style.display = 'none';
-            document.getElementById('loginSection').style.display = 'block';
-        }
-        
-        // Step navigation
-        function nextStep(step) {
-            // Hide all steps
-            document.querySelectorAll('.form-step').forEach(s => s.style.display = 'none');
-            // Show target step
-            document.getElementById('step' + step).style.display = 'block';
-            
-            // Update progress indicators
-            document.querySelectorAll('.step').forEach((el, idx) => {
-                el.classList.remove('active', 'completed');
-                if (idx < step - 1) el.classList.add('completed');
-                if (idx === step - 1) el.classList.add('active');
-            });
-        }
-        
-        function prevStep(step) {
-            nextStep(step);
-        }
-        
-        function skipToSubmit() {
-            // Skip skills and go to submit
-            submitRegistration();
-        }
-        
-        function skipDocuments() {
-            // Skip documents and submit
-            submitRegistration();
-        }
-        
-        // Experience selection
-        function selectExp(el) {
-            document.querySelectorAll('.exp-opt').forEach(opt => {
-                opt.classList.remove('on');
-                opt.style.background = 'var(--gray-50)';
-                opt.style.borderColor = 'var(--gray-200)';
-                opt.style.color = 'var(--text)';
-            });
-            el.classList.add('on');
-            el.style.background = 'var(--primary-light)';
-            el.style.borderColor = 'var(--primary)';
-            el.style.color = 'var(--primary)';
-            el.querySelector('input').checked = true;
-        }
-        
-        // Skills selection
-        document.querySelectorAll('.skill-box').forEach(box => {
-            box.addEventListener('click', function() {
-                this.classList.toggle('on');
-                this.style.borderColor = this.classList.contains('on') ? 'var(--primary)' : 'var(--gray-200)';
-                this.style.background = this.classList.contains('on') ? 'var(--primary-light)' : 'var(--gray-50)';
-                const input = this.querySelector('input');
-                input.checked = this.classList.contains('on');
-            });
-        });
-        
-        // Form submission
-        async function submitRegistration() {
-            const firstName = document.getElementById('regFirstName').value;
-            const lastName = document.getElementById('regLastName').value;
-            const email = document.getElementById('regEmail').value;
-            const mobile = document.getElementById('regMobile').value;
-            const city = document.getElementById('regCity').value;
-            const password = document.getElementById('regPassword').value;
-            
-            if (!firstName || !lastName || !mobile || !city || !password) {
-                alert('Please fill all required fields');
-                nextStep(1);
-                return;
-            }
-            
-            const skills = Array.from(document.querySelectorAll('input[name="skills"]:checked')).map(s => s.value);
-            const experience = document.querySelector('input[name="experience"]:checked')?.value || '3-5';
-            
-            const data = {
-                firstName,
-                lastName,
-                email: email || null,
-                mobile,
-                password,
-                city,
-                skills: skills.length > 0 ? skills : [],
-                experience,
-                userType: 'worker'
-            };
-            
-            try {
-                const response = await fetch('https://greenserve-platform.onrender.com/api/auth/worker/register', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                });
-                
-                const result = await response.json();
-                
-                if (result.success) {
-                    // Auto-login after registration (no OTP)
-                    localStorage.setItem('token', result.data.token);
-                    localStorage.setItem('user', JSON.stringify({
-                        id: result.data.workerId,
-                        firstName: firstName,
-                        lastName: lastName,
-                        mobile: mobile,
-                        userType: 'worker'
-                    }));
-                    alert('Registration successful! Welcome to EcoWorkConnect 🎉');
-                    window.location.href = 'worker-dashboard.html';
-                } else {
-                    alert(result.message || 'Registration failed');
-                }
-            } catch (error) {
-                console.error('Registration error:', error);
-                alert('Network error. Please try again.');
-            }
-        }
-    </script>
+        <div class="sec-title">Select Your Skills (Optional)</div>
+        <div class="skills-grid">
+          <label class="skill-box" onclick="this.classList.toggle('on');this.querySelector('input').checked=this.classList.contains('on');">
+            <input type="checkbox" name="skills" value="Solar Installation">
+            <i>☀️</i> Solar
+          </label>
+          <label class="skill-box" onclick="this.classList.toggle('on');this.querySelector('input').checked=this.classList.contains('on');">
+            <input type="checkbox" name="skills" value="EV Charging">
+            <i>🔌</i> EV Charging
+          </label>
+          <label class="skill-box" onclick="this.classList.toggle('on');this.querySelector('input').checked=this.classList.contains('on');">
+            <input type="checkbox" name="skills" value="Gardening">
+            <i>🌱</i> Gardening
+          </label>
+          <label class="skill-box" onclick="this.classList.toggle('on');this.querySelector('input').checked=this.classList.contains('on');">
+            <input type="checkbox" name="skills" value="Water Harvesting">
+            <i>💧</i> Water
+          </label>
+          <label class="skill-box" onclick="this.classList.toggle('on');this.querySelector('input').checked=this.classList.contains('on');">
+            <input type="checkbox" name="skills" value="Energy Audit">
+            <i>⚡</i> Energy Audit
+          </label>
+          <label class="skill-box" onclick="this.classList.toggle('on');this.querySelector('input').checked=this.classList.contains('on');">
+            <input type="checkbox" name="skills" value="Maintenance">
+            <i>🔧</i> Maintenance
+          </label>
+        </div>
+
+        <div class="sec-title">Years of Experience (Optional)</div>
+        <div class="exp-wrap">
+          <label class="exp-opt" onclick="selectExp(this)">
+            <input type="radio" name="experience" value="0-1"> &lt; 1 Year
+          </label>
+          <label class="exp-opt" onclick="selectExp(this)">
+            <input type="radio" name="experience" value="1-3"> 1-3 Years
+          </label>
+          <label class="exp-opt on" onclick="selectExp(this)">
+            <input type="radio" name="experience" value="3-5" checked> 3-5 Years
+          </label>
+          <label class="exp-opt" onclick="selectExp(this)">
+            <input type="radio" name="experience" value="5-10"> 5-10 Years
+          </label>
+          <label class="exp-opt" onclick="selectExp(this)">
+            <input type="radio" name="experience" value="10+"> 10+ Years
+          </label>
+        </div>
+
+        <div class="terms"><input type="checkbox" id="tc"><label for="tc">I agree to <a href="#">Terms</a> and <a href="#">Privacy Policy</a></label></div>
+        <button class="btn-sub" type="button" onclick="doReg()">Create Account →</button>
+      </div>
+      <div class="alt">Looking for services? <a href="user-login.html">User portal →</a></div>
+    </div>
+
+    <div class="view" id="v-forgot">
+      <div class="bh">
+        <div class="b-badge">🔑 Reset Password</div>
+        <div class="b-title">Forgot password?</div>
+        <div class="b-sub">Enter your mobile to receive a reset OTP.</div>
+      </div>
+      <div class="fc">
+        <div class="fg">
+          <label class="fl">Mobile Number</label>
+          <div class="ph-row"><select class="cc"><option>+91</option></select><input class="fi" type="tel" id="fMob" placeholder="9876543210" maxlength="10"></div>
+        </div>
+        <button class="btn-sub">Send Reset OTP →</button>
+      </div>
+      <div class="alt"><a href="#" onclick="sw('login');return false">← Back to login</a></div>
+    </div>
+</div>
+
+<script>
+const API='https://greenserve-platform.onrender.com/api';
+let mob='';
+function sw(tab){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));
+  document.getElementById('v-'+tab).classList.add('on');
+  const tog=document.getElementById('tog');
+  if(tab==='login'||tab==='reg'){
+    tog.style.display='grid';
+    tog.querySelectorAll('.t-btn').forEach((b,i)=>b.classList.toggle('on',(tab==='login'&&i===0)||(tab==='reg'&&i===1)));
+  } else tog.style.display='none';
+}
+function tp(id,btn){const i=document.getElementById(id);i.type=i.type==='password'?'text':'password';btn.textContent=i.type==='password'?'👁':'🙈';}
+function selectExp(el){
+  document.querySelectorAll('.exp-opt').forEach(opt=>opt.classList.remove('on'));
+  el.classList.add('on');
+  el.querySelector('input').checked=true;
+}
+function toast(msg,ok=false){
+  let c=document.querySelector('.tc-wrap');
+  if(!c){c=document.createElement('div');c.className='tc-wrap';c.style.cssText='position:fixed;bottom:2rem;right:2rem;z-index:9999;display:flex;flex-direction:column;gap:.5rem;';document.body.appendChild(c);}
+  const t=document.createElement('div');
+  t.style.cssText='background:'+(ok?'#1a56db':'#ef4444')+';color:white;padding:.75rem 1.25rem;border-radius:12px;font-family:"Plus Jakarta Sans",sans-serif;font-size:.85rem;font-weight:700;box-shadow:0 8px 30px rgba(0,0,0,.15);max-width:300px;';
+  t.textContent=msg;c.appendChild(t);setTimeout(()=>t.remove(),3500);
+}
+async function doLogin(){
+  const mobile=document.getElementById('lMob').value.trim();
+  const password=document.getElementById('lPwd').value;
+  if(!mobile||!password){toast('Please fill all fields');return;}
+  try{
+    const r=await fetch(API+'/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mobile,password,userType:'worker'})});
+    const d=await r.json();
+    if(d.success){localStorage.setItem('token',d.data.token);localStorage.setItem('user',JSON.stringify(d.data.user));toast('Welcome back! Redirecting…',true);setTimeout(()=>location.href='worker-dashboard.html',1200);}
+    else toast(d.message||'Login failed');
+  }catch{toast('Network error. Try again.');}
+}
+async function doReg(){
+  const firstName=document.getElementById('rFn').value.trim();
+  const lastName=document.getElementById('rLn').value.trim();
+  const email=document.getElementById('rEm').value.trim();
+  const mobile=document.getElementById('rMob').value.trim();
+  const password=document.getElementById('rPwd').value;
+  const city=document.getElementById('rCity').value;
+  if(!firstName||!lastName||!mobile||!password||!city){toast('Please fill all required fields');return;}
+  if(!document.getElementById('tc').checked){toast('Please agree to terms');return;}
+  const skills=Array.from(document.querySelectorAll('input[name="skills"]:checked')).map(s=>s.value);
+  const experience=document.querySelector('input[name="experience"]:checked')?.value||'3-5';
+  try{
+    const r=await fetch(API+'/auth/worker/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({firstName,lastName,email,mobile,password,city,skills,experience,userType:'worker'})});
+    const d=await r.json();
+    if(d.success && d.data.token){
+      localStorage.setItem('token',d.data.token);
+      localStorage.setItem('user',JSON.stringify({id:d.data.workerId,firstName,lastName,mobile,userType:'worker'}));
+      toast('Registration successful! Welcome 🎉',true);
+      setTimeout(()=>location.href='worker-dashboard.html',1200);
+    }
+    else toast(d.message||'Registration failed');
+  }catch{toast('Network error. Try again.');}
+}
+const p=new URLSearchParams(location.search);
+const tk=p.get('token');
+if(tk){localStorage.setItem('token',tk);window.history.replaceState({},'',location.pathname);toast('Google sign-in successful!',true);setTimeout(()=>location.href='worker-dashboard.html',1000);}
+</script>
 </body>
 </html>
