@@ -48,7 +48,7 @@ const workerRegistrationSchema = Joi.object({
   city: Joi.string().required(),
   address: Joi.string().optional(),
   yearsOfExperience: Joi.number().integer().min(0).max(50).required(),
-  skills: Joi.array().items(Joi.number().integer()).min(1).required().messages({
+  skills: Joi.array().items(Joi.string()).min(1).required().messages({
     'array.min': 'Select at least one skill'
   })
 });
