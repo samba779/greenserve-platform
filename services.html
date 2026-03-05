@@ -4,38 +4,132 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EcoWorkConnect - Services</title>
-    <link rel="stylesheet" href="css/styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    
+    :root{
+      --navy:#0a1628;--navy2:#0e2040;--blue:#1a56db;--blue2:#1e40af;
+      --sky:#3b82f6;--aqua:#06b6d4;--aqua-dim:rgba(6,182,212,0.1);
+      --blue-dim:rgba(26,86,219,0.08);--blue-glow:rgba(26,86,219,0.2);
+      --white:#ffffff;--off:#f8faff;--off2:#f1f5fd;
+      --border:rgba(26,86,219,0.1);--border2:rgba(26,86,219,0.15);
+      --text:#0a1628;--text-mid:#4b6280;--text-soft:#94a3b8;
+      --gold:#f59e0b;--green:#10b981;--red:#ef4444;
+      --r:18px;
+      --shadow:0 4px 24px rgba(26,86,219,0.08);
+      --shadow-lg:0 12px 48px rgba(26,86,219,0.14);
+    }
+    
+    body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--white);color:var(--text);}
+    
+    /* Navigation */
+    nav{position:sticky;top:0;z-index:200;background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 4rem;height:68px;display:flex;align-items:center;justify-content:space-between;}
+    .logo{display:flex;align-items:center;gap:.65rem;text-decoration:none;}
+    .logo-mark{width:36px;height:36px;background:linear-gradient(135deg,var(--blue),var(--sky));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:white;}
+    .logo-text{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;color:var(--navy);}
+    .logo-text span{color:var(--blue);}
+    .nav-links{display:flex;gap:2.5rem;list-style:none;}
+    .nav-links a{font-size:.875rem;font-weight:600;color:var(--text-mid);text-decoration:none;transition:color .2s;}
+    .nav-links a:hover{color:var(--blue);}
+    .nav-links a.active{color:var(--blue);}
+    .nav-right{display:flex;gap:.75rem;align-items:center;}
+    .btn-ghost{padding:.55rem 1.25rem;border:1.5px solid var(--border2);border-radius:100px;background:transparent;color:var(--text-mid);font-family:'Plus Jakarta Sans',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;transition:all .2s;text-decoration:none;}
+    .btn-ghost:hover{border-color:var(--blue);color:var(--blue);}
+    .btn-blue{padding:.6rem 1.5rem;border-radius:100px;background:linear-gradient(135deg,var(--blue),var(--blue2));color:white;border:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:.85rem;font-weight:700;cursor:pointer;box-shadow:0 4px 16px var(--blue-glow);transition:all .2s;text-decoration:none;}
+    .btn-blue:hover{transform:translateY(-1px);box-shadow:0 8px 24px var(--blue-glow);}
+    
+    /* Hero */
+    .page-header{background:linear-gradient(160deg,var(--navy) 0%,var(--navy2) 50%,#0c2d5a 100%);padding:4rem 4rem;position:relative;overflow:hidden;}
+    .page-header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 70% at 80% 50%,rgba(6,182,212,0.12) 0%,transparent 60%),radial-gradient(ellipse 40% 50% at 10% 80%,rgba(26,86,219,0.15) 0%,transparent 55%);}
+    .page-header .container{position:relative;z-index:1;max-width:1200px;margin:0 auto;text-align:center;}
+    .page-header h1{font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:700;color:white;margin-bottom:.5rem;}
+    .page-header p{font-size:1rem;color:rgba(255,255,255,0.7);}
+    
+    /* Services Grid */
+    .services-section{padding:3rem 4rem;background:var(--off);}
+    .container{max-width:1200px;margin:0 auto;}
+    .services-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;}
+    .service-card{background:white;border:1.5px solid var(--border);border-radius:var(--r);padding:1.75rem;transition:all .3s;box-shadow:var(--shadow);text-decoration:none;color:inherit;display:block;}
+    .service-card:hover{box-shadow:var(--shadow-lg);border-color:var(--border2);transform:translateY(-4px);}
+    .service-icon{width:64px;height:64px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:2rem;margin-bottom:1rem;}
+    .service-icon.solar{background:linear-gradient(135deg,#fef3c7,#fde68a);color:#d97706;}
+    .service-icon.energy{background:linear-gradient(135deg,#fee2e2,#fecaca);color:#dc2626;}
+    .service-icon.biogas{background:linear-gradient(135deg,#ffedd5,#fed7aa);color:#ea580c;}
+    .service-icon.gardening{background:linear-gradient(135deg,#d1fae5,#a7f3d0);color:#059669;}
+    .service-icon.waste{background:linear-gradient(135deg,#dbeafe,#bfdbfe);color:#2563eb;}
+    .service-icon.water{background:linear-gradient(135deg,#cffafe,#a5f3fc);color:#0891b2;}
+    .service-icon.ev{background:linear-gradient(135deg,#e0e7ff,#c7d2fe);color:#4f46e5;}
+    .service-icon.maintenance{background:linear-gradient(135deg,#f3e8ff,#d8b4fe);color:#7c3aed;}
+    .service-card h3{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:var(--navy);margin-bottom:.5rem;}
+    .service-card p{font-size:.9rem;color:var(--text-mid);line-height:1.6;margin-bottom:1rem;}
+    .btn-outline-sm{padding:.5rem 1rem;border-radius:100px;border:1.5px solid var(--border);background:transparent;color:var(--text-mid);font-family:'Plus Jakarta Sans',sans-serif;font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;display:inline-block;}
+    .btn-outline-sm:hover{border-color:var(--blue);color:var(--blue);}
+    
+    /* Footer */
+    footer{background:var(--navy);color:white;padding:3rem 4rem 1.5rem;}
+    .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:3rem;max-width:1200px;margin:0 auto;}
+    .footer-brand h4{font-family:'Playfair Display',serif;font-size:1.5rem;margin-bottom:1rem;}
+    .footer-brand p{color:rgba(255,255,255,0.7);font-size:.9rem;line-height:1.6;}
+    .footer-links h4{font-size:1rem;font-weight:600;margin-bottom:1rem;}
+    .footer-links ul{list-style:none;}
+    .footer-links li{margin-bottom:.5rem;}
+    .footer-links a{color:rgba(255,255,255,0.7);text-decoration:none;font-size:.9rem;transition:color .2s;}
+    .footer-links a:hover{color:white;}
+    .social-links{display:flex;gap:1rem;margin-top:1rem;}
+    .social-links a{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;color:white;text-decoration:none;transition:all .2s;}
+    .social-links a:hover{background:var(--blue);}
+    .footer-bottom{text-align:center;margin-top:2rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,0.1);}
+    .footer-bottom p{color:rgba(255,255,255,0.5);font-size:.85rem;}
+    
+    /* User Menu */
+    .user-menu{display:flex;align-items:center;gap:.5rem;cursor:pointer;position:relative;}
+    .user-avatar{width:36px;height:36px;border-radius:50%;object-fit:cover;}
+    .user-name{font-size:.85rem;font-weight:600;color:var(--text);}
+    .user-dropdown{position:absolute;top:100%;right:0;margin-top:.5rem;background:white;border:1px solid var(--border);border-radius:12px;padding:.5rem;box-shadow:var(--shadow-lg);display:none;min-width:150px;}
+    .user-dropdown.active{display:block;}
+    .user-dropdown a{display:flex;align-items:center;gap:.5rem;padding:.5rem .75rem;color:var(--text);text-decoration:none;font-size:.85rem;border-radius:8px;transition:all .2s;}
+    .user-dropdown a:hover{background:var(--off2);}
+    
+    /* Mobile */
+    @media(max-width:768px){
+      nav{padding:0 1.5rem;}
+      .page-header{padding:2rem 1.5rem;}
+      .page-header h1{font-size:2rem;}
+      .services-section{padding:2rem 1.5rem;}
+      .services-grid{grid-template-columns:1fr;}
+      .footer-grid{grid-template-columns:1fr;gap:2rem;}
+      .nav-links{display:none;}
+    }
+    </style>
 </head>
 <body>
     <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="index.html" class="nav-logo">
-                <i class="fas fa-leaf"></i>
-                <span>EcoWorkConnect</span>
-            </a>
-            <ul class="nav-menu">
-                <li><a href="index.html" class="nav-link">Home</a></li>
-                <li><a href="services.html" class="nav-link active">Services</a></li>
-            </ul>
-            <div class="nav-auth">
-                <div class="user-menu" id="userMenu" style="display: none;">
-                    <img src="https://picsum.photos/seed/user1/40/40.jpg" alt="User" class="user-avatar">
-                    <span class="user-name" id="userName">Guest User</span>
-                    <div class="user-dropdown">
-                        <a href="profile.html"><i class="fas fa-user"></i> Profile</a>
-                    </div>
-                </div>
-                <div id="authButtons">
-                    <a href="login-choice.html" class="btn btn-outline">Login</a>
-                    <a href="register.html" class="btn btn-primary">Sign Up</a>
+    <nav>
+        <a href="index.html" class="logo">
+            <div class="logo-mark"><i class="fas fa-leaf"></i></div>
+            <span class="logo-text">Eco<span>Work</span></span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="services.html" class="active">Services</a></li>
+            <li><a href="worker-portal.html">Worker Portal</a></li>
+        </ul>
+        <div class="nav-right">
+            <div class="user-menu" id="userMenu" style="display:none;">
+                <img src="https://picsum.photos/seed/user1/40/40.jpg" alt="User" class="user-avatar">
+                <span class="user-name" id="userName">Guest</span>
+                <div class="user-dropdown">
+                    <a href="profile.html"><i class="fas fa-user"></i> Profile</a>
+                    <a href="bookings.html"><i class="fas fa-calendar"></i> My Bookings</a>
+                    <a href="#" onclick="logout();return false;"><i class="fas fa-sign-out-alt"></i> Logout</a>
                 </div>
             </div>
-            <button class="mobile-menu-toggle" id="mobileMenuToggle">
-                <i class="fas fa-bars"></i>
-            </button>
+            <div id="authButtons" style="display:flex;gap:.75rem;">
+                <a href="login-choice.html" class="btn-ghost">Login</a>
+                <a href="register.html" class="btn-blue">Sign Up</a>
+            </div>
         </div>
     </nav>
 
@@ -57,7 +151,7 @@
                     </div>
                     <h3>Solar Services</h3>
                     <p>Installation, maintenance, and repair of solar panels and systems for homes and businesses</p>
-                    <span class="btn btn-outline btn-sm" style="margin-top: 1rem;">Book Now</span>
+                    <span class="btn-outline-sm">Book Now</span>
                 </a>
                 <a href="service-detail.html?id=energy" class="service-card">
                     <div class="service-icon energy">
@@ -65,7 +159,7 @@
                     </div>
                     <h3>Energy Audit</h3>
                     <p>Professional energy efficiency assessments and recommendations to reduce your carbon footprint</p>
-                    <span class="btn btn-outline btn-sm" style="margin-top: 1rem;">Book Now</span>
+                    <span class="btn-outline-sm">Book Now</span>
                 </a>
                 <a href="service-detail.html?id=biogas" class="service-card">
                     <div class="service-icon biogas">
@@ -73,7 +167,7 @@
                     </div>
                     <h3>Bio-Gas Services</h3>
                     <p>Biogas plant installation, maintenance, and consultation for sustainable energy</p>
-                    <span class="btn btn-outline btn-sm" style="margin-top: 1rem;">Book Now</span>
+                    <span class="btn-outline-sm">Book Now</span>
                 </a>
                 <a href="service-detail.html?id=gardening" class="service-card">
                     <div class="service-icon gardening">
@@ -81,7 +175,7 @@
                     </div>
                     <h3>Gardening & Landscaping</h3>
                     <p>Professional gardening, landscaping, and plant care services for your home</p>
-                    <span class="btn btn-outline btn-sm" style="margin-top: 1rem;">Book Now</span>
+                    <span class="btn-outline-sm">Book Now</span>
                 </a>
                 <a href="service-detail.html?id=waste" class="service-card">
                     <div class="service-icon waste">
@@ -89,7 +183,7 @@
                     </div>
                     <h3>Waste Management</h3>
                     <p>Waste collection, recycling, and disposal solutions for a cleaner environment</p>
-                    <span class="btn btn-outline btn-sm" style="margin-top: 1rem;">Book Now</span>
+                    <span class="btn-outline-sm">Book Now</span>
                 </a>
                 <a href="service-detail.html?id=water" class="service-card">
                     <div class="service-icon water">
@@ -97,7 +191,7 @@
                     </div>
                     <h3>Water Conservation</h3>
                     <p>Rainwater harvesting, water recycling, and conservation systems installation</p>
-                    <span class="btn btn-outline btn-sm" style="margin-top: 1rem;">Book Now</span>
+                    <span class="btn-outline-sm">Book Now</span>
                 </a>
                 <a href="service-detail.html?id=ev" class="service-card">
                     <div class="service-icon ev">
@@ -105,7 +199,7 @@
                     </div>
                     <h3>EV Charging Support</h3>
                     <p>EV charging station installation and maintenance for electric vehicles</p>
-                    <span class="btn btn-outline btn-sm" style="margin-top: 1rem;">Book Now</span>
+                    <span class="btn-outline-sm">Book Now</span>
                 </a>
                 <a href="service-detail.html?id=maintenance" class="service-card">
                     <div class="service-icon maintenance">
@@ -113,7 +207,7 @@
                     </div>
                     <h3>Green Maintenance</h3>
                     <p>Eco-friendly maintenance and repair services using sustainable practices</p>
-                    <span class="btn btn-outline btn-sm" style="margin-top: 1rem;">Book Now</span>
+                    <span class="btn-outline-sm">Book Now</span>
                 </a>
             </div>
         </div>
