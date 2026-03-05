@@ -300,7 +300,7 @@ async function doReg(){
       setTimeout(()=>location.href='worker-dashboard.html',1200);
     }
     else toast(d.message||'Registration failed');
-  }catch{toast('Network error. Try again.');}
+  }catch(err){console.error('Registration error:',err);toast('Network error. Try again.');}
 }
 const p=new URLSearchParams(location.search);
 const tk=p.get('token');
