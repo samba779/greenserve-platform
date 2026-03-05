@@ -305,7 +305,7 @@
                         // Redirect to login if not authenticated
                         showToast('Please login to book a service', 'info');
                         setTimeout(() => {
-                            window.location.href = `login.html?redirect=${encodeURIComponent(window.location.href)}`;
+                            window.location.href = `user-login.html?redirect=${encodeURIComponent(window.location.href)}`;
                         }, 1000);
                         return;
                     }
@@ -331,7 +331,7 @@
                 console.log('❌ No token or user ID, redirecting to login');
                 showToast('Please login to book a service', 'info');
                 setTimeout(() => {
-                    window.location.href = `login-choice.html?redirect=${encodeURIComponent(window.location.href)}`;
+                    window.location.href = `user-login.html?redirect=${encodeURIComponent(window.location.href)}`;
                 }, 1000);
                 return;
             }
