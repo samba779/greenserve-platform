@@ -29,13 +29,25 @@ app.set('trust proxy', 1);
 // Security middleware
 app.use(helmet());
 app.use(cors({
-  origin: [
-    process.env.FRONTEND_URL,
-    'https://greenserve-platform.vercel.app',
-    'https://greenserve-platform-e9f85nq3s-samba779s-projects.vercel.app',
-    'https://greenserve-platform-a4vf1o092-samba779s-projects.vercel.app'
-  ].filter(Boolean),
-  credentials: true
+  origin: function(origin, callback) {
+    const allowedOrigins = [
+      process.env.FRONTEND_URL,
+      'https://greenserve-platform.vercel.app',
+      'https://greenserve-platform-e9f85nq3s-samba779s-projects.vercel.app',
+      'https://greenserve-platform-a4vf1o092-samba779s-projects.vercel.app',
+      'http://localhost:3000',
+      'http://localhost:5500',
+      'http://localhost:8080'
+    ].filter(Boolean);
+    if (!origin || allowedOrigins.includes(origin) || origin.includes('vercel.app')) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
 
 // Rate limiting
