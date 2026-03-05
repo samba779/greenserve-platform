@@ -166,32 +166,32 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--off);color:var(
 
         <div class="sec-title">Select Your Skills *</div>
         <div class="skills-grid" id="skillsGrid">
-          <label class="skill-box" onclick="this.classList.toggle('on');this.querySelector('input').checked=this.classList.contains('on');">
-            <input type="checkbox" name="skills" value="Solar Installation">
+          <label class="skill-box" onclick="toggleSkill(this); event.preventDefault();">
+            <input type="checkbox" name="skills" value="Solar Installation" onclick="event.stopPropagation();">
             <i>☀️</i> Solar
           </label>
-          <label class="skill-box" onclick="this.classList.toggle('on');this.querySelector('input').checked=this.classList.contains('on');">
-            <input type="checkbox" name="skills" value="EV Charging">
+          <label class="skill-box" onclick="toggleSkill(this); event.preventDefault();">
+            <input type="checkbox" name="skills" value="EV Charging" onclick="event.stopPropagation();">
             <i>🔌</i> EV Charging
           </label>
-          <label class="skill-box" onclick="this.classList.toggle('on');this.querySelector('input').checked=this.classList.contains('on');">
-            <input type="checkbox" name="skills" value="Gardening">
+          <label class="skill-box" onclick="toggleSkill(this); event.preventDefault();">
+            <input type="checkbox" name="skills" value="Gardening" onclick="event.stopPropagation();">
             <i>🌱</i> Gardening
           </label>
-          <label class="skill-box" onclick="this.classList.toggle('on');this.querySelector('input').checked=this.classList.contains('on');">
-            <input type="checkbox" name="skills" value="Water Harvesting">
+          <label class="skill-box" onclick="toggleSkill(this); event.preventDefault();">
+            <input type="checkbox" name="skills" value="Water Harvesting" onclick="event.stopPropagation();">
             <i>💧</i> Water
           </label>
-          <label class="skill-box" onclick="this.classList.toggle('on');this.querySelector('input').checked=this.classList.contains('on');">
-            <input type="checkbox" name="skills" value="Energy Audit">
+          <label class="skill-box" onclick="toggleSkill(this); event.preventDefault();">
+            <input type="checkbox" name="skills" value="Energy Audit" onclick="event.stopPropagation();">
             <i>⚡</i> Energy Audit
           </label>
-          <label class="skill-box" onclick="this.classList.toggle('on');this.querySelector('input').checked=this.classList.contains('on');">
-            <input type="checkbox" name="skills" value="Maintenance">
+          <label class="skill-box" onclick="toggleSkill(this); event.preventDefault();">
+            <input type="checkbox" name="skills" value="Maintenance" onclick="event.stopPropagation();">
             <i>🔧</i> Maintenance
           </label>
         </div>
-        <div id="skillsError" style="color:var(--red);font-size:.75rem;margin-bottom:.5rem;display:none;">Please select at least one skill</div>
+        <div id="skillsError" style="color:#ef4444;font-size:.75rem;margin-bottom:.5rem;display:none;">Please select at least one skill</div>
 
         <div class="sec-title">Years of Experience (Optional)</div>
         <div class="exp-wrap">
@@ -246,6 +246,11 @@ function sw(tab){
     tog.style.display='grid';
     tog.querySelectorAll('.t-btn').forEach((b,i)=>b.classList.toggle('on',(tab==='login'&&i===0)||(tab==='reg'&&i===1)));
   } else tog.style.display='none';
+}
+function toggleSkill(el) {
+  const checkbox = el.querySelector('input[type="checkbox"]');
+  checkbox.checked = !checkbox.checked;
+  el.classList.toggle('on', checkbox.checked);
 }
 function tp(id,btn){const i=document.getElementById(id);i.type=i.type==='password'?'text':'password';btn.textContent=i.type==='password'?'👁':'🙈';}
 function selectExp(el){
