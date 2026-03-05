@@ -195,12 +195,25 @@
 
     <script src="js/app.js"></script>
     <script>
+        // Load booking data from localStorage
+        document.addEventListener('DOMContentLoaded', function() {
+            const booking = JSON.parse(localStorage.getItem('trackingBooking') || localStorage.getItem('paymentBooking') || '{}');
+            if (booking.id) {
+                document.querySelector('.card-header span').textContent = 'Booking #' + booking.id;
+                document.querySelector('.card-body .fa-solar-panel').parentElement.innerHTML = '<i class="fas fa-' + (booking.serviceType || 'wrench') + '"></i>';
+                document.querySelector('.card-body div.font-weight\\:600').textContent = booking.service || 'Service';
+                document.querySelector('.eta-value').textContent = booking.time || 'Pending';
+                document.querySelector('.card-body div:has(> span:contains("₹")) span:last-child').textContent = '₹' + (booking.price || 0).toLocaleString();
+            }
+        });
+        
         // Simulate ETA countdown
         let eta = 5;
         setInterval(() => {
             if (eta > 0) {
                 eta--;
-                document.querySelector('.eta-value').textContent = eta + ' min';
+                const etaEl = document.querySelector('.eta-value');
+                if (etaEl) etaEl.textContent = eta + ' min';
             }
         }, 60000);
     </script>
