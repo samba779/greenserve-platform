@@ -255,12 +255,15 @@ async function doLogin(){
   const password=document.getElementById('lPwd').value;
   if(!mobile||!password){toast('Please fill all fields');return;}
   try{
+    console.log('🔍 Login attempt:', mobile);
     const r=await fetch(`${API}/auth/login`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mobile,password,userType:'user'})});
+    console.log('📡 Response status:', r.status);
     const d=await r.json();
+    console.log('📡 Response data:', d);
     if(d.success){localStorage.setItem('token',d.data.token);localStorage.setItem('user',JSON.stringify(d.data.user));toast('Welcome back! Redirecting…',true);setTimeout(()=>location.href='user-dashboard.html',1200);}
     else if(d.data?.requiresVerification){mob=mobile;document.getElementById('otpNote').textContent=`OTP sent to +91 ${mobile}`;sw('otp');}
     else toast(d.message||'Login failed');
-  }catch{toast('Network error. Try again.');}
+  }catch(err){console.error('❌ Login error:', err);toast('Network error. Try again.');}
 }
 
 async function doReg(){
