@@ -285,6 +285,10 @@ const p=new URLSearchParams(location.search);
 const tk=p.get('token');
 if(tk){localStorage.setItem('token',tk);window.history.replaceState({},'',location.pathname);toast('Google sign-in successful!',true);setTimeout(()=>location.href='worker-dashboard.html',1000);}
 </script>
+<script>
+  window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
+</script>
+<script defer src="/_vercel/speed-insights/script.js"></script>
 </body>
 </html>
 <!-- Cache bust: v2 $(date) -->
